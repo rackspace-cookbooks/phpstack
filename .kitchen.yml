@@ -1,0 +1,66 @@
+---
+driver:
+  name: vagrant
+driver_config:
+  require_chef_omnibus: true
+
+provisioner:
+  name: chef_zero
+  client_rb:
+    environment: _default
+  attributes:
+    authorization:
+      sudo:
+        users: ['vagrant']
+        passwordless: true
+    rackspace:
+      cloudbackup:
+        enabled: false
+    platformstack:
+      cloud_monitoring:
+        enabled: false
+
+platforms:
+  - name: ubuntu-12.04
+    run_list:
+    - recipe[apt]
+  - name: centos-6.5
+    run_list:
+    - recipe[yum]
+
+suites:
+  - name: default
+    run_list:
+      - recipe[lampstack_test_app::default]
+      - recipe[lampstack_test_app::app]
+
+  - name: mysql-standalone
+    run_list:
+      - recipe[lampstack::mysql_standalone]
+    attributes:
+      mysql:
+        server_root_password: "randompass"
+        server_repl_password: "randompass"
+        server_debian_password: "randompass"
+
+  - name: mysql-master
+    run_list:
+      - recipe[lampstack::mysql_master]
+    attributes:
+      mysql:
+        server_root_password: "randompass"
+        server_repl_password: "randompass"
+        server_debian_password: "randompass"
+      holland:
+        password: "randompass"
+
+  - name: mysql-slave
+    run_list:
+      - recipe[lampstack::mysql_slave]
+    attributes:
+      mysql:
+        server_root_password: "randompass"
+        server_repl_password: "randompass"
+        server_debian_password: "randompass"
+      holland:
+        password: "randompass"
