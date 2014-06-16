@@ -12,9 +12,6 @@
 	  Allow from all
 	</Location>
 
-<%= "        ProxyPass 	      / http://#{@params[:tomcathost]}:#{@params[:tomcatport]}/" %>
-<%= "        ProxyPassReverse / http://#{@params[:tomcathost]}:#{@params[:tomcatport]}/" %>
-
         LogFormat "%{X-Forwarded-For}i %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" forwarded
 <%= "        CustomLog #{@params[:customlog]}" %>
 <%= "        ErrorLog #{@params[:errorlog]}" %>

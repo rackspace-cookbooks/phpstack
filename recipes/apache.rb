@@ -22,7 +22,7 @@ include_recipe 'platformstack::iptables'
 include_recipe 'platformstack::monitors'
 
 # Include the necessary recipes.
-%w(apt apache2::default apache2::mod_proxy apache2::mod_proxy_http).each do |recipe|
+%w(apt apache2::default apache2::mod_php5).each do |recipe|
   include_recipe recipe
 end
 
@@ -39,8 +39,6 @@ node['apache']['sites'].each do | site_name |
     server_name site['server_name']
     server_alias site['server_alias']
     docroot site['docroot']
-    lamphost site['lamphost']
-    lampport site['lampport']
     errorlog site['errorlog']
     customlog site['customlog']
     loglevel site['loglevel']
