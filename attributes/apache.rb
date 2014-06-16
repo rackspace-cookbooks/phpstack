@@ -18,8 +18,6 @@
 # limitations under the License.
 #
 
-include_attribute 'lampstack::lamp'
-
 site1 = 'example.com'
 
 node.default['apache']['sites'][site1]['port']         = 80
