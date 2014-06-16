@@ -26,8 +26,8 @@ node['apache']['sites'].each do | site_name |
 
   ark site_name do
     url site['tarfile']
-    checksum 'e2cbfbaabe3f5b7381b0a29aa6f7e595d71767b5292d943521de9512931f9e75'
-    version '0.0.1'
+    checksum site['sha512sum']
+    version site['version']
     prefix_root '/var/www'
     home_dir "/var/www/#{site_name}"
 #    path site['docroot']
