@@ -18,17 +18,32 @@
 # limitations under the License.
 #
 
-application 'php-demo' do
-  path  "#{node['application_php']['path']}/php-demo"
-  owner "#{node['application_php']['uid']}"
-  group "#{node['application_php']['gid']}"
+include_recipe 'git'
 
-  repository "#{node['application_php']['repository']}"
-  revision   "#{node['application_php']['revision']}"
-
-  php do
-    database_master_role "database_master"
-    local_settings_file "config/db.php"
+node['apache']['sites'].each do | site_name |
+  site_name = site_name[0]
+  site = node['apache']['sites'][site_name]
+  
+  application site_name do
+    path  node['apache']['sites'][site_name]['docroot']
+    owner node['apache']['user']
+    group node['apache']['group']
+    deploy_key node['apache']['sites'][site_name]['deploy_key']
+    repository node['apache']['sites'][site_name]['repository']
+    revision   node['apache']['sites'][site_name]['revision']
   end
-
+  web_app site_name do
+    cookbook node['apache']['sites'][site_name]['cookbook']
+    template node['apache']['sites'][site_name]['template']
+    Port node['apache']['sites'][site_name]['port']
+    ServerAdmin node['apache']['sites'][site_name]['server_admin']
+    ServerName node['apache']['sites'][site_name]['server_name']
+    ServerAlias node['apache']['sites'][site_name]['server_alias']
+    DocumentRoot node['apache']['sites'][site_name]['docroot']
+    CustomLog node['apache']['sites'][site_name]['customlog']
+    ErrorLog node['apache']['sites'][site_name]['errorlog']
+  end
 end
+
+# Apache Iptables Access
+add_iptables_rule('INPUT', '-p tcp --dport 80 -j ACCEPT', 515, 'Apache Access')

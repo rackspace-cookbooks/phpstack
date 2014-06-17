@@ -23,3 +23,5 @@ default['lampstack']['application_php']['repository'] = 'https://github.com/pani
 default['lampstack']['application_php']['gid'] = 'apache'
 default['lampstack']['application_php']['uid'] = 'apache'
 default['lampstack']['application_php']['path'] = '/var/www'
+default['lampstack']['application_php']['deploy_key'] = '/root/.ssh/id_rsa'
+
