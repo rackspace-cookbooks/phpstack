@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: lampstack
-# Recipe:: app
+# Recipe:: yum
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -18,19 +18,18 @@
 # limitations under the License.
 #
 
-include_recipe 'platformstack::iptables'
+include_recipe 'yum'
 
-node['apache']['sites'].each do | site_name |
-  site_name = site_name[0]
-  site = node['apache']['sites'][site_name]
+yum_repository 'epel' do
+  description 'Extra Packages for Enterprise Linux'
+  mirrorlist 'http://mirrors.fedoraproject.org/mirrorlist?repo=epel-6&arch=$basearch'
+  gpgkey 'http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-6'
+  action :create
+end
 
-  ark site_name do
-    url site['tarfile']
-    checksum site['sha512sum']
-    version site['version']
-    prefix_root '/var/www'
-    home_dir "/var/www/#{site_name}"
-    #    path site['docroot']
-    action 'install'
-  end
+yum_repository 'IUS' do
+  description 'IUS Community Packages for Enterprise Linux/CentOS 6'
+  mirrorlist 'http://dmirr.iuscommunity.org/mirrorlist/?repo=ius-centos6&arch=$basearch'
+  gpgkey 'http://dl.iuscommunity.org/pub/ius/IUS-COMMUNITY-GPG-KEY'
+  action :create
 end

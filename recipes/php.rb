@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: lampstack
-# Recipe:: application_php
+# Recipe:: php
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -18,10 +18,7 @@
 # limitations under the License.
 #
 
-default['lampstack']['application_php']['revision'] = 'master'
-default['lampstack']['application_php']['repository'] = 'https://github.com/panique/php-login-minimal'
-default['lampstack']['application_php']['gid'] = 'apache'
-default['lampstack']['application_php']['uid'] = 'apache'
-default['lampstack']['application_php']['path'] = '/var/www'
-default['lampstack']['application_php']['deploy_key'] = '/root/.ssh/id_rsa'
-
+# Include the necessary recipes.
+%w(lampstack::yum php php::ini).each do |recipe|
+  include_recipe recipe
+end

@@ -19,18 +19,19 @@
 #
 
 include_recipe 'git'
+include_recipe 'lampstack::php'
+include_recipe 'lampstack::mysql_standalone'
 
 node['apache']['sites'].each do | site_name |
   site_name = site_name[0]
-  site = node['apache']['sites'][site_name]
-  
+
   application site_name do
-    path  node['apache']['sites'][site_name]['docroot']
+    path node['apache']['sites'][site_name]['docroot']
     owner node['apache']['user']
     group node['apache']['group']
     deploy_key node['apache']['sites'][site_name]['deploy_key']
     repository node['apache']['sites'][site_name]['repository']
-    revision   node['apache']['sites'][site_name]['revision']
+    revision node['apache']['sites'][site_name]['revision']
   end
   web_app site_name do
     cookbook node['apache']['sites'][site_name]['cookbook']
@@ -39,11 +40,8 @@ node['apache']['sites'].each do | site_name |
     ServerAdmin node['apache']['sites'][site_name]['server_admin']
     ServerName node['apache']['sites'][site_name]['server_name']
     ServerAlias node['apache']['sites'][site_name]['server_alias']
-    DocumentRoot node['apache']['sites'][site_name]['docroot']
+    DocumentRoot "#{node['apache']['sites'][site_name]['docroot']}/current"
     CustomLog node['apache']['sites'][site_name]['customlog']
     ErrorLog node['apache']['sites'][site_name]['errorlog']
   end
 end
-
-# Apache Iptables Access
-add_iptables_rule('INPUT', '-p tcp --dport 80 -j ACCEPT', 515, 'Apache Access')

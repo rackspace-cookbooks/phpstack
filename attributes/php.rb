@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: lampstack
-# Recipe:: app
+# Recipe:: php
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -18,19 +18,15 @@
 # limitations under the License.
 #
 
-include_recipe 'platformstack::iptables'
-
-node['apache']['sites'].each do | site_name |
-  site_name = site_name[0]
-  site = node['apache']['sites'][site_name]
-
-  ark site_name do
-    url site['tarfile']
-    checksum site['sha512sum']
-    version site['version']
-    prefix_root '/var/www'
-    home_dir "/var/www/#{site_name}"
-    #    path site['docroot']
-    action 'install'
-  end
-end
+node.default['php']['packages'] = %w(
+  php55u
+  php55u-devel
+  php55u-mcrypt
+  php55u-mbstring
+  php55u-mysql
+  php55u-gd
+  php55u-pear
+  php55u-pecl-memcache
+  php55u-gmp
+  php55u-mysqlnd
+  php55u-xml )

@@ -18,11 +18,8 @@
 # limitations under the License.
 #
 
-include_recipe 'platformstack::iptables'
-include_recipe 'platformstack::monitors'
-
 # Include the necessary recipes.
-%w(apt apache2::default apache2::mod_php5).each do |recipe|
+%w(platformstack::monitors apt apache2::default apache2::mod_php5).each do |recipe|
   include_recipe recipe
 end
 
@@ -31,7 +28,6 @@ node['apache']['sites'].each do | site_name |
   site_name = site_name[0]
   site = node['apache']['sites'][site_name]
 
-  add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['apache']['sites'][site_name]['port']} -j ACCEPT", 100, 'Allow access to apache')
   web_app site_name do
     port site['port']
     cookbook site['cookbook']
@@ -58,3 +54,10 @@ node['apache']['sites'].each do | site_name |
     action 'create'
   end
 end
+
+
+node.default['platformstack']['iptables']['allow_ssh_from_world'] == true
+include_recipe 'platformstack::iptables'
+
+# Apache Iptables Access
+add_iptables_rule('INPUT', '-p tcp --dport 80 -j ACCEPT', 100, 'Apache Access')
