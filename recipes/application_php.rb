@@ -19,8 +19,12 @@
 #
 
 include_recipe 'git'
-include_recipe 'lampstack::php'
+if platform_family?("rhel")
+  include_recipe 'lampstack::yum'
+end
 include_recipe 'lampstack::mysql_standalone'
+include_recipe 'php'
+include_recipe 'php::ini'
 
 node['apache']['sites'].each do | site_name |
   site_name = site_name[0]
