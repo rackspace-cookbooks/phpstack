@@ -35,7 +35,7 @@ node['apache']['sites'].each do | site_name |
     cookbook site['cookbook']
     template site['template']
     server_name site['server_name']
-    server_alias site['server_alias']
+    server_aliases site['server_alias']
     docroot site['docroot']
     errorlog site['errorlog']
     customlog site['customlog']

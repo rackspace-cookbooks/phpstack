@@ -27,6 +27,7 @@ end
 include_recipe 'lampstack::mysql_standalone'
 include_recipe 'php'
 include_recipe 'php::ini'
+include_recipe 'lampstack::apache'
 
 node['apache']['sites'].each do | site_name |
   site_name = site_name[0]
@@ -38,14 +39,5 @@ node['apache']['sites'].each do | site_name |
     deploy_key node['apache']['sites'][site_name]['deploy_key']
     repository node['apache']['sites'][site_name]['repository']
     revision node['apache']['sites'][site_name]['revision']
-  end
-  web_app site_name do
-    cookbook node['apache']['sites'][site_name]['cookbook']
-    template node['apache']['sites'][site_name]['template']
-    server_port node['apache']['sites'][site_name]['port']
-    server_admin node['apache']['sites'][site_name]['server_admin']
-    server_name node['apache']['sites'][site_name]['server_name']
-    server_aliases node['apache']['sites'][site_name]['server_alias']
-    docroot "#{node['apache']['sites'][site_name]['docroot']}/current"
   end
 end
