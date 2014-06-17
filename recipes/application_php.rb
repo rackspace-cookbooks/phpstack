@@ -21,6 +21,8 @@
 include_recipe 'git'
 if platform_family?("rhel")
   include_recipe 'lampstack::yum'
+elsif platform_family?("debian")
+  include_recipe 'lampstack::apt'
 end
 include_recipe 'lampstack::mysql_standalone'
 include_recipe 'php'
@@ -40,12 +42,10 @@ node['apache']['sites'].each do | site_name |
   web_app site_name do
     cookbook node['apache']['sites'][site_name]['cookbook']
     template node['apache']['sites'][site_name]['template']
-    Port node['apache']['sites'][site_name]['port']
-    ServerAdmin node['apache']['sites'][site_name]['server_admin']
-    ServerName node['apache']['sites'][site_name]['server_name']
-    ServerAlias node['apache']['sites'][site_name]['server_alias']
-    DocumentRoot "#{node['apache']['sites'][site_name]['docroot']}/current"
-    CustomLog node['apache']['sites'][site_name]['customlog']
-    ErrorLog node['apache']['sites'][site_name]['errorlog']
+    server_port node['apache']['sites'][site_name]['port']
+    server_admin node['apache']['sites'][site_name]['server_admin']
+    server_name node['apache']['sites'][site_name]['server_name']
+    server_aliases node['apache']['sites'][site_name]['server_alias']
+    docroot "#{node['apache']['sites'][site_name]['docroot']}/current"
   end
 end
