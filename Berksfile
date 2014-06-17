@@ -7,9 +7,10 @@ cookbook 'rackspacecloud', git: 'git@github.com:rackspace-cookbooks/rackspaceclo
 cookbook 'rackspace_cloudbackup', git: 'git@github.com:rackspace-cookbooks/rackspace_cloudbackup.git'
 cookbook 'rackops_rolebook', git: 'git@github.com:rackops/rackops_rolebook.git'
 cookbook 'cron', git: 'git@github.com:rackspace-cookbooks/cron.git'
+cookbook 'rackspace_gluster', git: 'git@github.com:rackspace-cookbooks/rackspace_gluster.git'
 
 group :integration do
-  cookbook 'lampstack_test_app', path: 'test/fixtures/cookbooks/lampstack_test_app'
+#  cookbook 'lampstack_test_app', path: 'test/fixtures/cookbooks/lampstack_test_app'
 
   cookbook 'apt'
   cookbook 'yum'

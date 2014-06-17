@@ -64,3 +64,12 @@ suites:
         server_debian_password: "randompass"
       holland:
         password: "randompass"
+  - name: application_php
+    run_list:
+      - recipe[lampstack::application_php]
+      - recipe[lampstack::mysql_standalone]
+    attributes:
+      mysql:
+        server_root_password: "randompass"
+        server_repl_password: "randompass"
+        server_debian_password: "randompass"

@@ -33,3 +33,7 @@ node.default['apache']['sites'][site1]['docroot']      = "/var/www/#{site1}"
 node.default['apache']['sites'][site1]['errorlog']     = "#{node['apache']['log_dir']}/#{site1}-error.log"
 node.default['apache']['sites'][site1]['customlog']    = "#{node['apache']['log_dir']}/#{site1}-access.log combined"
 node.default['apache']['sites'][site1]['loglevel']     = 'warn'
+node.default['apache']['sites'][site1]['server_admin'] = 'demo@demo.com'
+node.default['apache']['sites'][site1]['revision'] = 'master'
+node.default['apache']['sites'][site1]['repository'] = 'https://github.com/panique/php-login-minimal'
+node.default['apache']['sites'][site1]['deploy_key'] = '/root/.ssh/id_rsa'

@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: lampstack
-# Recipe:: app
+# Recipe:: php
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -18,19 +18,7 @@
 # limitations under the License.
 #
 
-include_recipe 'platformstack::iptables'
-
-node['apache']['sites'].each do | site_name |
-  site_name = site_name[0]
-  site = node['apache']['sites'][site_name]
-
-  ark site_name do
-    url site['tarfile']
-    checksum site['sha512sum']
-    version site['version']
-    prefix_root '/var/www'
-    home_dir "/var/www/#{site_name}"
-    #    path site['docroot']
-    action 'install'
-  end
+# Include the necessary recipes.
+%w(lampstack::yum php php::ini).each do |recipe|
+  include_recipe recipe
 end
