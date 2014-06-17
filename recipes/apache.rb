@@ -19,7 +19,7 @@
 #
 
 # Include the necessary recipes.
-%w(platformstack::monitors apt apache2::default apache2::mod_php5).each do |recipe|
+%w(platformstack::monitors platformstack::iptables apt apache2::default apache2::mod_php5).each do |recipe|
   include_recipe recipe
 end
 
@@ -27,6 +27,8 @@ end
 node['apache']['sites'].each do | site_name |
   site_name = site_name[0]
   site = node['apache']['sites'][site_name]
+
+  add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site['port']} -j ACCEPT", 100, 'Allow access to apache')
 
   web_app site_name do
     port site['port']
@@ -56,8 +58,3 @@ node['apache']['sites'].each do | site_name |
     end
   end
 end
-
-include_recipe 'platformstack::iptables'
-
-# Apache Iptables Access
-add_iptables_rule('INPUT', '-p tcp --dport 80 -j ACCEPT', 100, 'Apache Access')
