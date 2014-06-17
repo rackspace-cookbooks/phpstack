@@ -55,8 +55,6 @@ node['apache']['sites'].each do | site_name |
   end
 end
 
-
-node.default['platformstack']['iptables']['allow_ssh_from_world'] == true
 include_recipe 'platformstack::iptables'
 
 # Apache Iptables Access
