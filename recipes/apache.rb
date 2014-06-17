@@ -39,19 +39,21 @@ node['apache']['sites'].each do | site_name |
     customlog site['customlog']
     loglevel site['loglevel']
   end
-  template "http-monitor-#{site['server_name']}" do
-    cookbook 'lampstack'
-    source 'monitoring-remote-http.yaml.erb'
-    path "/etc/rackspace-monitoring-agent.conf.d/#{site['server_name']}-http-monitor.yaml"
-    owner 'root'
-    group 'root'
-    mode '0644'
-    variables(
-      apache_port: site['port'],
-      server_name: site['server_name']
-    )
-    notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
-    action 'create'
+  if node['platformstack']['cloud_monitoring']['enabled'] == true
+    template "http-monitor-#{site['server_name']}" do
+      cookbook 'lampstack'
+      source 'monitoring-remote-http.yaml.erb'
+      path "/etc/rackspace-monitoring-agent.conf.d/#{site['server_name']}-http-monitor.yaml"
+      owner 'root'
+      group 'root'
+      mode '0644'
+      variables(
+        apache_port: site['port'],
+        server_name: site['server_name']
+      )
+      notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
+      action 'create'
+    end
   end
 end
 

@@ -30,12 +30,16 @@ Vagrant.configure("2") do |config|
             "sites" => {
             }
         },
-        "holland" => { "enabled" => "false" }
+        "holland" => { "enabled" => "false" },
+        "platformstack" => {
+           "cloud_monitoring" => { "enabled" => "false" }
+        }
     }
 
     chef.run_list = [
       "recipe[lampstack::mysql_master]",
-      "recipe[lampstack]"
+      "recipe[lampstack::apache]",
+      "recipe[lampstack::app]"
     ]
   end
 end
