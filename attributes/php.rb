@@ -40,5 +40,6 @@ when 'debian','ubuntu'
     php5-mysql
     php5-gd
     php5-gmp
-    php5-mysqlnd )
+    php5-mysqlnd 
+    php-pear )
 end
