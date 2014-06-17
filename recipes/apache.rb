@@ -37,6 +37,7 @@ node['apache']['sites'].each do | site_name |
     server_name site['server_name']
     server_aliases site['server_alias']
     docroot site['docroot']
+    allow_override site['allow_override']
     errorlog site['errorlog']
     customlog site['customlog']
     loglevel site['loglevel']
