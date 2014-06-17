@@ -19,7 +19,7 @@
 #
 
 site1 = 'example.com'
-version1 = '0.0.3'
+version1 = '0.0.5'
 
 node.default['apache']['sites'][site1]['port']         = 80
 node.default['apache']['sites'][site1]['cookbook']     = 'lampstack'
