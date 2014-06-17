@@ -20,10 +20,11 @@
 
 include_recipe 'apt'
 
-apt_repository 'php5-ppa' do
-  uri "http://ppa.launchpad.net/ondrej/php5/ubuntu"
-  distribution node['lsb']['codename']
-  components ["main"]
-  keyserver "keyserver.ubuntu.com"
-  key "E5267A6C"
-end
+# Disabled b/c it includes on apache 2.4 (chef cookbooks don't support 2.4)
+#apt_repository 'php5-ppa' do
+#  uri "http://ppa.launchpad.net/ondrej/php5/ubuntu"
+#  distribution node['lsb']['codename']
+#  components ["main"]
+#  keyserver "keyserver.ubuntu.com"
+#  key "E5267A6C"
+#end
