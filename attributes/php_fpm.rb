@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: lampstack
-# Recipe:: php
+# Recipe:: php-fpm
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -18,28 +18,13 @@
 # limitations under the License.
 #
 
+default['php-fpm']['pools'] = false
+
 case node['platform_family']
 when 'redhat'
-  node.default['php']['packages'] = %w(
-    php55u
-    php55u-devel
-    php55u-mcrypt
-    php55u-mbstring
-    php55u-mysql
-    php55u-gd
-    php55u-pear
-    php55u-pecl-memcache
-    php55u-gmp
-    php55u-mysqlnd
-    php55u-xml )
+  node.default['php-fpm']['package_name'] = %w(
+    php55u-fpm )
 when 'debian'
-  node.default['php']['packages'] = %w(
-    php5
-    php5-dev
-    php5-mcrypt
-    php5-mysql
-    php5-gd
-    php5-gmp
-    php5-mysqlnd
-    php-pear )
+  node.default['php']['package-name'] = %w(
+    php5-fpm )
 end

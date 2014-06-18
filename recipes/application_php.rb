@@ -19,15 +19,16 @@
 #
 
 include_recipe 'git'
-if platform_family?("rhel")
+if platform_family?('rhel')
   include_recipe 'lampstack::yum'
-elsif platform_family?("debian")
+elsif platform_family?('debian')
   include_recipe 'lampstack::apt'
 end
 include_recipe 'lampstack::mysql_standalone'
 include_recipe 'php'
 include_recipe 'php::ini'
 include_recipe 'lampstack::apache'
+include_recipe 'lampstack::php_fpm'
 
 node['apache']['sites'].each do | site_name |
   site_name = site_name[0]
