@@ -34,9 +34,9 @@ suites:
       - recipe[lampstack_test_app::default]
       - recipe[lampstack_test_app::app]
 
-  - name: mysql-standalone
+  - name: mysql-base
     run_list:
-      - recipe[lampstack::mysql_standalone]
+      - recipe[lampstack::mysql_base]
     attributes:
       mysql:
         server_root_password: "randompass"

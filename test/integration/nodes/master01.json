@@ -1,0 +1,29 @@
+{
+  "name": "master-01",
+  "chef_environment": "_default",
+  "json_class": "Chef::Node",
+  "automatic": {
+    "hostname": "vagrant.vm",
+    "recipes": [
+      "tomcatstack::mysql_base",
+      "tomcatstack::mysql_master"
+    ],
+    "roles": [
+      "database_master"
+    ]
+  },
+  "normal": {
+  },
+  "chef_type": "node",
+  "default": {
+  },
+  "override": {
+  },
+  "run_list": [
+    "role[database_master]"
+  ],
+  "ipaddress": "192.168.0.23",
+  "mysql": {
+    "server_repl_password": "guudpasswerd"
+  }
+}
