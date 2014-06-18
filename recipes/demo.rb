@@ -37,9 +37,9 @@ app_nodes.each do |app_node|
   mysql_database_user  node['lampstack']['app_user'] do
     connection connection_info
     password node['lampstack']['app_password']
-    host "#{node['cloud']['local_ipv4']}"
+    host "#{app_node['cloud']['local_ipv4']}"
     database_name node['lampstack']['app_db_name']
-    privileges ['full']
+    privileges ['select', 'update', 'insert']
     retries 2
     retry_delay 2
     action ['create', 'grant']
