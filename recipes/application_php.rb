@@ -26,6 +26,7 @@ elsif platform_family?('debian')
 end
 include_recipe 'php'
 include_recipe 'php::ini'
+include_recipe 'php::module_mysql'
 include_recipe 'lampstack::apache'
 include_recipe 'lampstack::php_fpm'
 include_recipe 'chef-sugar'
