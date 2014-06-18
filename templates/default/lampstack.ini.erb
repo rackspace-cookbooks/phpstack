@@ -5,6 +5,6 @@
 #
 [Database]
 host = <%= node['mysql']['master'] %>
-username = root
-password = <%= node['mysql']['server_root_password'] %>
-db_name = mysql
+username = <%= node['lampstack']['app_user'] %>
+password = <%= @mysql_password %>
+db_name = <%= node['lampstack']['app_db_name'] %>

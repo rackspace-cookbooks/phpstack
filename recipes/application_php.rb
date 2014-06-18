@@ -42,6 +42,7 @@ node['apache']['sites'].each do | site_name |
   end
 end
 
+mysql_node = search(:node, 'recipes:lampstack\:\:mysql_master' << " AND chef_environment:#{node.chef_environment}").first
 template 'lampstack.ini' do
   path '/etc/lampstack.ini'
   cookbook node['lampstack']['ini']['cookbook']
@@ -50,7 +51,8 @@ template 'lampstack.ini' do
   group node['apache']['group']
   mode '00640'
   variables(
-    cookbook_name: cookbook_name
+    cookbook_name: cookbook_name,
+    mysql_password: mysql_node['lampstack']['app_password'] || nil
   )
   action 'create'
 end
