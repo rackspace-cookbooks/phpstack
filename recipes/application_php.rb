@@ -54,7 +54,11 @@ template 'lampstack.ini' do
   mode '00640'
   variables(
     cookbook_name: cookbook_name,
-    mysql_password: mysql_node.deep_fetch('lampstack', 'app_password').nil? == true  ? nil : mysql_node['lampstack']['app_password']
+    mysql_password: if mysql_node.respond_to?('deep_fetch')
+                      mysql_node.deep_fetch('lampstack', 'app_password').nil? == true  ? nil : mysql_node['lampstack']['app_password']
+    else
+      nil
+    end
   )
   action 'create'
 end
