@@ -41,3 +41,16 @@ node['apache']['sites'].each do | site_name |
     revision node['apache']['sites'][site_name]['revision']
   end
 end
+
+template 'lampstack.ini' do
+  path '/etc/lampstack.ini'
+  cookbook node['lampstack']['ini']['cookbook']
+  source 'lampstack.ini.erb'
+  owner 'root'
+  group node['apache']['group']
+  mode '00640'
+  variables(
+    cookbook_name: cookbook_name
+  )
+  action 'create'
+end

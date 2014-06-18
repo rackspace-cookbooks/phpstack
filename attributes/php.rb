@@ -43,3 +43,5 @@ when 'debian'
     php5-mysqlnd
     php-pear )
 end
+
+default['lampstack']['ini']['cookbook'] = 'lampstack'
