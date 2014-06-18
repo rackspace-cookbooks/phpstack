@@ -153,15 +153,14 @@ mysql_database_user node['lampstack']['cloud_monitoring']['agent_mysql']['user']
   action 'create'
 end
 
-if node['platformstack']['cloud_monitoring']['enabled'] == true
-  template 'mysql-monitor' do
-    cookbook 'lampstack'
-    source 'monitoring-agent-mysql.yaml.erb'
-    path '/etc/rackspace-monitoring-agent.conf.d/agent-mysql-monitor.yaml'
-    owner 'root'
-    group 'root'
-    mode '00600'
-    notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
-    action 'create'
-  end
+template 'mysql-monitor' do
+  cookbook 'lampstack'
+  source 'monitoring-agent-mysql.yaml.erb'
+  path '/etc/rackspace-monitoring-agent.conf.d/agent-mysql-monitor.yaml'
+  owner 'root'
+  group 'root'
+  mode '00600'
+  notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
+  action 'create'
+  only_if node['platformstack']['cloud_monitoring']['enabled'] == true
 end

@@ -5,9 +5,9 @@
 #
 type: remote.http
 label: Remote HTTP check on <%= "#{node['cloud']['public_ipv4']} port #{@apache_port} for #{@server_name}" %>
-disabled: <%= node['tomcatstack']['cloud_monitoring']['remote_http']['disabled'] %>
-period: <%= node['tomcatstack']['cloud_monitoring']['remote_http']['period'] %>
-timeout: <%= node['tomcatstack']['cloud_monitoring']['remote_http']['timeout'] %>
+disabled: <%= node['lampstack']['cloud_monitoring']['remote_http']['disabled'] %>
+period: <%= node['lampstack']['cloud_monitoring']['remote_http']['period'] %>
+timeout: <%= node['lampstack']['cloud_monitoring']['remote_http']['timeout'] %>
 target_hostname: <%= node['cloud']['public_ipv4'] %>
 monitoring_zones_poll:
   - mzdfw
@@ -18,7 +18,7 @@ details:
   method: GET
   body: MySQL Service OK
   url: http://<%= "#{node['cloud']['public_ipv4']}:#{@apache_port}" %>
-<% if node['tomcatstack']['cloud_monitoring']['remote_http']['alarm'] == true %>
+<% if node['lampstack']['cloud_monitoring']['remote_http']['alarm'] == true %>
 alarms:
   http-check:
     label: Remote HTTP check on <%= "#{node['cloud']['public_ipv4']} port #{@apache_port} for #{@server_name}" %>
