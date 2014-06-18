@@ -18,32 +18,7 @@
 # limitations under the License.
 #
 
-include_recipe 'chef-sugar::default'
-include_recipe 'platformstack::monitors'
-include_recipe 'database::mysql'
-::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
-
-# determine best IP for bind_address in MySQL
-if node.attribute?('cloud')
-  bindip = node['cloud']['local_ipv4']
-else
-  bindip = node['ipaddress']
-end
-
-# Unique serverid via ipaddress to an int
-require 'ipaddr'
-serverid = IPAddr.new node['ipaddress']
-serverid = serverid.to_i
-
-# run apt-get update to clear cache issues
-include_recipe 'apt' if node.platform_family?('debian')
-
-include_recipe 'mysql::server'
-
-directory '/etc/mysql/conf.d' do
-  action :create
-  recursive true
-end
+include_recipe 'lampstack::mysql_base'
 
 template '/etc/mysql/conf.d/master.cnf' do
   source 'mysql/master.cnf.erb'
@@ -52,100 +27,23 @@ template '/etc/mysql/conf.d/master.cnf' do
   )
 end
 
-template '/etc/mysql/conf.d/my.cnf' do
-  source 'mysql/my.cnf.erb'
-  variables(
-    serverid: serverid,
-    cookbook_name: cookbook_name,
-    bind_address: bindip
-  )
-  notifies :restart, 'service[mysql]', :delayed
-end
-
-# Grant replication on slave
-node['mysql']['slaves'].each do |slave|
-
-  execute 'grant-slave' do
-    command <<-EOH
-    /usr/bin/mysql -u root -p#{node['mysql']['server_root_password']} < /root/grant-slaves.sql
-    rm -f /root/grant-slaves.sql
-    EOH
-    action :nothing
-  end
-
-  template '/root/grant-slaves.sql' do
-    path '/root/grant-slaves.sql'
-    source 'mysql/grant.slave.erb'
-    owner 'root'
-    group 'root'
-    mode '0600'
-    variables(
-      user: node['mysql']['slave_user'],
-      password: node['mysql']['server_repl_password'],
-      host: slave
-    )
-    notifies :run, 'execute[grant-slave]', :immediately
-  end
-end
-
-# add holland user
-if node.deep_fetch('holland', 'enabled')
-  execute 'grant-holland' do
-    command <<-EOH
-    /usr/bin/mysql -u root -p#{node['mysql']['server_root_password']} < /root/grant-holland.sql
-    rm -f /root/grant-holland.sql
-    EOH
-    action :nothing
-  end
-  template '/root/grant-holland.sql' do
-    path '/root/grant-holland.sql'
-    source 'mysql/grant.holland.erb'
-    owner 'root'
-    group 'root'
-    mode '0600'
-    variables(
-      user: 'holland',
-      password: node['holland']['password'],
-      host: '%'
-    )
-    notifies :run, 'execute[grant-holland]', :immediately
-  end
-end
-
-# add /root/.my.cnf file to system
-template '/root/.my.cnf' do
-  source 'mysql/user.my.cnf.erb'
-  owner 'root'
-  group 'root'
-  mode '0600'
-  variables(
-    user: 'root',
-    pass: node['mysql']['server_root_password']
-  )
-end
-
-case node['platform_family']
-when 'rhel'
-  service 'mysql' do
-    service_name 'mysqld'
-    supports status: true, restart: true, reload: true
-    action [:enable, :start]
-  end
-when 'debian'
-  service 'mysql' do
-    service_name 'mysql'
-    supports status: true, restart: true, reload: true
-    action [:enable, :start]
-  end
-end
-
-node.set_unless['lampstack']['cloud_monitoring']['agent_mysql']['password'] = secure_password
-
-mysql_connection_info = {
-  host:     'localhost',
+connection_info = {
+  host: 'localhost',
   username: 'root',
   password: node['mysql']['server_root_password']
 }
+
+# Grant replication on slave
+node['mysql']['slaves'].each do |slave|
+  mysql_database_user 'replicant' do
+    connection connection_info
+    password node['mysql']['server_repl_password']
+    host slave
+    privileges [:'replication slave', :usage]
+    action [:create, :grant]
+    retries 2
+  end
+end
 
 mysql_database_user node['lampstack']['cloud_monitoring']['agent_mysql']['user'] do
   connection mysql_connection_info
@@ -153,14 +51,15 @@ mysql_database_user node['lampstack']['cloud_monitoring']['agent_mysql']['user']
   action 'create'
 end
 
-template 'mysql-monitor' do
-  cookbook 'lampstack'
-  source 'monitoring-agent-mysql.yaml.erb'
-  path '/etc/rackspace-monitoring-agent.conf.d/agent-mysql-monitor.yaml'
-  owner 'root'
-  group 'root'
-  mode '00600'
-  notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
-  action 'create'
-  only_if node['platformstack']['cloud_monitoring']['enabled'] == true
+if node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled')
+  template 'mysql-monitor' do
+    cookbook 'lampstack'
+    source 'monitoring-agent-mysql.yaml.erb'
+    path '/etc/rackspace-monitoring-agent.conf.d/agent-mysql-monitor.yaml'
+    owner 'root'
+    group 'root'
+    mode '00600'
+    notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
+    action 'create'
+  end
 end

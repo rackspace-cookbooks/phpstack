@@ -18,42 +18,13 @@
 # limitations under the License.
 #
 
-if node.attribute?('cloud')
-  bindip = node['cloud']['local_ipv4']
-else
-  bindip = node['ipaddress']
-end
-
-# Unique serverid via ipaddress to an int
-require 'ipaddr'
-serverid = IPAddr.new node['ipaddress']
-serverid = serverid.to_i
-
-# run apt-get update to clear cache issues
-include_recipe 'apt' if node.platform_family?('debian')
-
-include_recipe 'mysql::server'
-
-directory '/etc/mysql/conf.d' do
-  action :create
-  recursive true
-end
+include_recipe 'lampstack::mysql_base'
 
 template '/etc/mysql/conf.d/mysql_slave.cnf' do
   source 'mysql/slave.cnf.erb'
   variables(
     cookbook_name: cookbook_name
   )
-end
-
-template '/etc/mysql/conf.d/my.cnf' do
-  source 'mysql/my.cnf.erb'
-  variables(
-    serverid: serverid,
-    cookbook_name: cookbook_name,
-    bind_address: bindip
-  )
-  notifies :restart, 'service[mysql]', :delayed
 end
 
 # Connect slave to master
@@ -77,31 +48,4 @@ template '/root/change.master.sql' do
     password: node['mysql']['server_repl_password']
   )
   notifies :run, 'execute[change master]', :immediately
-end
-
-# add /root/.my.cnf file to system
-template '/root/.my.cnf' do
-  source 'mysql/user.my.cnf.erb'
-  owner 'root'
-  group 'root'
-  mode '0600'
-  variables(
-    user: 'root',
-    pass: node['mysql']['server_root_password']
-  )
-end
-
-case node['platform_family']
-when 'rhel'
-  service 'mysql' do
-    service_name 'mysqld'
-    supports status: true, restart: true, reload: true
-    action [:enable, :start]
-  end
-when 'debian'
-  service 'mysql' do
-    service_name 'mysql'
-    supports status: true, restart: true, reload: true
-    action [:enable, :start]
-  end
 end
