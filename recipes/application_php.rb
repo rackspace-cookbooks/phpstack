@@ -28,6 +28,7 @@ include_recipe 'php'
 include_recipe 'php::ini'
 include_recipe 'lampstack::apache'
 include_recipe 'lampstack::php_fpm'
+include_recipe 'chef-sugar'
 
 node['apache']['sites'].each do | site_name |
   site_name = site_name[0]
@@ -52,7 +53,7 @@ template 'lampstack.ini' do
   mode '00640'
   variables(
     cookbook_name: cookbook_name,
-    mysql_password: mysql_node['lampstack']['app_password'] || nil
+    mysql_password: mysql_node.deep_fetch('lampstack', 'app_password').nil? == true  ? nil : mysql_node['lampstack']['app_password']
   )
   action 'create'
 end
