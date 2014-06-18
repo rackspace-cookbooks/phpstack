@@ -45,12 +45,6 @@ node['mysql']['slaves'].each do |slave|
   end
 end
 
-mysql_database_user node['lampstack']['cloud_monitoring']['agent_mysql']['user'] do
-  connection mysql_connection_info
-  password node['lampstack']['cloud_monitoring']['agent_mysql']['password']
-  action 'create'
-end
-
 if node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled')
   template 'mysql-monitor' do
     cookbook 'lampstack'
