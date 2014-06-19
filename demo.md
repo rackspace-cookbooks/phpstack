@@ -1,4 +1,4 @@
-# Build Cloud Servers
+## Build Cloud Servers
     nova boot lampstack-web-1 --poll --image "ffa476b1-9b14-46bd-99a8-862d1d94eb7a" \
     --flavor "performance1-1" --key-name my-ssh-key
     nova boot lampstack-web-2 --poll --image "ffa476b1-9b14-46bd-99a8-862d1d94eb7a" \
@@ -9,12 +9,12 @@
     nova boot lampstack-mysql-slave --poll --image "ffa476b1-9b14-46bd-99a8-862d1d94eb7a" \
     --flavor "performance1-1" --key-name my-ssh-key
 
-## check what the private IPs are for the mysql master and slave, we will need them soon.
+#### check what the private IPs are for the mysql master and slave, we will need them soon.
 
     nova show lampstack-mysql-master | grep private\ network | awk '{print $5}'
     nova show lampstack-mysql-slave | grep private\ network | awk '{print $5}'
 
-# Edit the Environment
+## Edit the Environment
 
     "default_attributes": {
       "mysql": {
@@ -31,9 +31,9 @@
       }
     }
 
-# Create the Roles
+## Create the Roles
 
-## php app node
+### php app node
 
     knife role edit lampstack-app
     
@@ -44,7 +44,7 @@
       "recipe[lampstack::demo]"
     ],
 
-## mysql master
+### mysql master
 
     knife role edit lampstack-mysql-master
     
@@ -55,7 +55,7 @@
       "recipe[lampstack::demo]"
     ],
 
-## mysql slave
+### mysql slave
 
     knife role edit lampstack-mysql-slave
     
@@ -66,7 +66,7 @@
       "recipe[lampstack::demo]"
     ],
 
-# Bootstrap the nodes
+## Bootstrap the nodes
 
     knife bootstrap 0.0.0.0 -N lampstack-app-1 -x root -r 'role[lampstack-app]' -E test
     knife bootstrap 0.0.0.0 -N lampstack-app-2 -x root -r 'role[lampstack-app]' -E test
