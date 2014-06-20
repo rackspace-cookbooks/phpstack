@@ -1,7 +1,7 @@
 
-default['mysql']['master'] = ''
-default['mysql']['slaves'] = []
-default['mysql']['slave_user'] = 'replicant'
+default['mysql-multi']['master'] = ''
+default['mysql-multi']['slaves'] = []
+default['mysql-multi']['slave_user'] = 'replicant'
 
 default['lampstack']['app_db_name'] = 'exampledb'
 default['lampstack']['app_user'] = 'foobar'

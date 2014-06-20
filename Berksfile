@@ -8,6 +8,7 @@ cookbook 'rackspace_cloudbackup', git: 'git@github.com:rackspace-cookbooks/racks
 cookbook 'rackspace_gluster', git: 'git@github.com:rackspace-cookbooks/rackspace_gluster.git'
 cookbook 'rackops_rolebook', git: 'git@github.com:rackops/rackops_rolebook.git'
 cookbook 'cron', git: 'git@github.com:rackspace-cookbooks/cron.git'
+cookbook 'mysql-multi', git: 'git@github.com:rackspace-cookbooks/mysql-multi.git'
 
 group :integration do
 #  cookbook 'lampstack_test_app', path: 'test/fixtures/cookbooks/lampstack_test_app'

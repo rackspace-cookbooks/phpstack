@@ -4,7 +4,7 @@
 # Controlling Cookbook: <%=  @cookbook_name %>
 #
 [Database]
-host = <%= node['mysql']['master'] %>
+host = <%= node['mysql-multi']['master'] %>
 username = <%= node['lampstack']['app_user'] %>
 password = <%= @mysql_password %>
 db_name = <%= node['lampstack']['app_db_name'] %>

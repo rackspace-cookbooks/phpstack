@@ -20,30 +20,7 @@
 
 include_recipe 'lampstack::mysql_base'
 
-template '/etc/mysql/conf.d/master.cnf' do
-  source 'mysql/master.cnf.erb'
-  variables(
-    cookbook_name: cookbook_name
-  )
-end
-
-connection_info = {
-  host: 'localhost',
-  username: 'root',
-  password: node['mysql']['server_root_password']
-}
-
-# Grant replication on slave
-node['mysql']['slaves'].each do |slave|
-  mysql_database_user 'replicant' do
-    connection connection_info
-    password node['mysql']['server_repl_password']
-    host slave
-    privileges [:'replication slave', :usage]
-    action [:create, :grant]
-    retries 2
-  end
-end
+include_recipe 'mysql-multi::mysql_master'
 
 if node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled')
   template 'mysql-monitor' do
