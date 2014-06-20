@@ -7,7 +7,7 @@ license 'Apache 2.0'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 description 'Provides a full lamp stack'
 
-version '0.0.2'
+version '0.0.3'
 
 depends 'apt'
 depends 'mysql'
@@ -30,3 +30,4 @@ depends 'application'
 depends 'git'
 depends 'php'
 depends 'php-fpm'
+depends 'mysql-multi'

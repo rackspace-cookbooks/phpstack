@@ -27,33 +27,7 @@ include_recipe 'platformstack::monitors'
 
 include_recipe 'mysql::server'
 
-# determine best IP for bind_address in MySQL
-if node.attribute?('cloud')
-  bindip = node['cloud']['local_ipv4']
-else
-  bindip = node['ipaddress']
-end
-
-# Unique serverid via ipaddress to an int
-require 'ipaddr'
-serverid = IPAddr.new node['ipaddress']
-serverid = serverid.to_i
-
-directory '/etc/mysql/conf.d' do
-  action :create
-  recursive true
-end
-
-template '/etc/mysql/conf.d/my.cnf' do
-  cookbook 'lampstack'
-  source 'mysql/my.cnf.erb'
-  variables(
-    serverid: serverid,
-    cookbook_name: cookbook_name,
-    bind_address: bindip
-  )
-  notifies :restart, 'service[mysql]', :delayed
-end
+include_recipe 'mysql-multi::mysql_base'
 
 connection_info = {
   host: 'localhost',
@@ -92,33 +66,6 @@ if node['platformstack']['cloud_monitoring']['enabled'] == true
     mode '00600'
     notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
     action 'create'
-  end
-end
-
-# add /root/.my.cnf file to system
-template '/root/.my.cnf' do
-  source 'mysql/user.my.cnf.erb'
-  owner 'root'
-  group 'root'
-  mode '0600'
-  variables(
-    user: 'root',
-    pass: node['mysql']['server_root_password']
-  )
-end
-
-case node['platform_family']
-when 'rhel'
-  service 'mysql' do
-    service_name 'mysqld'
-    supports status: true, restart: true, reload: true
-    action [:enable, :start]
-  end
-when 'debian'
-  service 'mysql' do
-    service_name 'mysql'
-    supports status: true, restart: true, reload: true
-    action [:enable, :start]
   end
 end
 

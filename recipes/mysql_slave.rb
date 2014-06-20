@@ -20,32 +20,4 @@
 
 include_recipe 'lampstack::mysql_base'
 
-template '/etc/mysql/conf.d/mysql_slave.cnf' do
-  source 'mysql/slave.cnf.erb'
-  variables(
-    cookbook_name: cookbook_name
-  )
-end
-
-# Connect slave to master
-execute 'change master' do
-  command <<-EOH
-/usr/bin/mysql -u root -p#{node['mysql']['server_root_password']} < /root/change.master.sql
-rm -f /root/change.master.sql
-EOH
-  action :nothing
-end
-
-template '/root/change.master.sql' do
-  path '/root/change.master.sql'
-  source 'mysql/change.master.erb'
-  owner 'root'
-  group 'root'
-  mode '0600'
-  variables(
-    host: node['mysql']['master'],
-    user: node['mysql']['slave_user'],
-    password: node['mysql']['server_repl_password']
-  )
-  notifies :run, 'execute[change master]', :immediately
-end
+include_recipe 'mysql-multi::mysql_slave'
