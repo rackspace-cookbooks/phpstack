@@ -23,7 +23,14 @@ include_recipe 'chef-sugar'
 cluster = node['rackspace_gluster']['config']['server']['glusters'].values[0]
 
 # set the replica count to the number of gluster nodes
-node.default['rackspace_gluster']['config']['server']['glusters'].values[0]['replica'] = cluster['nodes'].values.count
+if cluster['nodes'].values.count == 2
+  replica_count = 2
+elsif cluster['nodes'].values.count >= 3
+  replica_count = 3
+else
+  Chef::Application.fatal!('gluster node count is not 2 or greater', 1)
+end
+node.default['rackspace_gluster']['config']['server']['glusters'].values[0]['replica'] = replica_count
 # node.default['rackspace_gluster']['config']['server']['glusters']['Gluster Cluster 1']['replica'] = cluster['nodes'].values.count
 
 # allow application_php nodes to connect
