@@ -1,3 +1,7 @@
+## Notes
+
+If using the gluster recipe you must fill the `['rackspace_gluster']['config']['server']['glusters']['Gluster Cluster 1']['nodes']` hash with your gluster Nodes IPs, check the commented out section of attributes/gluster.rb
+
 ## Build Cloud Servers
     nova boot lampstack-web-1 --poll --image "ffa476b1-9b14-46bd-99a8-862d1d94eb7a" \
     --flavor "performance1-1" --key-name my-ssh-key
