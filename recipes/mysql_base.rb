@@ -37,17 +37,17 @@ connection_info = {
 }
 
 # add holland user (if holland is enabled)
-if node.deep_fetch('holland', 'enabled')
-  mysql_database_user 'holland' do
-    connection connection_info
-    password ['holland']['password']
-    host 'localhost'
-    privileges [:usage, :select, :'lock tables', :'show view', :reload, :super, :'replication client']
-    retries 2
-    retry_delay 2
-    action [:create, :grant]
-  end
+mysql_database_user 'holland' do
+  connection connection_info
+  password ['holland']['password']
+  host 'localhost'
+  privileges [:usage, :select, :'lock tables', :'show view', :reload, :super, :'replication client']
+  retries 2
+  retry_delay 2
+  action [:create, :grant]
+  only_if { node.deep_fetch('holland', 'enabled') }
 end
+
 
 node.set_unless['phpstack']['cloud_monitoring']['agent_mysql']['password'] = secure_password
 

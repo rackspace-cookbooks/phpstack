@@ -44,7 +44,12 @@ node['apache']['sites'].each do | site_name |
   end
 end
 
-mysql_node = search(:node, 'recipes:phpstack\:\:mysql_master' << " AND chef_environment:#{node.chef_environment}").first
+if Chef::Config[:solo]
+  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+end
+
+mysql_node = search(:node, 'recipes:phpstack\:\:mysql_master'\
+                           " AND chef_environment:#{node.chef_environment}").first
 template 'phpstack.ini' do
   path '/etc/phpstack.ini'
   cookbook node['phpstack']['ini']['cookbook']
