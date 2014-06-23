@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: lampstack
+# Cookbook Name:: phpstack
 # Recipe:: gluster
 #
 # Copyright 2014, Rackspace Hosting
@@ -17,13 +17,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-case node['lampstack']['database']['engine']
+case node['phpstack']['database']['engine']
 when 'mysql'
-  run_recipes = %w( lampstack::mysql_base )
+  run_recipes = %w( phpstack::mysql_base )
 when 'mongodb'
-  run_recipes = %w( lampstack::mongodb_standalone )
+  run_recipes = %w( phpstack::mongodb_standalone )
 when 'postgresql'
-  run_recipes = %w( lampstack::postgresql_standalone )
+  run_recipes = %w( phpstack::postgresql_standalone )
 end
 
 run_recipes.each do |recipe|
