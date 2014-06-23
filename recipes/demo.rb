@@ -61,11 +61,11 @@ if includes_recipe?('phpstack::application_php')
   node.default['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] = 'mattthode@rackspace.com'
   node.set['rackspace_cloudbackup']['backups'] =
     [
-      { location: "/var/www",
-        comment:  "Web Content Backup",
-        cloud: { notify_email: "matt.thode@rackspace.com" }
+      { location: '/var/www',
+        comment:  'Web Content Backup',
+        cloud: { notify_email: 'example@example.com' }
       },
-      { location: "/etc",
+      { location: '/etc',
         time: {
           day:     1,
           month:   '*',
@@ -73,7 +73,7 @@ if includes_recipe?('phpstack::application_php')
           minute:  0,
           weekday: '*'
         },
-        cloud: { notify_email: "matt.thode@rackspace.com" }
+        cloud: { notify_email: 'example@example.com' }
       },
   ]
 end
