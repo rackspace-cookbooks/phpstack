@@ -1,3 +1,4 @@
+# Encoding: utf-8
 #
 # Cookbook Name:: phpstack
 # Recipe:: mysql_base
@@ -69,5 +70,5 @@ if node['platformstack']['cloud_monitoring']['enabled'] == true
   end
 end
 
-#allow the app nodes to connect
+# allow the app nodes to connect
 search_add_iptables_rules('recipes:phpstack\:\:application_php' << " AND chef_environment:#{node.chef_environment}", 'INPUT', '-p tcp --dport 3306 -j ACCEPT', 9998, 'allow app nodes to connect')

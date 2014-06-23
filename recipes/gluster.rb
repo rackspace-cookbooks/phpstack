@@ -37,12 +37,16 @@ node.default['rackspace_gluster']['config']['server']['glusters'].values[0]['rep
 search_add_iptables_rules('recipe:phpstack\:\:application_php', 'INPUT', '-j ACCEPT', 70, 'web nodes access to gluster')
 
 # dynamically generate the authorized clients
-gluster_servers = search('node', 'recipe:phpstack\:\:gluster')
-gluster_ips = ['127.0.0.1']
-gluster_servers.each do |gluster_server|
-  gluster_ips.push best_ip_for(gluster_ips)
+if Chef::Config[:solo]
+  Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+else
+  gluster_servers = search('node', 'recipe:phpstack\:\:gluster')
+  gluster_ips = ['127.0.0.1']
+  gluster_servers.each do |gluster_server|
+    gluster_ips.push best_ip_for(gluster_server)
+  end
+  node.default['rackspace_gluster']['config']['server']['glusters']['Gluster Cluster 1']['auth_clients'] = gluster_ips.join(',')
 end
-node.default['rackspace_gluster']['config']['server']['glusters']['Gluster Cluster 1']['auth_clients'] = gluster_ips.join(',')
 
 # allow the gluster nodes to connect to eachother
 cluster['nodes'].values.each do |gluster_node|

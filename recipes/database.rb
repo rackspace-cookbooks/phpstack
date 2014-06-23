@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: phpstack
-# Recipe:: mongodb_standalone
+# Recipe:: gluster
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -16,7 +16,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-include_recipe 'mongodb::10gen_repo'
-include_recipe 'mongodb::default'
+case node['phpstack']['database']['engine']
+when 'mysql'
+  run_recipes = %w( phpstack::mysql_base )
+when 'mongodb'
+  run_recipes = %w( phpstack::mongodb_standalone )
+when 'postgresql'
+  run_recipes = %w( phpstack::postgresql_standalone )
+end
+
+run_recipes.each do |recipe|
+  include_recipe recipe
+end

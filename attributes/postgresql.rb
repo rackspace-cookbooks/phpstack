@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: phpstack
-# Recipe:: mongodb_standalone
+# Recipe:: postgresql
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -16,7 +16,5 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-include_recipe 'mongodb::10gen_repo'
-include_recipe 'mongodb::default'
+default['postgresql']['password']['postgres'] = 'randompasswordforpostgresql'
