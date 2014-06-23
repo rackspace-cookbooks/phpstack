@@ -19,4 +19,4 @@
 
 # Options = mysql/mongodb/postgresql
 
-default['lampstack']['database']['engine'] = 'mysql'
+default['phpstack']['database']['engine'] = 'mysql'
