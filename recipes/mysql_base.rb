@@ -48,7 +48,6 @@ mysql_database_user 'holland' do
   only_if { node.deep_fetch('holland', 'enabled') }
 end
 
-
 node.set_unless['phpstack']['cloud_monitoring']['agent_mysql']['password'] = secure_password
 
 mysql_database_user node['phpstack']['cloud_monitoring']['agent_mysql']['user'] do
