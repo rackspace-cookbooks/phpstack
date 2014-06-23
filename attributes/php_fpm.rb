@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: lampstack
+# Cookbook Name:: phpstack
 # Recipe:: php-fpm
 #
 # Copyright 2014, Rackspace Hosting

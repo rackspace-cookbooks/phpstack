@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: lampstack
+# Cookbook Name:: phpstack
 # Recipe:: gluster
 #
 # Copyright 2014, Rackspace Hosting
@@ -34,10 +34,10 @@ node.default['rackspace_gluster']['config']['server']['glusters'].values[0]['rep
 # node.default['rackspace_gluster']['config']['server']['glusters']['Gluster Cluster 1']['replica'] = cluster['nodes'].values.count
 
 # allow application_php nodes to connect
-search_add_iptables_rules('recipe:lampstack\:\:application_php', 'INPUT', '-j ACCEPT', 70, 'web nodes access to gluster')
+search_add_iptables_rules('recipe:phpstack\:\:application_php', 'INPUT', '-j ACCEPT', 70, 'web nodes access to gluster')
 
 # dynamically generate the authorized clients
-gluster_servers = search('node', 'recipe:lampstack\:\:gluster')
+gluster_servers = search('node', 'recipe:phpstack\:\:gluster')
 gluster_ips = ['127.0.0.1']
 gluster_servers.each do |gluster_server|
   gluster_ips.push best_ip_for(gluster_ips)

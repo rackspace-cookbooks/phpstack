@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: lampstack
+# Cookbook Name:: phpstack
 # Recipe:: apache
 #
 # Copyright 2014, Rackspace Hosting
@@ -22,7 +22,7 @@ site1 = 'example.com'
 version1 = '0.0.6'
 
 node.default['apache']['sites'][site1]['port']         = 80
-node.default['apache']['sites'][site1]['cookbook']     = 'lampstack'
+node.default['apache']['sites'][site1]['cookbook']     = 'phpstack'
 node.default['apache']['sites'][site1]['template']     = "apache2/sites/#{site1}.erb"
 node.default['apache']['sites'][site1]['server_name']  = site1
 node.default['apache']['sites'][site1]['server_alias'] = ["test.#{site1}", "www.#{site1}"]

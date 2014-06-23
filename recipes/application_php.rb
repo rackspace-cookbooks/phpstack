@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: lampstack
+# Cookbook Name:: phpstack
 # Recipe:: application_php
 #
 # Copyright 2014, Rackspace Hosting
@@ -20,15 +20,15 @@
 
 include_recipe 'git'
 if platform_family?('rhel')
-  include_recipe 'lampstack::yum'
+  include_recipe 'phpstack::yum'
 elsif platform_family?('debian')
-  include_recipe 'lampstack::apt'
+  include_recipe 'phpstack::apt'
 end
 include_recipe 'php'
 include_recipe 'php::ini'
 include_recipe 'php::module_mysql'
-include_recipe 'lampstack::apache'
-include_recipe 'lampstack::php_fpm'
+include_recipe 'phpstack::apache'
+include_recipe 'phpstack::php_fpm'
 include_recipe 'chef-sugar'
 
 node['apache']['sites'].each do | site_name |
@@ -44,18 +44,18 @@ node['apache']['sites'].each do | site_name |
   end
 end
 
-mysql_node = search(:node, 'recipes:lampstack\:\:mysql_master' << " AND chef_environment:#{node.chef_environment}").first
-template 'lampstack.ini' do
-  path '/etc/lampstack.ini'
-  cookbook node['lampstack']['ini']['cookbook']
-  source 'lampstack.ini.erb'
+mysql_node = search(:node, 'recipes:phpstack\:\:mysql_master' << " AND chef_environment:#{node.chef_environment}").first
+template 'phpstack.ini' do
+  path '/etc/phpstack.ini'
+  cookbook node['phpstack']['ini']['cookbook']
+  source 'phpstack.ini.erb'
   owner 'root'
   group node['apache']['group']
   mode '00640'
   variables(
     cookbook_name: cookbook_name,
     mysql_password: if mysql_node.respond_to?('deep_fetch')
-                      mysql_node.deep_fetch('lampstack', 'app_password').nil? == true  ? nil : mysql_node['lampstack']['app_password']
+                      mysql_node.deep_fetch('phpstack', 'app_password').nil? == true  ? nil : mysql_node['phpstack']['app_password']
     else
       nil
     end

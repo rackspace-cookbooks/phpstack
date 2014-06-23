@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: lampstack
+# Cookbook Name:: phpstack
 # Recipe:: apache
 #
 # Copyright 2014, Rackspace Hosting
@@ -44,7 +44,7 @@ node['apache']['sites'].each do | site_name |
   end
   if node['platformstack']['cloud_monitoring']['enabled'] == true
     template "http-monitor-#{site['server_name']}" do
-      cookbook 'lampstack'
+      cookbook 'phpstack'
       source 'monitoring-remote-http.yaml.erb'
       path "/etc/rackspace-monitoring-agent.conf.d/#{site['server_name']}-http-monitor.yaml"
       owner 'root'

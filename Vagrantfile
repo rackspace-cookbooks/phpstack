@@ -37,9 +37,9 @@ Vagrant.configure("2") do |config|
     }
 
     chef.run_list = [
-      "recipe[lampstack::mysql_master]",
-      "recipe[lampstack::apache]",
-      "recipe[lampstack::app]"
+      "recipe[phpstack::mysql_master]",
+      "recipe[phpstack::apache]",
+      "recipe[phpstack::app]"
     ]
   end
 end

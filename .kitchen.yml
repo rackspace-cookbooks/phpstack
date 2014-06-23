@@ -29,14 +29,9 @@ platforms:
     - recipe[yum]
 
 suites:
-  - name: default
-    run_list:
-      - recipe[lampstack_test_app::default]
-      - recipe[lampstack_test_app::app]
-
   - name: mysql-base
     run_list:
-      - recipe[lampstack::mysql_base]
+      - recipe[phpstack::mysql_base]
     attributes:
       mysql:
         server_root_password: "randompass"
@@ -45,7 +40,7 @@ suites:
 
   - name: mysql-master
     run_list:
-      - recipe[lampstack::mysql_master]
+      - recipe[phpstack::mysql_master]
     attributes:
       mysql:
         server_root_password: "randompass"
@@ -56,7 +51,7 @@ suites:
 
   - name: mysql-slave
     run_list:
-      - recipe[lampstack::mysql_slave]
+      - recipe[phpstack::mysql_slave]
     attributes:
       mysql:
         server_root_password: "randompass"
@@ -66,8 +61,8 @@ suites:
         password: "randompass"
   - name: application_php
     run_list:
-      - recipe[lampstack::application_php]
-      - recipe[lampstack::mysql_standalone]
+      - recipe[phpstack::application_php]
+      - recipe[phpstack::mysql_standalone]
     attributes:
       mysql:
         server_root_password: "randompass"

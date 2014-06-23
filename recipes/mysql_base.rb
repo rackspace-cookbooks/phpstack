@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: lampstack
+# Cookbook Name:: phpstack
 # Recipe:: mysql_base
 #
 # Copyright 2014, Rackspace Hosting
@@ -48,17 +48,17 @@ if node.deep_fetch('holland', 'enabled')
   end
 end
 
-node.set_unless['lampstack']['cloud_monitoring']['agent_mysql']['password'] = secure_password
+node.set_unless['phpstack']['cloud_monitoring']['agent_mysql']['password'] = secure_password
 
-mysql_database_user node['lampstack']['cloud_monitoring']['agent_mysql']['user'] do
+mysql_database_user node['phpstack']['cloud_monitoring']['agent_mysql']['user'] do
   connection connection_info
-  password node['lampstack']['cloud_monitoring']['agent_mysql']['password']
+  password node['phpstack']['cloud_monitoring']['agent_mysql']['password']
   action 'create'
 end
 
 if node['platformstack']['cloud_monitoring']['enabled'] == true
   template 'mysql-monitor' do
-    cookbook 'lampstack'
+    cookbook 'phpstack'
     source 'monitoring-agent-mysql.yaml.erb'
     path '/etc/rackspace-monitoring-agent.conf.d/agent-mysql-monitor.yaml'
     owner 'root'
@@ -70,4 +70,4 @@ if node['platformstack']['cloud_monitoring']['enabled'] == true
 end
 
 #allow the app nodes to connect
-search_add_iptables_rules('recipes:lampstack\:\:application_php' << " AND chef_environment:#{node.chef_environment}", 'INPUT', '-p tcp --dport 3306 -j ACCEPT', 9998, 'allow app nodes to connect')
+search_add_iptables_rules('recipes:phpstack\:\:application_php' << " AND chef_environment:#{node.chef_environment}", 'INPUT', '-p tcp --dport 3306 -j ACCEPT', 9998, 'allow app nodes to connect')
