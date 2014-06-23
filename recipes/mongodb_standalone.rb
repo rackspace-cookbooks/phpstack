@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: phpstack
-# Recipe:: mysql_standalone
+# Recipe:: mongodb_standalone
 #
 # Copyright 2014, Rackspace Hosting
 #

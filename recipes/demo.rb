@@ -1,3 +1,4 @@
+# Encoding: utf-8
 #
 # Cookbook Name:: phpstack
 # Recipe:: demo
@@ -20,7 +21,7 @@
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
 include_recipe 'chef-sugar'
 
-#the chef-sugar functions allow us to be first in the runlist if we want
+# the chef-sugar functions allow us to be first in the runlist if we want
 if includes_recipe?('phpstack::mysql_master')
   include_recipe 'phpstack::mysql_master'
   connection_info = {
