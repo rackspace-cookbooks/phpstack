@@ -31,6 +31,33 @@ include_recipe 'phpstack::apache'
 include_recipe 'phpstack::php_fpm'
 include_recipe 'chef-sugar'
 
+# if gluster is in our environment, install the utils and mount it to /var/www
+if node.deep_fetch['rackspace_gluster']['config']['server']['glusters']
+  if Chef::Config[:solo]
+    Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+  else
+    # get the list of gluster servers and pick one randomly to use as the one we connect to
+    gluster_ips = []
+    node.deep_fetch['rackspace_gluster']['config']['server']['glusters'].values[0]['nodes'].each do |server|
+      gluster_ips.push(server[1]['ip'])
+    end
+    node.set_unless['phpstack']['gluster_connect_ip'] = gluster_ips.sample
+
+    # install gluster mount
+    package 'glusterfs-client' do
+      action :install
+    end
+
+    # set up the mountpoint
+    mount 'webapp-mountpoint' do
+      fstype 'glusterfs'
+      device "#{node['phpstack']['gluster_connect_ip']}:/#{node['rackspace_gluster']['config']['server']['glusters'].values[0]['volume']}"
+      mount_point '/var/www/'
+      action ['mount', 'enable']
+    end
+  end
+end
+
 node['apache']['sites'].each do | site_name |
   site_name = site_name[0]
 
