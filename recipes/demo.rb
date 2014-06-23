@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: lampstack
+# Cookbook Name:: phpstack
 # Recipe:: demo
 #
 # Copyright 2014, Rackspace Hosting
@@ -21,28 +21,28 @@
 include_recipe 'chef-sugar'
 
 #the chef-sugar functions allow us to be first in the runlist if we want
-if includes_recipe?('lampstack::mysql_master')
-  include_recipe 'lampstack::mysql_master'
+if includes_recipe?('phpstack::mysql_master')
+  include_recipe 'phpstack::mysql_master'
   connection_info = {
     host: 'localhost',
     username: 'root',
     password: node['mysql']['server_root_password']
   }
 
-  mysql_database node['lampstack']['app_db_name'] do
+  mysql_database node['phpstack']['app_db_name'] do
     connection connection_info
     action 'create'
   end
 
-  node.set_unless['lampstack']['app_password'] = secure_password
+  node.set_unless['phpstack']['app_password'] = secure_password
 
-  app_nodes = search(:node, 'recipes:lampstack\:\:application_php' << " AND chef_environment:#{node.chef_environment}")
+  app_nodes = search(:node, 'recipes:phpstack\:\:application_php' << " AND chef_environment:#{node.chef_environment}")
   app_nodes.each do |app_node|
-    mysql_database_user  node['lampstack']['app_user'] do
+    mysql_database_user  node['phpstack']['app_user'] do
       connection connection_info
-      password node['lampstack']['app_password']
+      password node['phpstack']['app_password']
       host "#{app_node['cloud']['local_ipv4']}"
-      database_name node['lampstack']['app_db_name']
+      database_name node['phpstack']['app_db_name']
       privileges ['select', 'update', 'insert']
       retries 2
       retry_delay 2
@@ -51,7 +51,7 @@ if includes_recipe?('lampstack::mysql_master')
   end
 end
 
-if includes_recipe?('lampstack::application_php')
+if includes_recipe?('phpstack::application_php')
   node.default['rackspace']['datacenter'] = 'dfw'
   node.default['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] = 'mattthode@rackspace.com'
   node.set['rackspace_cloudbackup']['backups'] =

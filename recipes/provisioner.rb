@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: lampstack
+# Cookbook Name:: phpstack
 # Recipe:: provisioner
 #
 # Copyright 2014, Rackspace Hosting
@@ -70,19 +70,19 @@ with_chef_server Chef::Config[:chef_server_url],
 
 machine 'database' do
   recipe 'apt'
-  recipe 'lampstack::mysql_standalone'
+  recipe 'phpstack::mysql_standalone'
   notifies 'create', 'machine[lamp]', 'immediately'
 end
 
 machine 'lamp' do
   recipe 'apt'
-  recipe 'lampstack::lamp'
+  recipe 'phpstack::lamp'
   action 'nothing'
   notifies 'create', 'machine[web]', 'immediately'
 end
 
 machine 'web' do
   recipe 'apt'
-  recipe 'lampstack::apache'
+  recipe 'phpstack::apache'
   action 'nothing'
 end

@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: lampstack
+# Cookbook Name:: phpstack
 # Recipe:: mysql_holland
 #
 # Copyright 2014, Rackspace Hosting
@@ -46,7 +46,7 @@ end
 end
 
 # determine if server is slave or standalone and drop specific backupset file
-if node.run_context.loaded_recipe?('lampstack::mysql_slave')
+if node.run_context.loaded_recipe?('phpstack::mysql_slave')
   template '/etc/holland/backupsets/default.conf' do
     source 'mysql/backup_sets.slave.erb'
     owner 'root'

@@ -5,6 +5,6 @@
 #
 [Database]
 host = <%= node['mysql-multi']['master'] %>
-username = <%= node['lampstack']['app_user'] %>
+username = <%= node['phpstack']['app_user'] %>
 password = <%= @mysql_password %>
-db_name = <%= node['lampstack']['app_db_name'] %>
+db_name = <%= node['phpstack']['app_db_name'] %>

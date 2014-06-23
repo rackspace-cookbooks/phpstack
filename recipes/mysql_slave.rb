@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: lampstack
+# Cookbook Name:: phpstack
 # Recipe:: mysql_slave
 #
 # Copyright 2014, Rackspace Hosting
@@ -18,6 +18,6 @@
 # limitations under the License.
 #
 
-include_recipe 'lampstack::mysql_base'
+include_recipe 'phpstack::mysql_base'
 
 include_recipe 'mysql-multi::mysql_slave'

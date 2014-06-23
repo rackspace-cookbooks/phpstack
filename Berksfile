@@ -11,7 +11,7 @@ cookbook 'cron', git: 'git@github.com:rackspace-cookbooks/cron.git'
 cookbook 'mysql-multi', git: 'git@github.com:rackspace-cookbooks/mysql-multi.git'
 
 group :integration do
-#  cookbook 'lampstack_test_app', path: 'test/fixtures/cookbooks/lampstack_test_app'
+#  cookbook 'phpstack_test_app', path: 'test/fixtures/cookbooks/phpstack_test_app'
 
   cookbook 'apt'
   cookbook 'yum'

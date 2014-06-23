@@ -5,11 +5,11 @@
 #
 type: agent.mysql
 label: Local MYSQL check on <%= node['cloud']['public_ipv4'] %>
-disabled: <%= node['lampstack']['cloud_monitoring']['agent_mysql']['disabled'] %>
-period: <%= node['lampstack']['cloud_monitoring']['agent_mysql']['period'] %>
-timeout: <%= node['lampstack']['cloud_monitoring']['agent_mysql']['timeout'] %>
+disabled: <%= node['phpstack']['cloud_monitoring']['agent_mysql']['disabled'] %>
+period: <%= node['phpstack']['cloud_monitoring']['agent_mysql']['period'] %>
+timeout: <%= node['phpstack']['cloud_monitoring']['agent_mysql']['timeout'] %>
 details:
   host: localhost
   port: <%= node['mysql']['port'] %>
-  username: <%= node['lampstack']['cloud_monitoring']['agent_mysql']['user'] %>
-  password: <%= node['lampstack']['cloud_monitoring']['agent_mysql']['password'] %>
+  username: <%= node['phpstack']['cloud_monitoring']['agent_mysql']['user'] %>
+  password: <%= node['phpstack']['cloud_monitoring']['agent_mysql']['password'] %>

@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: lampstack
+# Cookbook Name:: phpstack
 # Recipe:: php
 #
 # Copyright 2014, Rackspace Hosting
@@ -44,4 +44,4 @@ when 'debian'
     php-pear )
 end
 
-default['lampstack']['ini']['cookbook'] = 'lampstack'
+default['phpstack']['ini']['cookbook'] = 'phpstack'
