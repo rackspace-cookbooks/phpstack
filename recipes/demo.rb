@@ -38,11 +38,11 @@ if includes_recipe?('phpstack::mysql_master')
   node.set_unless['phpstack']['app_password'] = secure_password
 
   if Chef::Config[:solo]
-    Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+    Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
   else
     app_nodes = search(:node, 'recipes:phpstack\:\:application_php' << " AND chef_environment:#{node.chef_environment}")
     app_nodes.each do |app_node|
-      mysql_database_user  node['phpstack']['app_user'] do
+      mysql_database_user node['phpstack']['app_user'] do
         connection connection_info
         password node['phpstack']['app_password']
         host "#{app_node['cloud']['local_ipv4']}"
@@ -74,6 +74,6 @@ if includes_recipe?('phpstack::application_php')
           weekday: '*'
         },
         cloud: { notify_email: 'example@example.com' }
-      },
-  ]
+      }
+    ]
 end
