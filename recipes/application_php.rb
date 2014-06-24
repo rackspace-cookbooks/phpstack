@@ -38,8 +38,11 @@ if node.deep_fetch['rackspace_gluster']['config']['server']['glusters']
   else
     # get the list of gluster servers and pick one randomly to use as the one we connect to
     gluster_ips = []
-    node.deep_fetch['rackspace_gluster']['config']['server']['glusters'].values[0]['nodes'].each do |server|
-      gluster_ips.push(server[1]['ip'])
+    servers = node.deep_fetch['rackspace_gluster']['config']['server']['glusters'].values[0]['nodes']
+    if servers.respond_to?('each')
+      servers.each do |server|
+        gluster_ips.push(server[1]['ip'])
+      end
     end
     node.set_unless['phpstack']['gluster_connect_ip'] = gluster_ips.sample
 
