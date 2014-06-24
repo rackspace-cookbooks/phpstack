@@ -24,14 +24,16 @@ include_recipe 'apt' if node.platform_family?('debian')
 include_recipe 'chef-sugar'
 include_recipe 'database::mysql'
 include_recipe 'platformstack::monitors'
+
+# set passwords dynamically...
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
+node.set_unless['phpstack']['cloud_monitoring']['agent_mysql']['password'] = secure_password
+if node['mysql']['server_root_password'] == 'ilikerandompasswords'
+  node.set['mysql']['server_root_password'] = secure_password
+end
 
 include_recipe 'mysql::server'
-
 include_recipe 'mysql-multi::mysql_base'
-
-node.set_unless['phpstack']['cloud_monitoring']['agent_mysql']['password'] = secure_password
-node.set_unless['mysql']['server_root_password'] = secure_password
 
 connection_info = {
   host: 'localhost',
