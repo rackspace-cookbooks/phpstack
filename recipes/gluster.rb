@@ -38,7 +38,7 @@ search_add_iptables_rules('recipes:phpstack\:\:application_php', 'INPUT', '-j AC
 
 # dynamically generate the authorized clients
 if Chef::Config[:solo]
-  Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
   gluster_servers = search('node', 'recipes:phpstack\:\:gluster OR recipes:phpstack\:\:application_php')
   gluster_ips = ['127.0.0.1']
