@@ -142,7 +142,7 @@ If using the gluster recipe you must fill the `['rackspace_gluster']['config']['
 
 This is needed because gluster doesn't allow the IPs it allows to connect to the volume to be set dynamically.
 
-So, won the gluster servers, run the following.
+So, on the gluster servers, run the following.
 
     chef-client
     echo yes | gluster volume stop vol0 && gluster volume start vol0
