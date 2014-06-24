@@ -31,14 +31,13 @@ else
   Chef::Application.fatal!('gluster node count is not 2 or greater', 1)
 end
 node.default['rackspace_gluster']['config']['server']['glusters'].values[0]['replica'] = replica_count
-# node.default['rackspace_gluster']['config']['server']['glusters']['Gluster Cluster 1']['replica'] = cluster['nodes'].values.count
 
 # allow application_php nodes to connect
 search_add_iptables_rules('recipes:phpstack\:\:application_php', 'INPUT', '-j ACCEPT', 70, 'web nodes access to gluster')
 
 # dynamically generate the authorized clients
 if Chef::Config[:solo]
-  Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
   gluster_servers = search('node', 'recipes:phpstack\:\:gluster OR recipes:phpstack\:\:application_php')
   gluster_ips = ['127.0.0.1']

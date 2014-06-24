@@ -71,7 +71,12 @@ node['apache']['sites'].each do | site_name |
   end
 end
 
-mysql_node = search(:node, 'recipes:phpstack\:\:mysql_master' << " AND chef_environment:#{node.chef_environment}").first
+if Chef::Config[:solo]
+  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+end
+
+mysql_node = search(:node, 'recipes:phpstack\:\:mysql_master'\
+                           " AND chef_environment:#{node.chef_environment}").first
 template 'phpstack.ini' do
   path '/etc/phpstack.ini'
   cookbook node['phpstack']['ini']['cookbook']
@@ -83,9 +88,9 @@ template 'phpstack.ini' do
     cookbook_name: cookbook_name,
     mysql_password: if mysql_node.respond_to?('deep_fetch')
                       mysql_node.deep_fetch('phpstack', 'app_password').nil? == true  ? nil : mysql_node['phpstack']['app_password']
-    else
-      nil
-    end
+                    else
+                      nil
+                    end
   )
   action 'create'
 end
