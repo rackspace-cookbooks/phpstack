@@ -30,6 +30,9 @@ include_recipe 'mysql::server'
 
 include_recipe 'mysql-multi::mysql_base'
 
+node.set_unless['phpstack']['cloud_monitoring']['agent_mysql']['password'] = secure_password
+node.set_unless['mysql']['server_root_password'] = secure_password
+
 connection_info = {
   host: 'localhost',
   username: 'root',
@@ -47,8 +50,6 @@ mysql_database_user 'holland' do
   action [:create, :grant]
   only_if { node.deep_fetch('holland', 'enabled') }
 end
-
-node.set_unless['phpstack']['cloud_monitoring']['agent_mysql']['password'] = secure_password
 
 mysql_database_user node['phpstack']['cloud_monitoring']['agent_mysql']['user'] do
   connection connection_info
