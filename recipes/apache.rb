@@ -42,7 +42,6 @@ node['apache']['sites'].each do | site_name |
     customlog site['customlog']
     loglevel site['loglevel']
   end
-  next if node['platformstack']['cloud_monitoring']['enabled'] == false
   template "http-monitor-#{site['server_name']}" do
     cookbook 'phpstack'
     source 'monitoring-remote-http.yaml.erb'
@@ -56,5 +55,6 @@ node['apache']['sites'].each do | site_name |
     )
     notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
     action 'create'
+    only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
   end
 end
