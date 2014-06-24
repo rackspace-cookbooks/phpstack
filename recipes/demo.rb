@@ -57,8 +57,8 @@ if includes_recipe?('phpstack::mysql_master')
 end
 
 if includes_recipe?('phpstack::application_php')
-  node.default['rackspace']['datacenter'] = 'dfw'
-  node.default['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] = 'mattthode@rackspace.com'
+  node.default['rackspace']['datacenter'] = node['rackspace']['region']
+  node.default['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] = 'example@example.com'
   node.set['rackspace_cloudbackup']['backups'] =
     [
       { location: '/var/www',
