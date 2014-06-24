@@ -45,7 +45,7 @@ else
   gluster_servers.each do |gluster_server|
     gluster_ips.push best_ip_for(gluster_server)
   end
-  node.default['rackspace_gluster']['config']['server']['glusters']['Gluster Cluster 1']['auth_clients'] = gluster_ips.join(',')
+  node.default['rackspace_gluster']['config']['server']['glusters'].values[0]['auth_clients'] = gluster_ips.join(',')
 end
 
 # allow the gluster nodes to connect to eachother
