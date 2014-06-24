@@ -34,7 +34,7 @@ include_recipe 'chef-sugar'
 # if gluster is in our environment, install the utils and mount it to /var/www
 if node.deep_fetch['rackspace_gluster']['config']['server']['glusters']
   if Chef::Config[:solo]
-    Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+    Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
   else
     # get the list of gluster servers and pick one randomly to use as the one we connect to
     gluster_ips = []
@@ -53,7 +53,7 @@ if node.deep_fetch['rackspace_gluster']['config']['server']['glusters']
       fstype 'glusterfs'
       device "#{node['phpstack']['gluster_connect_ip']}:/#{node['rackspace_gluster']['config']['server']['glusters'].values[0]['volume']}"
       mount_point '/var/www/'
-      action ['mount', 'enable']
+      action %w(mount enable)
     end
   end
 end
@@ -83,9 +83,9 @@ template 'phpstack.ini' do
     cookbook_name: cookbook_name,
     mysql_password: if mysql_node.respond_to?('deep_fetch')
                       mysql_node.deep_fetch('phpstack', 'app_password').nil? == true  ? nil : mysql_node['phpstack']['app_password']
-    else
-      nil
-    end
+                    else
+                      nil
+                    end
   )
   action 'create'
 end
