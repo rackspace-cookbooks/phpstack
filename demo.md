@@ -138,3 +138,11 @@ If using the gluster recipe you must fill the `['rackspace_gluster']['config']['
     knife bootstrap 0.0.0.0 -N phpstack-gluster-1 -x root -r 'role[phpstack-gluster]' -E test
     knife bootstrap 0.0.0.0 -N phpstack-gluster-2 -x root -r 'role[phpstack-gluster]' -E test
 
+### reconverge and restart the gluster volume
+
+This is needed because gluster doesn't allow the IPs it allows to connect to the volume to be set dynamically.
+
+So, on the gluster servers, run the following.
+
+    chef-client
+    echo yes | gluster volume stop vol0 && gluster volume start vol0
