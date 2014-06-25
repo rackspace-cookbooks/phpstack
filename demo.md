@@ -2,6 +2,9 @@
 
 If using the gluster recipe you must fill the `['rackspace_gluster']['config']['server']['glusters']['Gluster Cluster 1']['nodes']` hash with your gluster Nodes IPs, check the commented out section of attributes/gluster.rb
 
+## Add your ssh key
+    nova keypair-add my-ssh-key --pub-key /path/to/pub/key
+
 ## Build Cloud Servers
     nova boot phpstack-web-1 --poll --image "ffa476b1-9b14-46bd-99a8-862d1d94eb7a" \
     --flavor "performance1-1" --key-name my-ssh-key
@@ -44,30 +47,6 @@ If using the gluster recipe you must fill the `['rackspace_gluster']['config']['
 
 ## Edit the Environment
 
-    "rackspace_gluster": {
-      "config": {
-        "server": {
-          "glusters": {
-            "Gluster Cluster 1": {
-              "nodes": {
-                "phpstack-gluster-1": {
-                  "ip": "192.0.2.5",
-                  "block_device": "/dev/xvdd",
-                  "mount_point": "/mnt/brick0",
-                  "brick_dir": "/mnt/brick0/brick"
-                },
-                "phpstack-gluster-2": {
-                  "ip": "192.0.2.6",
-                  "block_device": "/dev/xvdd",
-                  "mount_point": "/mnt/brick0",
-                  "brick_dir": "/mnt/brick0/brick"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "default_attributes": {
       "mysql": {
         "master": "192.0.2.10",
@@ -79,6 +58,30 @@ If using the gluster recipe you must fill the `['rackspace_gluster']['config']['
         "cloud_credentials": {
           "username": "example_user",
           "api_key": "example_api_key"
+        }
+      },
+      "rackspace_gluster": {
+        "config": {
+          "server": {
+            "glusters": {
+              "Gluster Cluster 1": {
+                "nodes": {
+                  "phpstack-gluster-1": {
+                    "ip": "192.0.2.5",
+                    "block_device": "/dev/xvdd",
+                    "mount_point": "/mnt/brick0",
+                    "brick_dir": "/mnt/brick0/brick"
+                  },
+                  "phpstack-gluster-2": {
+                    "ip": "192.0.2.6",
+                    "block_device": "/dev/xvdd",
+                    "mount_point": "/mnt/brick0",
+                    "brick_dir": "/mnt/brick0/brick"
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

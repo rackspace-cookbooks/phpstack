@@ -24,10 +24,15 @@ include_recipe 'apt' if node.platform_family?('debian')
 include_recipe 'chef-sugar'
 include_recipe 'database::mysql'
 include_recipe 'platformstack::monitors'
+
+# set passwords dynamically...
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
+node.set_unless['phpstack']['cloud_monitoring']['agent_mysql']['password'] = secure_password
+if node['mysql']['server_root_password'] == 'ilikerandompasswords'
+  node.set['mysql']['server_root_password'] = secure_password
+end
 
 include_recipe 'mysql::server'
-
 include_recipe 'mysql-multi::mysql_base'
 
 connection_info = {
@@ -39,7 +44,7 @@ connection_info = {
 # add holland user (if holland is enabled)
 mysql_database_user 'holland' do
   connection connection_info
-  password ['holland']['password']
+  password node['holland']['password']
   host 'localhost'
   privileges [:usage, :select, :'lock tables', :'show view', :reload, :super, :'replication client']
   retries 2
@@ -47,8 +52,6 @@ mysql_database_user 'holland' do
   action [:create, :grant]
   only_if { node.deep_fetch('holland', 'enabled') }
 end
-
-node.set_unless['phpstack']['cloud_monitoring']['agent_mysql']['password'] = secure_password
 
 mysql_database_user node['phpstack']['cloud_monitoring']['agent_mysql']['user'] do
   connection connection_info
