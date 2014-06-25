@@ -21,7 +21,7 @@
 site1 = 'example.com'
 version1 = '0.0.8'
 
-node.default['apache']['sites'][site1]['port']         = 80
+node.default['apache']['sites'][site1]['port']         = 8080
 node.default['apache']['sites'][site1]['cookbook']     = 'phpstack'
 node.default['apache']['sites'][site1]['template']     = "apache2/sites/#{site1}.erb"
 node.default['apache']['sites'][site1]['server_name']  = site1

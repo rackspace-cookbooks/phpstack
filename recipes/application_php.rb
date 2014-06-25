@@ -73,22 +73,25 @@ node['apache']['sites'].each do | site_name |
     revision node['apache']['sites'][site_name]['revision']
   end
 end
-
-mysql_node = search(:node, 'recipes:phpstack\:\:mysql_master' << " AND chef_environment:#{node.chef_environment}").first
-template 'phpstack.ini' do
-  path '/etc/phpstack.ini'
-  cookbook node['phpstack']['ini']['cookbook']
-  source 'phpstack.ini.erb'
-  owner 'root'
-  group node['apache']['group']
-  mode '00640'
-  variables(
-    cookbook_name: cookbook_name,
-    mysql_password: if mysql_node.respond_to?('deep_fetch')
-                      mysql_node.deep_fetch('phpstack', 'app_password').nil? == true  ? nil : mysql_node['phpstack']['app_password']
-                    else
-                      nil
-                    end
-  )
-  action 'create'
+if Chef::Config[:solo]
+  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+else
+  mysql_node = search(:node, 'recipes:phpstack\:\:mysql_master' << " AND chef_environment:#{node.chef_environment}").first
+  template 'phpstack.ini' do
+    path '/etc/phpstack.ini'
+    cookbook node['phpstack']['ini']['cookbook']
+    source 'phpstack.ini.erb'
+    owner 'root'
+    group node['apache']['group']
+    mode '00640'
+    variables(
+      cookbook_name: cookbook_name,
+      mysql_password: if mysql_node.respond_to?('deep_fetch')
+                        mysql_node.deep_fetch('phpstack', 'app_password').nil? == true  ? nil : mysql_node['phpstack']['app_password']
+                      else
+                        nil
+                      end
+    )
+    action 'create'
+  end
 end

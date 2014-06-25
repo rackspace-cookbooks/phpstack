@@ -17,5 +17,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-default['varnish']['listen_port'] = 8080
-default['varnish']['backend_port'] = 80
+default['varnish']['listen_port'] = 80
+default['varnish']['backend_port'] = 8080

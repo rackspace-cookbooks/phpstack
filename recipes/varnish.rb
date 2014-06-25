@@ -17,5 +17,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+listen_port = node['varnish']['listen_port']
+backend_port = node['varnish']['backend_port']
+
+add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{listen_port} -j ACCEPT", 100, 'Allow access to Varnish')
+add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{backend_port} -j REJECT", 101, 'Deny access to backend')
 
 include_recipe 'varnish'
