@@ -45,7 +45,7 @@ if includes_recipe?('phpstack::mysql_master')
       mysql_database_user node['phpstack']['app_user'] do
         connection connection_info
         password node['phpstack']['app_password']
-        host "#{app_node['cloud']['local_ipv4']}"
+        host app_node['cloud']['local_ipv4']
         database_name node['phpstack']['app_db_name']
         privileges %w(select update insert)
         retries 2

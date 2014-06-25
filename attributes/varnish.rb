@@ -16,9 +16,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['varnish']['listen_port']} -j ACCEPT", 100, 'Allow access to Varnish')
-add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['varnish']['backend_port']} -j REJECT", 101, 'Deny access to backend')
-
-include_recipe 'varnish'
+default['varnish']['listen_port'] = 80
+default['varnish']['backend_port'] = 8080

@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: phpstack
-# Recipe:: varnish
+# Recipe:: memcache
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -16,9 +16,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-
-add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['varnish']['listen_port']} -j ACCEPT", 100, 'Allow access to Varnish')
-add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['varnish']['backend_port']} -j REJECT", 101, 'Deny access to backend')
-
-include_recipe 'varnish'
