@@ -74,7 +74,8 @@ node['apache']['sites'].each do | site_name |
   end
 end
 
-mysql_node = search(:node, 'recipes:phpstack\:\:mysql_master' << " AND chef_environment:#{node.chef_environment}").first
+mysql_node = search('node', 'recipes:phpstack\:\:mysql_master' << " AND chef_environment:#{node.chef_environment}").first
+rabbit_node = search('node', 'recipes:phpstack\:\:rabbitmq' << " AND chef_environment:#{node.chef_environment}").first
 template 'phpstack.ini' do
   path '/etc/phpstack.ini'
   cookbook node['phpstack']['ini']['cookbook']
@@ -88,7 +89,18 @@ template 'phpstack.ini' do
                       mysql_node.deep_fetch('phpstack', 'app_password').nil? == true  ? nil : mysql_node['phpstack']['app_password']
                     else
                       nil
-                    end
+                    end,
+    rabbit_host: if rabbit_node.respond_to?('deep_fetch')
+                   # need to do here because sugar is not available inside the template
+                   best_ip_for(rabbit_node)
+                 else
+                   nil
+                 end,
+    rabbit_passwords: if rabbit_node.respond_to?('deep_fetch')
+                        rabbit_node.deep_fetch('phpstack', 'rabbitmq', 'passwords').values[0].nil? == true ? nil : rabbit_node['phpstack']['rabbitmq']['passwords']
+                      else
+                        nil
+                      end
   )
   action 'create'
 end
