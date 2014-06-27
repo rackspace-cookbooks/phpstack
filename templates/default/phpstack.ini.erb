@@ -8,3 +8,16 @@ host = <%= node['mysql-multi']['master'] %>
 username = <%= node['phpstack']['app_user'] %>
 password = <%= @mysql_password %>
 db_name = <%= node['phpstack']['app_db_name'] %>
+
+<%- unless @rabbit_host.nil? -%>
+<%-   node['apache']['sites'].each do |site_name| -%>
+<%-     site_name = site_name[0] -%>
+[RabbitMQ-<%= site_name -%>]
+host = <%= @rabbit_host %>
+port = <%= node['rabbitmq']['port'].nil? == true ? 5672 : node['rabbitmq']['port'] %>
+vhost = <%= site_name %>
+user = <%= site_name %>
+pass = <%= @rabbit_passwords.nil? == true ? 'this_is_not_going_to_work' : @rabbit_passwords[site_name] %>
+
+<%-   end -%>
+<%- end -%>

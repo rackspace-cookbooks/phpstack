@@ -1,0 +1,1 @@
+default['phpstack']['rabbitmq']['passwords'] = {}
