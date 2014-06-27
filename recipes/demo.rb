@@ -18,43 +18,7 @@
 # limitations under the License.
 #
 
-::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
 include_recipe 'chef-sugar'
-
-# the chef-sugar functions allow us to be first in the runlist if we want
-if includes_recipe?('phpstack::mysql_master')
-  include_recipe 'phpstack::mysql_master'
-  connection_info = {
-    host: 'localhost',
-    username: 'root',
-    password: node['mysql']['server_root_password']
-  }
-
-  mysql_database node['phpstack']['app_db_name'] do
-    connection connection_info
-    action 'create'
-  end
-
-  node.set_unless['phpstack']['app_password'] = secure_password
-
-  if Chef::Config[:solo]
-    Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
-  else
-    app_nodes = search(:node, 'recipes:phpstack\:\:application_php' << " AND chef_environment:#{node.chef_environment}")
-    app_nodes.each do |app_node|
-      mysql_database_user node['phpstack']['app_user'] do
-        connection connection_info
-        password node['phpstack']['app_password']
-        host "#{app_node['cloud']['local_ipv4']}"
-        database_name node['phpstack']['app_db_name']
-        privileges %w(select update insert)
-        retries 2
-        retry_delay 2
-        action %w(create grant)
-      end
-    end
-  end
-end
 
 if includes_recipe?('phpstack::application_php')
   node.default['rackspace']['datacenter'] = node['rackspace']['region']
