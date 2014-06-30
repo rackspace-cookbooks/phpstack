@@ -9,7 +9,6 @@ cookbook 'rackspace_gluster', git: 'git@github.com:rackspace-cookbooks/rackspace
 cookbook 'rackops_rolebook', git: 'git@github.com:rackops/rackops_rolebook.git'
 cookbook 'cron', git: 'git@github.com:rackspace-cookbooks/cron.git'
 cookbook 'mysql-multi', git: 'git@github.com:rackspace-cookbooks/mysql-multi.git'
-cookbook 'monit', git: 'git@github.com:apsoto/monit.git'
 
 group :integration do
 #  cookbook 'phpstack_test_app', path: 'test/fixtures/cookbooks/phpstack_test_app'
