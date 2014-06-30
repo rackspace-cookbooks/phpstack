@@ -15,7 +15,7 @@ override_attributes:
 run_list:
   recipe[platformstack::default]
   recipe[rackops_rolebook::default]
-  recipe[phppstack::mysql_standalone]
+  recipe[phpstack::mysql_base]
   recipe[phpstack::application_php]
 ```
 
