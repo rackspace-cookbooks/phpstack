@@ -20,9 +20,11 @@
 
 include_recipe 'git'
 if platform_family?('rhel')
-  include_recipe 'phpstack::yum'
+  include_recipe 'yum'
+  include_recipe 'yum-epel'
+  include_recipe 'yum-ius'
 elsif platform_family?('debian')
-  include_recipe 'phpstack::apt'
+  include_recipe 'apt'
 end
 include_recipe 'php'
 include_recipe 'php::ini'
