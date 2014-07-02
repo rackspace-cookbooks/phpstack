@@ -29,15 +29,6 @@ platforms:
     - recipe[yum]
 
 suites:
-  - name: mysql-base
-    run_list:
-      - recipe[phpstack::mysql_base]
-    attributes:
-      mysql:
-        server_root_password: "randompass"
-        server_repl_password: "randompass"
-        server_debian_password: "randompass"
-
   - name: mysql-master
     run_list:
       - recipe[phpstack::mysql_master]
@@ -59,12 +50,21 @@ suites:
         server_debian_password: "randompass"
       holland:
         password: "randompass"
+
   - name: application_php
     run_list:
       - recipe[phpstack::application_php]
-      - recipe[phpstack::mysql_standalone]
+      - recipe[phpstack::mysql_master]
     attributes:
       mysql:
         server_root_password: "randompass"
         server_repl_password: "randompass"
         server_debian_password: "randompass"
+
+  - name: mongodb
+    run_list:
+      - recipe[phpstack::mongodb_standalone]
+
+  - name: memcached
+    run_list:
+      - recipe[phpstack::memcache]
