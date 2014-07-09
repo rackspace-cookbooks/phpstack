@@ -42,7 +42,7 @@ Creates sites coming from node['apache']['sites'] array
 Creates monitoring check for each site if node[platformstack][cloud_monitoring] = enabled
 #### application_php
 Includes recipes: git, yum, yum-epel, yum-ius, apt, php, php::ini, php::module_mysql, phpstack::apache, phpstack::php_fpm, chef-sugar
-If gluster is part of the environment attributes, installs the utils and mount it to /var/www
+If gluster is part of the environment attributes, installs the utils and mount it to /var/www (the default of node['apache']['docroot_dir'] on debian/ubuntu)
 Creates application_deployment configuration, checking out the code from node['apache']['sites']['repository'] and putting into the path specified in node['apache']['sites']['docroot']
 Creates a configuration file for applications using variables for mysql_master node and rabbitmq node and placing this file in /etc/phpstack.ini
 #### elasticsearch

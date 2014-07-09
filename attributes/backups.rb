@@ -22,3 +22,5 @@ default['holland']['password'] = 'notagudpassword'
 default['holland']['cron']['day'] = '*'
 default['holland']['cron']['hour'] = '3'
 default['holland']['cron']['minute'] = '12'
+
+default['phpstack']['rackspace_cloudbackup']['apache_docroot']['enable'] = 'true'
