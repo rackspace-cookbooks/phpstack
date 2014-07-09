@@ -107,24 +107,13 @@ template 'phpstack.ini' do
 end
 
 # backups
-if includes_recipe?('phpstack::application_php')
-  node.default['rackspace']['datacenter'] = node['rackspace']['region']
-  node.default['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] = 'example@example.com'
-  node.set['rackspace_cloudbackup']['backups'] =
-    [
-      { location: '/var/www',
-        comment:  'Web Content Backup',
-        cloud: { notify_email: 'example@example.com' }
-      },
-      { location: '/etc',
-        time: {
-          day:     1,
-          month:   '*',
-          hour:    0,
-          minute:  0,
-          weekday: '*'
-        },
-        cloud: { notify_email: 'example@example.com' }
-      }
-    ]
-end
+node.default['rackspace']['datacenter'] = node['rackspace']['region']
+node.set_unless['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] = 'example@example.com'
+node.set['rackspace_cloudbackup']['backups'] =
+  [
+    { location: node['apache']['docroot_dir'],
+      enable: node['phpstack']['rackspace_cloudbackup']['apache_docroot']['enable'],
+      comment: 'Web Content Backup',
+      cloud: { notify_email: node['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] }
+    }
+  ]
