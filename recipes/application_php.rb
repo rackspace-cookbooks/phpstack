@@ -34,32 +34,28 @@ include_recipe 'phpstack::php_fpm'
 include_recipe 'chef-sugar'
 
 # if gluster is in our environment, install the utils and mount it to /var/www
-if node.deep_fetch['rackspace_gluster']['config']['server']['glusters'].values[0].key?('nodes')
-  if Chef::Config[:solo]
-    Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
-  else
-    # get the list of gluster servers and pick one randomly to use as the one we connect to
-    gluster_ips = []
-    servers = node.deep_fetch['rackspace_gluster']['config']['server']['glusters'].values[0]['nodes']
-    if servers.respond_to?('each')
-      servers.each do |server|
-        gluster_ips.push(server[1]['ip'])
-      end
+gluster_cluster = node['rackspace_gluster']['config']['server']['glusters'].first
+if gluster_cluster.key?('nodes')
+  # get the list of gluster servers and pick one randomly to use as the one we connect to
+  gluster_ips = []
+  if gluster_cluster['nodes'].respond_to?('each')
+    gluster_cluster['nodes'].each do |server|
+      gluster_ips.push(server[1]['ip'])
     end
-    node.set_unless['phpstack']['gluster_connect_ip'] = gluster_ips.sample
+  end
+  node.set_unless['phpstack']['gluster_connect_ip'] = gluster_ips.sample
 
-    # install gluster mount
-    package 'glusterfs-client' do
-      action :install
-    end
+  # install gluster mount
+  package 'glusterfs-client' do
+    action :install
+  end
 
-    # set up the mountpoint
-    mount 'webapp-mountpoint' do
-      fstype 'glusterfs'
-      device "#{node['phpstack']['gluster_connect_ip']}:/#{node['rackspace_gluster']['config']['server']['glusters'].values[0]['volume']}"
-      mount_point '/var/www/'
-      action %w(mount enable)
-    end
+  # set up the mountpoint
+  mount 'webapp-mountpoint' do
+    fstype 'glusterfs'
+    device "#{node['phpstack']['gluster_connect_ip']}:/#{node['rackspace_gluster']['config']['server']['glusters'].values[0]['volume']}"
+    mount_point '/var/www/'
+    action %w(mount enable)
   end
 end
 
@@ -76,8 +72,14 @@ node['apache']['sites'].each do | site_name |
   end
 end
 
-mysql_node = search('node', 'recipes:phpstack\:\:mysql_master' << " AND chef_environment:#{node.chef_environment}").first
-rabbit_node = search('node', 'recipes:phpstack\:\:rabbitmq' << " AND chef_environment:#{node.chef_environment}").first
+if Chef::Config[:solo]
+  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+  mysql_node = nil
+  rabbit_node = nil
+else
+  mysql_node = search('node', 'recipes:phpstack\:\:mysql_master' << " AND chef_environment:#{node.chef_environment}").first
+  rabbit_node = search('node', 'recipes:phpstack\:\:rabbitmq' << " AND chef_environment:#{node.chef_environment}").first
+end
 template 'phpstack.ini' do
   path '/etc/phpstack.ini'
   cookbook node['phpstack']['ini']['cookbook']
