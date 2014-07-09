@@ -95,8 +95,7 @@ If using the gluster recipe you must fill the `['rackspace_gluster']['config']['
     "run_list": [
       "recipe[platformstack::default]",
       "recipe[rackops_rolebook::default]",
-      "recipe[phpstack::application_php]",
-      "recipe[phpstack::demo]"
+      "recipe[phpstack::application_php]"
     ],
 
 ### mysql master
@@ -106,8 +105,7 @@ If using the gluster recipe you must fill the `['rackspace_gluster']['config']['
     "run_list": [
       "recipe[platformstack::default]",
       "recipe[rackops_rolebook::default]",
-      "recipe[phpstack::mysql_master]",
-      "recipe[phpstack::demo]"
+      "recipe[phpstack::mysql_master]"
     ],
 
 ### mysql slave
@@ -117,8 +115,7 @@ If using the gluster recipe you must fill the `['rackspace_gluster']['config']['
     "run_list": [
       "recipe[platformstack::default]",
       "recipe[rackops_rolebook::default]",
-      "recipe[phpstack::mysql_slave]",
-      "recipe[phpstack::demo]"
+      "recipe[phpstack::mysql_slave]"
     ],
 
 ### gluster node
