@@ -45,9 +45,6 @@ Includes recipes: git, yum, yum-epel, yum-ius, apt, php, php::ini, php::module_m
 If gluster is part of the environment attributes, installs the utils and mount it to /var/www
 Creates application_deployment configuration, checking out the code from node['apache']['sites']['repository'] and putting into the path specified in node['apache']['sites']['docroot']
 Creates a configuration file for applications using variables for mysql_master node and rabbitmq node and placing this file in /etc/phpstack.ini
-#### demo
-Includes recipe phpstack::application_php
-Configures cloud_backup
 #### elasticsearch
 Includes recipe java
 Defines allocated memory to be around 50% of total memory.
