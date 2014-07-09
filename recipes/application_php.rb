@@ -54,7 +54,7 @@ if gluster_cluster.key?('nodes')
   mount 'webapp-mountpoint' do
     fstype 'glusterfs'
     device "#{node['phpstack']['gluster_connect_ip']}:/#{node['rackspace_gluster']['config']['server']['glusters'].values[0]['volume']}"
-    mount_point '/var/www/'
+    mount_point node['apache']['docroot_dir']
     action %w(mount enable)
   end
 end
@@ -109,9 +109,11 @@ end
 # backups
 node.default['rackspace']['datacenter'] = node['rackspace']['region']
 node.set_unless['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] = 'example@example.com'
-node.set['rackspace_cloudbackup']['backups'] =
+# we will want to change this when https://github.com/rackspace-cookbooks/rackspace_cloudbackup/issues/17 is fixed
+node.default['rackspace_cloudbackup']['backups'] =
   [
-    { location: node['apache']['docroot_dir'],
+    {
+      location: node['apache']['docroot_dir'],
       enable: node['phpstack']['rackspace_cloudbackup']['apache_docroot']['enable'],
       comment: 'Web Content Backup',
       cloud: { notify_email: node['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] }
