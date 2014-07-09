@@ -23,18 +23,6 @@ include_recipe 'mysql-multi::mysql_master'
 include_recipe 'chef-sugar'
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
 
-template 'mysql-monitor' do
-  cookbook 'phpstack'
-  source 'monitoring-agent-mysql.yaml.erb'
-  path '/etc/rackspace-monitoring-agent.conf.d/agent-mysql-monitor.yaml'
-  owner 'root'
-  group 'root'
-  mode '00600'
-  notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
-  action 'create'
-  only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
-end
-
 connection_info = {
   host: 'localhost',
   username: 'root',
