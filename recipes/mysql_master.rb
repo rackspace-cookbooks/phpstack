@@ -23,18 +23,6 @@ include_recipe 'mysql-multi::mysql_master'
 include_recipe 'chef-sugar'
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
 
-template 'mysql-monitor' do
-  cookbook 'phpstack'
-  source 'monitoring-agent-mysql.yaml.erb'
-  path '/etc/rackspace-monitoring-agent.conf.d/agent-mysql-monitor.yaml'
-  owner 'root'
-  group 'root'
-  mode '00600'
-  notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
-  action 'create'
-  only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
-end
-
 connection_info = {
   host: 'localhost',
   username: 'root',
@@ -50,6 +38,13 @@ node['apache']['sites'].each do |site_name|
   end
 
   node.set_unless['apache']['sites'][site_name]['mysql_password'] = secure_password
+  if Chef::Config[:solo]
+    Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+    app_nodes = []
+  else
+    app_nodes = search(:node, 'recipes:phpstack\:\:application_php' << " AND chef_environment:#{node.chef_environment}")
+  end
+
   if Chef::Config[:solo]
     Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
     app_nodes = []

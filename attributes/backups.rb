@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: phpstack
-# Recipe:: gluster
+# Recipe:: holland
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -17,15 +17,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-case node['phpstack']['database']['engine']
-when 'mysql'
-  run_recipes = %w( phpstack::mysql_base )
-when 'mongodb'
-  run_recipes = %w( phpstack::mongodb_standalone )
-when 'postgresql'
-  run_recipes = %w( phpstack::postgresql_standalone )
-end
+default['holland']['enabled'] = false
+default['holland']['password'] = 'notagudpassword'
+default['holland']['cron']['day'] = '*'
+default['holland']['cron']['hour'] = '3'
+default['holland']['cron']['minute'] = '12'
 
-run_recipes.each do |recipe|
-  include_recipe recipe
-end
+default['phpstack']['rackspace_cloudbackup']['apache_docroot']['enable'] = 'true'
