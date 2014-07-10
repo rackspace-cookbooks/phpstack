@@ -22,7 +22,7 @@ include_recipe 'git'
 if platform_family?('rhel')
   include_recipe 'phpstack::yum'
 elsif platform_family?('debian')
-  include_recipe 'phpstack::apt'
+  include_recipe 'apt'
 end
 include_recipe 'php'
 include_recipe 'php::ini'
@@ -32,13 +32,13 @@ include_recipe 'phpstack::php_fpm'
 include_recipe 'chef-sugar'
 
 # if gluster is in our environment, install the utils and mount it to /var/www
-if node.deep_fetch['rackspace_gluster']['config']['server']['glusters'].values[0].key?('nodes')
+if node.deep_fetch('rackspace_gluster', 'config', 'server', 'glusters').values[0].key?('nodes')
   if Chef::Config[:solo]
     Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
   else
     # get the list of gluster servers and pick one randomly to use as the one we connect to
     gluster_ips = []
-    servers = node.deep_fetch['rackspace_gluster']['config']['server']['glusters'].values[0]['nodes']
+    servers = node.deep_fetch('rackspace_gluster', 'config', 'server', 'glusters').values[0]['nodes']
     if servers.respond_to?('each')
       servers.each do |server|
         gluster_ips.push(server[1]['ip'])
