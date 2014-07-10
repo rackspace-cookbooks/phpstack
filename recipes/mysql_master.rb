@@ -38,6 +38,12 @@ node['apache']['sites'].each do |site_name|
   end
 
   node.set_unless['apache']['sites'][site_name]['mysql_password'] = secure_password
+  if Chef::Config[:solo]
+    Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+    app_nodes = []
+  else
+    app_nodes = search(:node, 'recipes:phpstack\:\:application_php' << " AND chef_environment:#{node.chef_environment}")
+  end
 
   if Chef::Config[:solo]
     Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
@@ -45,6 +51,7 @@ node['apache']['sites'].each do |site_name|
   else
     app_nodes = search(:node, 'recipes:phpstack\:\:application_php' << " AND chef_environment:#{node.chef_environment}")
   end
+
   app_nodes.each do |app_node|
     mysql_database_user site_name do
       connection connection_info
