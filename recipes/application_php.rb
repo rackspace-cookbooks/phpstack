@@ -30,7 +30,7 @@ include_recipe 'php'
 include_recipe 'php::ini'
 include_recipe 'php::module_mysql'
 include_recipe 'phpstack::apache'
-include_recipe 'phpstack::php_fpm'
+include_recipe 'php-fpm'
 include_recipe 'chef-sugar'
 
 # if gluster is in our environment, install the utils and mount it to /var/www
