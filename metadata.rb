@@ -35,4 +35,3 @@ depends 'varnish'
 depends 'yum'
 depends 'yum-ius'
 depends 'yum-epel'
-
