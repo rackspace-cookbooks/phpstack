@@ -42,9 +42,9 @@ backend_nodes.each do |backend_node|
     site_name = site_name[0]
     site = node['apache']['sites'][site_name]
     backend_hosts.merge!(
-      "#{best_ip_for(backend_node)}" => {
-        "#{site['port']}" => {
-          "#{site_name}" => "#{site_name}"
+      best_ip_for(backend_node) => {
+        site['port'] => {
+          site_name => site_name
         }
       }
     )
