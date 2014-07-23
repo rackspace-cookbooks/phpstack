@@ -18,4 +18,7 @@
 # limitations under the License.
 #
 
+if platform_family?('debian')
+  include_recipe 'apt'
+end
 include_recipe 'memcached'
