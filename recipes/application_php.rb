@@ -18,7 +18,6 @@
 # limitations under the License.
 #
 
-include_recipe 'git'
 if platform_family?('rhel')
   include_recipe 'yum'
   include_recipe 'yum-epel'
@@ -26,6 +25,7 @@ if platform_family?('rhel')
 elsif platform_family?('debian')
   include_recipe 'apt'
 end
+include_recipe 'git'
 include_recipe 'php'
 include_recipe 'php::ini'
 include_recipe 'php::module_mysql'
