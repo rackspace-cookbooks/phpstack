@@ -80,9 +80,10 @@ else
   mysql_node = search('node', 'recipes:phpstack\:\:mysql_master' << " AND chef_environment:#{node.chef_environment}").first
   rabbit_node = search('node', 'recipes:phpstack\:\:rabbitmq' << " AND chef_environment:#{node.chef_environment}").first
 end
-puts
+puts 'simple deepfetch'
 puts mysql_node.deep_fetch('apache', 'sites')
-puts mysql_node.deep_fetch('apache', 'sites').values[0]['mysql_password'].methods.sort
+puts 'now with methods'
+puts mysql_node.deep_fetch('apache', 'sites').methods.sort
 template 'phpstack.ini' do
   path '/etc/phpstack.ini'
   cookbook node['phpstack']['ini']['cookbook']
