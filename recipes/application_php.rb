@@ -80,10 +80,6 @@ else
   mysql_node = search('node', 'recipes:phpstack\:\:mysql_master' << " AND chef_environment:#{node.chef_environment}").first
   rabbit_node = search('node', 'recipes:phpstack\:\:rabbitmq' << " AND chef_environment:#{node.chef_environment}").first
 end
-puts 'simple deepfetch'
-puts mysql_node.deep_fetch('apache', 'sites')
-puts 'now with methods'
-puts mysql_node.deep_fetch('apache', 'sites').methods.sort
 template 'phpstack.ini' do
   path '/etc/phpstack.ini'
   cookbook node['phpstack']['ini']['cookbook']
@@ -95,7 +91,11 @@ template 'phpstack.ini' do
     cookbook_name: cookbook_name,
     # if it responds then we will create the config section in the ini file
     mysql: if mysql_node.respond_to?('deep_fetch')
-             mysql_node.deep_fetch('apache', 'sites').first['mysql_password'].nil? == false ? mysql_node : nil
+             if mysql_node.deep_fetch('apache', 'sites').nil?
+               nil
+             else
+               mysql_node.deep_fetch('apache', 'sites').values[0]['mysql_password'].nil? == false ? mysql_node : nil
+             end
            end,
     # need to do here because sugar is not available inside the template
     rabbit_host: if rabbit_node.respond_to?('deep_fetch')
