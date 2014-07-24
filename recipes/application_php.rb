@@ -90,7 +90,9 @@ template 'phpstack.ini' do
   variables(
     cookbook_name: cookbook_name,
     # if it responds then we will create the config section in the ini file
-    mysql: mysql_node.respond_to?('deep_fetch') == true ? mysql_node : nil,
+    mysql: if mysql_node.respond_to?('deep_fetch')
+             mysql_node.deep_fetch('apache', 'sites').values[0].nil? == false ? mysql_node : nil
+           end,
     # need to do here because sugar is not available inside the template
     rabbit_host: if rabbit_node.respond_to?('deep_fetch')
                    best_ip_for(rabbit_node)
