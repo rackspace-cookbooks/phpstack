@@ -13,13 +13,9 @@ provisioner:
       sudo:
         users: ['vagrant']
         passwordless: true
-    rackspace:
-      cloud_credentials: # until platformstack ships default values
-        username: please_exist
-        api_key: so_it_compiles
+    platformstack:
       cloudbackup:
         enabled: false
-    platformstack:
       cloud_monitoring:
         enabled: false
 
