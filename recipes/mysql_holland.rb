@@ -19,8 +19,8 @@
 #
 
 # set repository
-case node['platform']
-when 'ubuntu'
+case node['platform_family']
+when 'debain'
   include_recipe 'apt'
   apt_repository 'Holland' do
     uri "http://download.opensuse.org/repositories/home:/holland-backup/x#{node['lsb']['id']}_#{node['lsb']['release']}/"
@@ -28,7 +28,7 @@ when 'ubuntu'
     components ['./']
     action :add
   end
-when 'centos'
+when 'rhel'
   include_recipe 'yum'
   yum_repository 'Holland' do
     description 'Holland backup repo'
