@@ -5,8 +5,7 @@
   "automatic": {
     "hostname": "vagrant.vm",
     "recipes": [
-      "tomcatstack::mysql_base",
-      "tomcatstack::mysql_master"
+      "phpstack::mysql_master"
     ],
     "roles": [
       "database_master"
