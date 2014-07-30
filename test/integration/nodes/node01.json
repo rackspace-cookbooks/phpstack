@@ -23,5 +23,5 @@
   "run_list": [
     "recipe[phpstack::application_php]"
   ],
-  "ipaddress": "192.168.0.52",
+  "ipaddress": "192.168.0.52"
 }
