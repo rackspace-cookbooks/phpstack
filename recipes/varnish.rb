@@ -37,19 +37,26 @@ if Chef::Config[:solo]
 else
   backend_nodes = search('node', 'recipes:phpstack\:\:apache' << " AND chef_environment:#{node.chef_environment}")
 end
+
 backend_nodes.each do |backend_node|
-  node['apache']['sites'].each do |site_name|
-    site_name = site_name[0]
-    site = node['apache']['sites'][site_name]
-    backend_hosts.merge!(
-      best_ip_for(backend_node) => {
-        site['port'] => {
-          site_name => site_name
+  if backend_node['apache']['sites'].nil?
+    errmsg = 'Did not find sites, default.vcl not configured'
+    Chef::Application.warn(errmsg)
+  else
+    node['apache']['sites'].each do |site_name|
+      site_name = site_name[0]
+      site = node['apache']['sites'][site_name]
+      backend_hosts.merge!(
+        best_ip_for(backend_node) => {
+          site['port'] => {
+            site_name => site_name
+          }
         }
-      }
-    )
+      )
+    end
   end
 end
+
 node.default['phpstack']['varnish']['backends'] = backend_hosts
 
 include_recipe 'varnish::default'
