@@ -19,6 +19,9 @@
 #
 
 include_recipe 'chef-sugar'
+if platform_family?('debian')
+  include_recipe 'apt'
+end
 
 add_iptables_rule('INPUT', "-p tcp --dport #{node['varnish']['listen_port']} -j ACCEPT", 9997, 'allow web browsers to connect')
 
