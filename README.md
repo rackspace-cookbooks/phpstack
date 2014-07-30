@@ -256,8 +256,8 @@ Usage
 }
 ```
 * single app node - multi db node 
-  
-  Ensure the following attributes are set within environment or wrapper cookbook.
+
+Ensure the following attributes are set within environment or wrapper cookbook.
 
 ```
 ['mysql']['server_repl_password'] = 'rootlogin'
@@ -266,7 +266,7 @@ Usage
 ['mysql-multi']['slaves'] = ['5.6.7.8']
 ```
 
-  MySQL DB Master Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_master` in your node's `run_list`:    
+MySQL DB Master Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_master` in your node's `run_list`:    
 ```json
 {
   "run_list": [
@@ -277,7 +277,7 @@ Usage
 }
 ```
 
-  MySQL DB Slave Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_slave`, `phpstack::mysql_slave` in your node's `run_list`:    
+MySQL DB Slave Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_slave`, `phpstack::mysql_slave` in your node's `run_list`:    
 ```json
 {
   "run_list": [
@@ -289,7 +289,7 @@ Usage
 }
 ```
 
-  App Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::application_php` in your node's `run_list`:    
+App Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::application_php` in your node's `run_list`:    
 ```json
 {
   "run_list": [
