@@ -6,7 +6,7 @@ import directors;    # load the directors
 <%- end %>
 <%# the gsubs are needed because varnish doesn't like plaintext -%>
 # sets up backends to ip-port combos that apache uses (populated data into an atribute)
-<%- node['pythonstack']['varnish']['backends'].each do |ip, ip_data| -%>
+<%- node['phpstack']['varnish']['backends'].each do |ip, ip_data| -%>
 <%-   ip_data.each do |port, port_data| -%>
 <%#     port.values[0] should map to the vhost -%>
 backend backend_<%= "#{ip.gsub(/\./, '_')}_#{port}" -%> {
@@ -18,7 +18,7 @@ backend backend_<%= "#{ip.gsub(/\./, '_')}_#{port}" -%> {
 <%- end -%>
 <%# pulls out and merges a list of all hostnames we need to create load balancers for -%>
 <%- hostnames = {} -%>
-<%- node['pythonstack']['varnish']['backends'].each do |ip, ip_data| -%>
+<%- node['phpstack']['varnish']['backends'].each do |ip, ip_data| -%>
 <%-   ip_data.each do |port, port_data| -%>
 <%-     port_data.each do |hostname| -%>
 <%-       hostnames.merge!({hostname[0] => hostname[1] }) -%>
@@ -34,7 +34,7 @@ backend backend_<%= "#{ip.gsub(/\./, '_')}_#{port}" -%> {
 sub vcl_init {
     new <%= also_hostname.gsub(/[\.-]/, '_') -%> = directors.round_robin();
 <%#   needed because we are now mapping ip/port to hostnames, not the other way around -%>
-<%-   node['pythonstack']['varnish']['backends'].each do |ip, ip_data| -%>
+<%-   node['phpstack']['varnish']['backends'].each do |ip, ip_data| -%>
 <%-     ip_data.each do |port, port_data| -%>
 <%-       if port_data.include?(hostname) -%>
     <%= also_hostname.gsub(/[\.-]/, '_') -%>.add_backend(backend_<%= "#{ip.gsub(/\./, '_')}_#{port}" -%>);
@@ -61,7 +61,7 @@ sub vcl_recv {
 <%- hostnames.each do |hostname, also_hostname| -%>
 director <%= also_hostname.gsub(/[\.-]/, '_') -%> round-robin {
 <%#   needed because we are now mapping ip/port to hostnames, not the other way around -%>
-<%-   node['pythonstack']['varnish']['backends'].each do |ip, ip_data| -%>
+<%-   node['phpstack']['varnish']['backends'].each do |ip, ip_data| -%>
 <%-     ip_data.each do |port, port_data| -%>
 <%-       if port_data.include?(hostname) -%>
   { .backend = backend_<%= "#{ip.gsub(/\./, '_')}_#{port}" -%>; }
