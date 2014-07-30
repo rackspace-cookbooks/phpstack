@@ -64,6 +64,10 @@ suites:
     run_list:
       - recipe[phpstack::mongodb_standalone]
 
+  - name: varnish
+    run_list:
+      - recipe[phpstack::varnish]
+
   - name: memcached
     run_list:
       - recipe[phpstack::memcache]
