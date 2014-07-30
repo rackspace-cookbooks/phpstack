@@ -125,3 +125,5 @@ node.default['rackspace_cloudbackup']['backups'] =
       cloud: { notify_email: node['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] }
     }
   ]
+
+tag('app_node')
