@@ -41,7 +41,7 @@ end
 backend_nodes.each do |backend_node|
   if backend_node.deep_fetch('apache', 'sites').nil?
     errmsg = 'Did not find sites, default.vcl not configured'
-    Chef::Application.warn(errmsg)
+    Chef::Log.warn(errmsg)
   else
     node['apache']['sites'].each do |site_name|
       site_name = site_name[0]
