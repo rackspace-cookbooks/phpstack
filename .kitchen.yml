@@ -53,12 +53,6 @@ suites:
   - name: application_php
     run_list:
       - recipe[phpstack::application_php]
-      - recipe[phpstack::mysql_base]
-    attributes:
-      mysql:
-        server_root_password: "randompass"
-        server_repl_password: "randompass"
-        server_debian_password: "randompass"
 
   - name: mongodb
     run_list:
@@ -71,3 +65,18 @@ suites:
   - name: memcached
     run_list:
       - recipe[phpstack::memcache]
+
+  - name: all-in-one
+    run_list:
+      - recipe[phpstack::varnish]
+      - recipe[phpstack::memcache]
+      - recipe[phpstack::mongodb_standalone]
+      - recipe[phpstack::mysql_master]
+      - recipe[phpstack::application_php]
+    attributes:
+      mysql:
+        server_root_password: "randompass"
+        server_repl_password: "randompass"
+        server_debian_password: "randompass"
+      holland:
+        password: "randompass"

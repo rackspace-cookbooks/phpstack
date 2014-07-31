@@ -16,6 +16,6 @@ describe port(80) do
   it { should be_listening }
 end
 
-describe file('/etc/php.ini') do
+describe file('/etc/phpstack.ini') do
   it { should be_file }
 end
