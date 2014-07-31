@@ -62,4 +62,7 @@ end
 
 node.default['phpstack']['varnish']['backends'] = backend_hosts
 
-include_recipe 'varnish::default'
+# only run if we have backends to populate (aka not on first run with an all in one node)
+unless backend_nodes.first.nil?
+  include_recipe 'varnish::default'
+end
