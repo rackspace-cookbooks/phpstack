@@ -69,7 +69,7 @@ suites:
   - name: all-in-one
     run_list:
       - recipe[phpstack::varnish]
-      - recipe[phpstack::memcached]
+      - recipe[phpstack::memcache]
       - recipe[phpstack::mongodb_standalone]
       - recipe[phpstack::mysql_master]
       - recipe[phpstack::application_php]
