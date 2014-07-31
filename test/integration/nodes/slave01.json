@@ -5,6 +5,7 @@
   "automatic": {
     "hostname": "vagrant.vm",
     "recipes": [
+      "phpstack::mysql_base",
       "phpstack::mysql_slave"
     ],
     "roles": [
