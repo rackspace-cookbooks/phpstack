@@ -30,5 +30,5 @@
   },
   "run_list": [
     "recipe[phpstack::application_php]"
-  ],
+  ]
 }
