@@ -8,7 +8,8 @@
       "phpstack::application_php"
     ],
     "roles": [
-    ]
+    ],
+    "ipaddress": "192.168.0.52"
   },
   "tags": [
     "app_node"
@@ -30,5 +31,4 @@
   "run_list": [
     "recipe[phpstack::application_php]"
   ],
-  "ipaddress": "192.168.0.52"
 }
