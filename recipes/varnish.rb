@@ -60,7 +60,11 @@ end
 node.default['phpstack']['varnish']['backends'] = backend_hosts
 
 # only set if we have backends to populate (aka not on first run with an all in one node)
-unless backend_nodes.first.nil?
+if backend_nodes.first.nil?
+  # if our backends go away we needs this
+  node.default['varnish']['vcl_cookbook'] = 'varnish'
+  node.default['varnish']['vcl_source'] = 'default.vcl.erb'
+else
   # let us set up a more complicated vcl config if needed
   node.default['varnish']['vcl_cookbook'] = 'phpstack' if node['phpstack']['varnish']['multi']
   node.default['varnish']['vcl_source'] = 'varnish-default-vcl.erb' if node['phpstack']['varnish']['multi']
