@@ -9,10 +9,6 @@ provisioner:
   client_rb:
     environment: _default
   attributes:
-    authorization:
-      sudo:
-        users: ['vagrant']
-        passwordless: true
     platformstack:
       cloudbackup:
         enabled: false
