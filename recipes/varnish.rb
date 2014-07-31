@@ -57,6 +57,18 @@ backend_nodes.each do |backend_node|
   end
 end
 
+ruby_block 'debug log' do
+  block do
+    puts
+    puts
+    puts backend_hosts
+    puts backend_nodes.first
+    puts
+    puts
+  end
+  action 'run'
+end
+
 node.default['phpstack']['varnish']['backends'] = backend_hosts
 
 # only set if we have backends to populate (aka not on first run with an all in one node)
