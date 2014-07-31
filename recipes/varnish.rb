@@ -25,9 +25,6 @@ end
 
 add_iptables_rule('INPUT', "-p tcp --dport #{node['varnish']['listen_port']} -j ACCEPT", 9997, 'allow web browsers to connect')
 
-# let us set up a more complicated vcl config if needed
-node.default['varnish']['vcl_cookbook'] = 'phpstack' if node['phpstack']['varnish']['multi']
-node.default['varnish']['vcl_source'] = 'varnish-default-vcl.erb' if node['phpstack']['varnish']['multi']
 # set the default port to send things on to something that might be useful
 node.default['varnish']['backend_port'] = node['apache']['listen_ports'].first
 
@@ -62,7 +59,10 @@ end
 
 node.default['phpstack']['varnish']['backends'] = backend_hosts
 
-# only run if we have backends to populate (aka not on first run with an all in one node)
+# only set if we have backends to populate (aka not on first run with an all in one node)
 unless backend_nodes.first.nil?
-  include_recipe 'varnish::default'
+  # let us set up a more complicated vcl config if needed
+  node.default['varnish']['vcl_cookbook'] = 'phpstack' if node['phpstack']['varnish']['multi']
+  node.default['varnish']['vcl_source'] = 'varnish-default-vcl.erb' if node['phpstack']['varnish']['multi']
 end
+include_recipe 'varnish::default'
