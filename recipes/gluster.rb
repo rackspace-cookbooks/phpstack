@@ -40,7 +40,7 @@ search_add_iptables_rules("tags:python_app_node AND chef_environment:#{node.chef
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
-  gluster_servers = search('node', "(tags:python_app_node OR recipes:phpstack::gluster) AND chef_environment:#{node.chef_environment}")
+  gluster_servers = search('node', "(tags:python_app_node OR recipes:phpstack\\:\\:gluster) AND chef_environment:#{node.chef_environment}")
   gluster_ips = ['127.0.0.1']
   gluster_servers.each do |gluster_server|
     gluster_ips.push best_ip_for(gluster_server)
