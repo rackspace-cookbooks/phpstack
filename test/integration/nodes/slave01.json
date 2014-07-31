@@ -5,6 +5,7 @@
   "automatic": {
     "hostname": "vagrant.vm",
     "recipes": [
+      "phpstack::mysql_base",
       "phpstack::mysql_slave"
     ],
     "roles": [
@@ -21,5 +22,8 @@
   "run_list": [
     "role[database_slave]"
   ],
+  "tags": [
+    "mysql_slave"
+    ],
   "ipaddress": "192.168.0.23"
 }

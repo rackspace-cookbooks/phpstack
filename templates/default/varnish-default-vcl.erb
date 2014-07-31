@@ -1,3 +1,9 @@
+<%- if node['varnish']['version'] == '4.0' %>
+vcl 4.0;
+
+import directors;    # load the directors
+
+<%- end %>
 <%# the gsubs are needed because varnish doesn't like plaintext -%>
 # sets up backends to ip-port combos that apache uses (populated data into an atribute)
 <%- node['phpstack']['varnish']['backends'].each do |ip, ip_data| -%>
@@ -10,19 +16,50 @@ backend backend_<%= "#{ip.gsub(/\./, '_')}_#{port}" -%> {
 
 <%-   end -%>
 <%- end -%>
-<%# pulls out and merges a list of all hostnames we need to create load balacers for -%>
+<%# pulls out and merges a list of all hostnames we need to create load balancers for -%>
 <%- hostnames = {} -%>
 <%- node['phpstack']['varnish']['backends'].each do |ip, ip_data| -%>
 <%-   ip_data.each do |port, port_data| -%>
 <%-     port_data.each do |hostname| -%>
-<%-       hostnames.merge!({hostname[0] => hostname[0] }) -%>
+<%-       hostnames.merge!({hostname[0] => hostname[1] }) -%>
 <%-     end -%>
 <%-   end -%>
 <%- end -%>
 
-# configures load balancnig between for each site...
+
+<%- if node['varnish']['version'] == '4.0' %>
+
+# configures load balancing between for each site...
 <%- hostnames.each do |hostname, also_hostname| -%>
-director <%= hostname.gsub(/[\.-]/, '_') -%> round-robin {
+sub vcl_init {
+    new <%= also_hostname.gsub(/[\.-]/, '_') -%> = directors.round_robin();
+<%#   needed because we are now mapping ip/port to hostnames, not the other way around -%>
+<%-   node['phpstack']['varnish']['backends'].each do |ip, ip_data| -%>
+<%-     ip_data.each do |port, port_data| -%>
+<%-       if port_data.include?(hostname) -%>
+    <%= also_hostname.gsub(/[\.-]/, '_') -%>.add_backend(backend_<%= "#{ip.gsub(/\./, '_')}_#{port}" -%>);
+<%-       end -%>
+<%-     end -%>
+<%-   end -%>
+}
+
+<%- end -%>
+
+
+# set up the routing of sites
+sub vcl_recv {
+<%- hostnames.each do |hostname, also_hostname| -%>
+  if (req.http.host == "<%= also_hostname -%>" || req.http.host == "www.<%= also_hostname -%>") {
+    set req.backend_hint = <%= also_hostname.gsub(/[\.-]/, '_') -%>.backend();
+  }
+}
+<%- end -%>
+
+<%- else %>
+
+# configures load balancing between for each site...
+<%- hostnames.each do |hostname, also_hostname| -%>
+director <%= also_hostname.gsub(/[\.-]/, '_') -%> round-robin {
 <%#   needed because we are now mapping ip/port to hostnames, not the other way around -%>
 <%-   node['phpstack']['varnish']['backends'].each do |ip, ip_data| -%>
 <%-     ip_data.each do |port, port_data| -%>
@@ -36,11 +73,12 @@ director <%= hostname.gsub(/[\.-]/, '_') -%> round-robin {
 <%- end -%>
 
 # set up the routing of sites
-sub vcl_recv {
+<%= 'sub vcl_recv {' unless hostnames.first.nil? %>
 <%- hostnames.each do |hostname, also_hostname| -%>
-  if (req.http.host == "<%= hostname -%>") {
-    set req.backend = <%= hostname.gsub(/[\.-]/, '_') -%>;
+  if (req.http.host == "<%= also_hostname -%>") {
+    set req.backend = <%= also_hostname.gsub(/[\.-]/, '_') -%>;
   }
 
 <%- end -%>
-}
+
+<%- end %>

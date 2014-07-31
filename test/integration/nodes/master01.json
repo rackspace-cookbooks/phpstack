@@ -5,6 +5,7 @@
   "automatic": {
     "hostname": "vagrant.vm",
     "recipes": [
+      "phpstack::mysql_base",
       "phpstack::mysql_master"
     ],
     "roles": [
@@ -22,6 +23,9 @@
     "role[database_master]"
   ],
   "ipaddress": "192.168.0.23",
+  "tags": [
+    "mysql_master"
+    ],
   "mysql": {
     "server_repl_password": "guudpasswerd"
   }

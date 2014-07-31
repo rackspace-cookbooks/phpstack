@@ -26,7 +26,8 @@ Requirements
 * `apache2::mod_php5`  
 * `database::mysql`  
 * `mysql:server`  
-* `mysql-multi::mysql_base`  
+* `mysql-multi`
+* `pg-multi`  
 * `java`  
 * `elasticsearch`  
 * `varnish`  
@@ -84,8 +85,12 @@ Creates an user with select, update and insert permissions, for each server that
 Includes recipe phpstack::mysql_base and mysql-multi::mysql_slave
 #### php_fpm
 Includes recipe php_fpm
-#### postgresql_standalone
-Includes recipe postgresql::server
+#### postgresql_base
+Creates base postgresql server in standalone mode
+#### postgresql_master
+Creates postgresql server in master node configuration
+#### postgresql_slave
+Creates posgresql server in slave node configuration
 #### rabbitmq
 Includes recipe platformstack::iptables
 Creates an iptables rule for application_php nodes in order to connect to this one.
@@ -251,31 +256,40 @@ Usage
 }
 ```
 * single app node - multi db node 
-  DB Master Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_base`, `phpstack::mysql_master` in your node's `run_list`:    
+
+Ensure the following attributes are set within environment or wrapper cookbook.
+
+```
+['mysql']['server_repl_password'] = 'rootlogin'
+['mysql']['server_repl_password'] = 'replicantlogin'
+['mysql-multi']['master'] = '1.2.3.4'
+['mysql-multi']['slaves'] = ['5.6.7.8']
+```
+
+MySQL DB Master Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_master` in your node's `run_list`:    
 ```json
 {
   "run_list": [
   "recipe[platformstack::default]",
-  "recipe[rackops_rolebook::default]",
-  "recipe[phpstack::mysql_base]",  
+  "recipe[rackops_rolebook::default]",  
   "recipe[phpstack::mysql_master]"
   ]
 }
 ```
 
-  DB Slave Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_base`, `phpstack::mysql_slave` in your node's `run_list`:    
+MySQL DB Slave Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_slave`, `phpstack::mysql_slave` in your node's `run_list`:    
 ```json
 {
   "run_list": [
   "recipe[platformstack::default]",
   "recipe[rackops_rolebook::default]",
-  "recipe[phpstack::mysql_base]",
+  "recipe[phpstack::mysql_slave]",
   "recipe[phpstack::application_php]
   ]
 }
 ```
 
-  App Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::application_php` in your node's `run_list`:    
+App Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::application_php` in your node's `run_list`:    
 ```json
 {
   "run_list": [
@@ -286,6 +300,42 @@ Usage
 }
 ```
 
+* Building a PostgreSQL cluster for phpstack.
+
+Ensure the following attributes are set within environment or wrapper cookbook.
+
+```
+['postgresql']['version'] = '9.3' 
+['postgresql']['password'] = 'postgresdefault'
+['pg-multi']['replication']['password'] = 'useagudpasswd'
+['pg-multi']['master_ip'] = '1.2.3.4'
+['pg-multi']['slave_ip'] = ['5.6.7.8']
+
+Depending on OS one of the following two must be set:
+['postgresql']['enable_pdgd_yum'] = true  (Redhat Family)
+['postgresql']['enable_pdgd_apt'] = true  (Debian Family)
+```
+
+Master Postgresql node:
+```json
+{
+  "run_list": [
+  "recipe[platformstack::default]",
+  "recipe[rackops_rolebook::default]",
+  "recipe[phpstack::postgresql_master]"
+  ]
+}
+```
+Slave node:
+```json
+{
+  "run_list": [
+  "recipe[platformstack::default]",
+  "recipe[rackops_rolebook::default]",
+  "recipe[phpstack::postgresql_slave]"
+  ]
+}
+```
 
 Contributing
 ------------

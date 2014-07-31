@@ -19,12 +19,12 @@
 #
 
 include_recipe 'chef-sugar'
+if platform_family?('debian')
+  include_recipe 'apt'
+end
 
 add_iptables_rule('INPUT', "-p tcp --dport #{node['varnish']['listen_port']} -j ACCEPT", 9997, 'allow web browsers to connect')
 
-# let us set up a more complicated vcl config if needed
-node.default['varnish']['vcl_cookbook'] = 'phpstack' if node['phpstack']['varnish']['multi']
-node.default['varnish']['vcl_source'] = 'varnish-default-vcl.erb' if node['phpstack']['varnish']['multi']
 # set the default port to send things on to something that might be useful
 node.default['varnish']['backend_port'] = node['apache']['listen_ports'].first
 
@@ -35,21 +35,38 @@ if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
   backend_nodes = nil
 else
-  backend_nodes = search('node', 'recipes:phpstack\:\:apache' << " AND chef_environment:#{node.chef_environment}")
+  backend_nodes = search('node', 'tags:php_app_node' << " AND chef_environment:#{node.chef_environment}")
 end
+
 backend_nodes.each do |backend_node|
-  node['apache']['sites'].each do |site_name|
-    site_name = site_name[0]
-    site = node['apache']['sites'][site_name]
-    backend_hosts.merge!(
-      best_ip_for(backend_node) => {
-        site['port'] => {
-          site_name => site_name
+  if backend_node.deep_fetch('apache', 'sites').nil?
+    errmsg = 'Did not find sites, default.vcl not configured'
+    Chef::Log.warn(errmsg)
+  else
+    backend_node['apache']['sites'].each do |site_name|
+      site_name = site_name[0]
+      site = backend_node['apache']['sites'][site_name]
+      backend_hosts.merge!(
+        best_ip_for(backend_node) => {
+          site['port'] => {
+            site_name => site_name
+          }
         }
-      }
-    )
+      )
+    end
   end
 end
+
 node.default['phpstack']['varnish']['backends'] = backend_hosts
 
+# only set if we have backends to populate (aka not on first run with an all in one node)
+if backend_nodes.first.nil?
+  # if our backends go away we needs this
+  node.default['varnish']['vcl_cookbook'] = 'varnish'
+  node.default['varnish']['vcl_source'] = 'default.vcl.erb'
+else
+  # let us set up a more complicated vcl config if needed
+  node.default['varnish']['vcl_cookbook'] = 'phpstack' if node['phpstack']['varnish']['multi']
+  node.default['varnish']['vcl_source'] = 'varnish-default-vcl.erb' if node['phpstack']['varnish']['multi']
+end
 include_recipe 'varnish::default'

@@ -20,7 +20,6 @@
 
 # run apt-get update to clear cache issues
 include_recipe 'apt' if node.platform_family?('debian')
-
 include_recipe 'chef-sugar'
 include_recipe 'database::mysql'
 include_recipe 'platformstack::monitors'
@@ -33,7 +32,7 @@ if node['mysql']['server_root_password'] == 'ilikerandompasswords'
 end
 
 include_recipe 'mysql::server'
-include_recipe 'mysql-multi::mysql_base'
+include_recipe 'mysql-multi'
 
 connection_info = {
   host: 'localhost',
@@ -57,6 +56,7 @@ mysql_database_user node['phpstack']['cloud_monitoring']['agent_mysql']['user'] 
   connection connection_info
   password node['phpstack']['cloud_monitoring']['agent_mysql']['password']
   action 'create'
+  only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
 end
 
 template 'mysql-monitor' do
@@ -73,7 +73,40 @@ end
 
 # allow the app nodes to connect
 search_add_iptables_rules(
-  'recipes:phpstack\:\:application_php' << " AND chef_environment:#{node.chef_environment}",
+  "tags:php_app_node AND chef_environment:#{node.chef_environment}",
   'INPUT', "-p tcp --dport #{node['mysql']['port']} -j ACCEPT",
   9998,
   'allow app nodes to connect')
+
+# we don't want to create DBs or users and the like on slaves, do we?
+unless includes_recipe?('phpstack::mysql_slave')
+  node['apache']['sites'].each do |site_name|
+    site_name = site_name[0]
+
+    mysql_database site_name do
+      connection connection_info
+      action 'create'
+    end
+
+    node.set_unless['apache']['sites'][site_name]['mysql_password'] = secure_password
+    if Chef::Config[:solo]
+      Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+      app_nodes = []
+    else
+      app_nodes = search(:node, "tags:php_app_node AND chef_environment:#{node.chef_environment}")
+    end
+
+    app_nodes.each do |app_node|
+      mysql_database_user site_name do
+        connection connection_info
+        password node['apache']['sites'][site_name]['mysql_password']
+        host best_ip_for(app_node)
+        database_name site_name
+        privileges %w(select update insert)
+        retries 2
+        retry_delay 2
+        action %w(create grant)
+      end
+    end
+  end
+end

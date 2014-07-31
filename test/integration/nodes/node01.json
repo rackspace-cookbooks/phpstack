@@ -1,0 +1,34 @@
+{
+  "name": "app_node-01",
+  "chef_environment": "_default",
+  "json_class": "Chef::Node",
+  "automatic": {
+    "hostname": "vagrant.vm",
+    "recipes": [
+      "phpstack::application_php"
+    ],
+    "roles": [
+    ],
+    "ipaddress": "192.168.0.52"
+  },
+  "tags": [
+    "php_app_node"
+  ],
+  "normal": {
+  },
+  "chef_type": "node",
+  "default": {
+    "apache": {
+      "sites": {
+        "example.com": {
+          "port": 80
+        }
+      }
+    }
+  },
+  "override": {
+  },
+  "run_list": [
+    "recipe[phpstack::application_php]"
+  ]
+}

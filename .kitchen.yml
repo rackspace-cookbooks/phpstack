@@ -9,19 +9,15 @@ provisioner:
   client_rb:
     environment: _default
   attributes:
+    platformstack:
+      cloudbackup:
+        enabled: false
+      cloud_monitoring:
+        enabled: false
     authorization:
       sudo:
         users: ['vagrant']
         passwordless: true
-    rackspace:
-      cloud_credentials: # until platformstack ships default values
-        username: please_exist
-        api_key: so_it_compiles
-      cloudbackup:
-        enabled: false
-    platformstack:
-      cloud_monitoring:
-        enabled: false
 
 platforms:
   - name: ubuntu-12.04
@@ -57,7 +53,7 @@ suites:
   - name: application_php
     run_list:
       - recipe[phpstack::application_php]
-      - recipe[phpstack::mysql_master]
+      - recipe[phpstack::mysql_base]
     attributes:
       mysql:
         server_root_password: "randompass"
@@ -67,6 +63,10 @@ suites:
   - name: mongodb
     run_list:
       - recipe[phpstack::mongodb_standalone]
+
+  - name: varnish
+    run_list:
+      - recipe[phpstack::varnish]
 
   - name: memcached
     run_list:
