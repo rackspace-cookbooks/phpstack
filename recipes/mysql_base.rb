@@ -33,7 +33,7 @@ if node['mysql']['server_root_password'] == 'ilikerandompasswords'
 end
 
 include_recipe 'mysql::server'
-include_recipe 'mysql-multi::mysql_base'
+include_recipe 'mysql-multi'
 
 connection_info = {
   host: 'localhost',
@@ -77,3 +77,42 @@ search_add_iptables_rules(
   'INPUT', "-p tcp --dport #{node['mysql']['port']} -j ACCEPT",
   9998,
   'allow app nodes to connect')
+
+unless includes_recipe?('phpstack::mysql_slave')
+  node['apache']['sites'].each do |site_name|
+    site_name = site_name[0]
+
+    mysql_database site_name do
+      connection connection_info
+      action 'create'
+    end
+
+    node.set_unless['apache']['sites'][site_name]['mysql_password'] = secure_password
+    if Chef::Config[:solo]
+      Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+      app_nodes = []
+    else
+      app_nodes = search(:node, 'recipes:phpstack\:\:application_php' << " AND chef_environment:#{node.chef_environment}")
+    end
+
+    if Chef::Config[:solo]
+      Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+      app_nodes = []
+    else
+      app_nodes = search(:node, 'recipes:phpstack\:\:application_php' << " AND chef_environment:#{node.chef_environment}")
+    end
+
+    app_nodes.each do |app_node|
+      mysql_database_user site_name do
+        connection connection_info
+        password node['apache']['sites'][site_name]['mysql_password']
+        host best_ip_for(app_node)
+        database_name site_name
+        privileges %w(select update insert)
+        retries 2
+        retry_delay 2
+        action %w(create grant)
+      end
+    end
+  end
+end

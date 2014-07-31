@@ -53,7 +53,7 @@ suites:
   - name: application_php
     run_list:
       - recipe[phpstack::application_php]
-      - recipe[phpstack::mysql_master]
+      - recipe[phpstack::mysql_base]
     attributes:
       mysql:
         server_root_password: "randompass"
@@ -63,6 +63,10 @@ suites:
   - name: mongodb
     run_list:
       - recipe[phpstack::mongodb_standalone]
+
+  - name: varnish
+    run_list:
+      - recipe[phpstack::varnish]
 
   - name: memcached
     run_list:
