@@ -28,6 +28,18 @@ platforms:
     - recipe[yum]
 
 suites:
+  - name: default
+    run_list:
+      - recipe[phpstack::application_php]
+      - recipe[phpstack::mysql_master]
+    attributes:
+      mysql:
+        server_root_password: "randompass"
+        server_repl_password: "randompass"
+        server_debian_password: "randompass"
+      mysql-multi:
+        slaves: [] 
+
   - name: mysql-master
     run_list:
       - recipe[phpstack::mysql_master]

@@ -7,9 +7,15 @@ if os[:family] == 'RedHat'
     it { should be_enabled }
     it { should be_running }
   end
+  describe service('mysqld') do
+    it { should be_running }
+  end
 else
   describe service('mysql') do
     it { should be_enabled }
+    it { should be_running }
+  end
+  describe service('mysql') do
     it { should be_running }
   end
 end
