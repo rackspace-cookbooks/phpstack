@@ -6,10 +6,14 @@ if os[:family] == 'RedHat'
   describe service('httpd') do
     it { should be_enabled }
   end
+
+  apache2ctl = '/usr/sbin/apachectl'
 else
   describe service('apache2') do
     it { should be_enabled }
   end
+
+  apache2ctl = '/usr/sbin/apache2ctl'
 end
 
 describe port(80) do
@@ -18,4 +22,8 @@ end
 
 describe file('/etc/php.ini') do
   it { should be_file }
+end
+
+describe command("#{apache2ctl} -M") do
+  it { should return_stdout(/^ ssl_module/) }
 end
