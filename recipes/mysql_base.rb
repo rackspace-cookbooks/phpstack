@@ -31,8 +31,6 @@ if node['mysql']['server_root_password'] == 'ilikerandompasswords'
 end
 
 include_recipe 'build-essential'
-include_recipe 'mysql::server'
-include_recipe 'mysql::client'
 include_recipe 'mysql-multi'
 include_recipe 'database::mysql'
 
