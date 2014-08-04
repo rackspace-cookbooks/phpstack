@@ -7,7 +7,7 @@ license 'Apache 2.0'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 description 'Provides a full php stack'
 
-version '0.0.7'
+version '0.0.8'
 
 depends 'apache2', '~> 1.10'
 depends 'application'
@@ -23,6 +23,7 @@ depends 'memcached'
 depends 'mongodb'
 depends 'mysql'
 depends 'mysql-multi'
+depends 'newrelic'
 depends 'openssl'
 depends 'php'
 depends 'php-fpm'
