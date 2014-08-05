@@ -20,6 +20,8 @@
 
 # The node['newrelic']['license'] attribute needs to be set for NewRelic to work
 
+fail 'The NewRelic license attribute is not set.' if node['newrelic']['license'].nil?
+
 node.override['newrelic']['application_monitoring']['daemon']['ssl'] = true
 node.override['newrelic']['server_monitoring']['ssl'] = true
 include_recipe 'newrelic::php-agent'
