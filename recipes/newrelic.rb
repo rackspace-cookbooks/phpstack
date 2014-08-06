@@ -24,4 +24,5 @@ fail 'The NewRelic license attribute is not set.' if node['newrelic']['license']
 
 node.override['newrelic']['application_monitoring']['daemon']['ssl'] = true
 node.override['newrelic']['server_monitoring']['ssl'] = true
+node.override['newrelic']['php-agent']['agent_action'] = 'upgrade'
 include_recipe 'newrelic::php-agent'
