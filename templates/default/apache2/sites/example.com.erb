@@ -7,8 +7,12 @@
   <Directory <%= @params[:docroot] %>>
     Options <%= [@params[:directory_options] || "FollowSymLinks" ].flatten.join " " %>
     AllowOverride <%= [@params[:allow_override] || "None" ].flatten.join " " %>
+    <% if node['apache']['version'] == '2.2' -%>
     Order allow,deny
     Allow from all
+    <% elsif node['apache']['version'] == '2.4' -%>
+    Require all granted
+    <% end -%>
   </Directory>
 
   <Directory />
@@ -19,9 +23,13 @@
   <Location /server-status>
     SetHandler server-status
 
+    <% if node['apache']['version'] == '2.2' -%>
     Order Deny,Allow
     Deny from all
     Allow from 127.0.0.1
+    <% elsif node['apache']['version'] == '2.4' -%>
+    Require host 127.0.0.1
+    <% end -%>
   </Location>
 
   LogLevel info
@@ -33,8 +41,12 @@
   <% end -%>
 
   RewriteEngine On
+  <% if node['apache']['version'] == '2.2' -%>
   RewriteLog <%= node['apache']['log_dir'] %>/<%= @application_name %>-rewrite.log
   RewriteLogLevel 0
+  <% elsif node['apache']['version'] == '2.4' -%>
+  LogLevel alert rewrite:trace1
+  <% end -%>
 
   # DO NOT canonicalize example.com's template
   # Canonical host, <%= @params[:server_name] %>

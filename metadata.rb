@@ -7,9 +7,9 @@ license 'Apache 2.0'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 description 'Provides a full php stack'
 
-version '0.0.8'
+version '0.0.9'
 
-depends 'apache2', '~> 1.10'
+depends 'apache2'
 depends 'application'
 depends 'application_php'
 depends 'apt'
