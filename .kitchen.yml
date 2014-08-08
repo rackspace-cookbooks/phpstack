@@ -32,7 +32,7 @@ suites:
     run_list:
       - recipe[phpstack::mysql_base]
       - recipe[phpstack::mongodb_standalone]
-      - recipe[phpstack::memcached]
+      - recipe[phpstack::memcache]
       - recipe[phpstack::varnish]
       - recipe[phpstack::application_php]
     attributes:
