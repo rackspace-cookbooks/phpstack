@@ -28,7 +28,7 @@ platforms:
     - recipe[yum]
 
 suites:
-  - name: all-in-one
+  - name: default
     run_list:
       - recipe[phpstack::mysql_base]
       - recipe[phpstack::mongodb_standalone]
