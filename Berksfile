@@ -1,4 +1,4 @@
-source "https://api.berkshelf.com"
+source 'https://api.berkshelf.com'
 
 cookbook 'logstash_stack', git: 'git@github.com:rackspace-cookbooks/logstash_stack.git'
 cookbook 'rackspace_iptables', git: 'git@github.com:rackspace-cookbooks/rackspace_iptables.git'
@@ -10,8 +10,6 @@ cookbook 'cron', git: 'git@github.com:rackspace-cookbooks/cron.git'
 cookbook 'pg-multi', git: 'git@github.com:rackspace-cookbooks/pg-multi.git'
 
 group :integration do
-#  cookbook 'phpstack_test_app', path: 'test/fixtures/cookbooks/phpstack_test_app'
-
   cookbook 'apt'
   cookbook 'yum'
 end
