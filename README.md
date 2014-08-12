@@ -9,12 +9,12 @@ Supported Platforms
 Requirements
 ------------
 #### Cookbooks
-  
-* `git` 
+
+* `git`
 * `rackops_rolebook`  
 * `yum`  
 * `yum-epel`  
-* `yum-ius`     
+* `yum-ius`
 * `apt`  
 * `php`  
 * `php::ini`  
@@ -32,7 +32,7 @@ Requirements
 * `elasticsearch`  
 * `varnish`  
 * `rabbitmq`  
-* `varnish`        
+* `varnish`
 
 Recipes
 ----------
@@ -220,8 +220,8 @@ Usage
 
 #### phpstack
 
-* single node (app and db) 
-	Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_base`, `phpstack::application_php` in your node's `run_list`:    
+* single node (app and db)
+	Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_base`, `phpstack::application_php` in your node's `run_list`:
 ```json
 {
   "run_list": [
@@ -232,8 +232,8 @@ Usage
   ]
 }
 ```
-* single app node - standalone db node 
-  DB Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_base` in your node's `run_list`:    
+* single app node - standalone db node
+  DB Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_base` in your node's `run_list`:
 ```json
 {
   "run_list": [
@@ -245,7 +245,7 @@ Usage
 }
 ```
 
-  App Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::application_php` in your node's `run_list`:    
+  App Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::application_php` in your node's `run_list`:
 ```json
 {
   "run_list": [
@@ -255,7 +255,7 @@ Usage
   ]
 }
 ```
-* single app node - multi db node 
+* single app node - multi db node
 
 Ensure the following attributes are set within environment or wrapper cookbook.
 
@@ -266,7 +266,7 @@ Ensure the following attributes are set within environment or wrapper cookbook.
 ['mysql-multi']['slaves'] = ['5.6.7.8']
 ```
 
-MySQL DB Master Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_master` in your node's `run_list`:    
+MySQL DB Master Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_master` in your node's `run_list`:
 ```json
 {
   "run_list": [
@@ -277,7 +277,7 @@ MySQL DB Master Node: Include recipe `platformstack::default`, `rackops_rolebook
 }
 ```
 
-MySQL DB Slave Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_slave`, `phpstack::mysql_slave` in your node's `run_list`:    
+MySQL DB Slave Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::mysql_slave`, `phpstack::mysql_slave` in your node's `run_list`:
 ```json
 {
   "run_list": [
@@ -289,7 +289,7 @@ MySQL DB Slave Node: Include recipe `platformstack::default`, `rackops_rolebook:
 }
 ```
 
-App Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::application_php` in your node's `run_list`:    
+App Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, `phpstack::application_php` in your node's `run_list`:
 ```json
 {
   "run_list": [
@@ -305,7 +305,7 @@ App Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, 
 Ensure the following attributes are set within environment or wrapper cookbook.
 
 ```
-['postgresql']['version'] = '9.3' 
+['postgresql']['version'] = '9.3'
 ['postgresql']['password'] = 'postgresdefault'
 ['pg-multi']['replication']['password'] = 'useagudpasswd'
 ['pg-multi']['master_ip'] = '1.2.3.4'
@@ -337,6 +337,34 @@ Slave node:
 }
 ```
 
+New Relic Monitoring
+--------------------
+
+To configure New Relic, make sure the `node['newrelic']['license']`
+attribute is set and include the `platformstack` cookbook in your run_list.
+
+New Relic monitoring plugins can be configured by including the `newrelic::meetme-plugin`
+recipe in your run_list and setting the following attribute hash in an application
+cookbook:
+
+```ruby
+node.override['newrelic']['meetme-plugin']['services'] = {
+  "memcached": {
+    "name": "localhost",
+    "host":  "host",
+    "port":  11211
+  },
+  "elasticsearch": {
+    "name": "clustername",
+    "host": "localhost",
+    "port": 9200
+  }
+}
+```
+
+More examples can be found [here](https://github.com/escapestudios-cookbooks/newrelic#meetme-pluginrb)
+and [here](https://github.com/MeetMe/newrelic-plugin-agent#configuration-example).
+
 Contributing
 ------------
 
@@ -346,4 +374,3 @@ https://github.com/rackspace-cookbooks/contributing/blob/master/CONTRIBUTING.md
 Authors
 -------
 Authors:: Rackspace DevOps (devops@rackspace.com)
-
