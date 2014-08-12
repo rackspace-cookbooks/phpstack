@@ -19,7 +19,7 @@
 #
 
 case node['platform_family']
-when 'redhat'
+when 'rhel'
   node.default['php']['packages'] = %w(
     php55u
     php55u-devel
