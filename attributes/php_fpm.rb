@@ -21,9 +21,9 @@
 default['php-fpm']['pools'] = false
 
 case node['platform_family']
-when 'redhat'
-  node.default['php-fpm']['package_name'] = %w(
-    php55u-fpm )
+when 'rhel'
+  node.default['php-fpm']['package_name'] = 'php55u-fpm'
+  node.default['php-fpm']['service_name'] = 'php-fpm'
 when 'debian'
   node.default['php']['package-name'] = %w(
     php5-fpm )
