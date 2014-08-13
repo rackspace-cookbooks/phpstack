@@ -45,3 +45,18 @@ suites:
         server_debian_password: "randompass"
       holland:
         password: "randompass"
+
+  - name: web
+    run_list:
+      - recipe[phpstack::application_php]
+
+  - name: mysql
+    run_list:
+      - recipe[phpstack::mysql_base]
+    attributes:
+      mysql:
+        server_root_password: "randompass"
+        server_repl_password: "randompass"
+        server_debian_password: "randompass"
+      holland:
+        password: "randompass"
