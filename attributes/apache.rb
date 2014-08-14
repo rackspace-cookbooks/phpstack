@@ -17,6 +17,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+default['phpstack']['demo']['enabled'] = false
 
 if node['phpstack']['demo']['enabled']
   site1 = 'example.com'
