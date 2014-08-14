@@ -40,6 +40,7 @@ suites:
       - recipe[phpstack::mongodb_standalone]
       - recipe[phpstack::memcache]
       - recipe[phpstack::varnish]
+      - recipe[phpstack::rabbitmq]
       - recipe[phpstack::application_php]
     attributes:
       mysql:
