@@ -17,6 +17,9 @@ end
 describe port(80) do
   it { should be_listening }
 end
+describe command("#{apache2ctl} -M") do
+  it { should return_stdout(/^ ssl_module/) }
+end
 
 # memcache
 describe service('memcached') do
@@ -33,19 +36,12 @@ if os[:family] == 'RedHat'
     it { should be_enabled }
     it { should be_running }
   end
-  describe service('mysqld') do
-    it { should be_running }
-  end
 else
   describe service('mysql') do
     it { should be_enabled }
     it { should be_running }
   end
-  describe service('mysql') do
-    it { should be_running }
-  end
 end
-
 describe port(3306) do
   it { should be_listening }
 end
@@ -67,8 +63,4 @@ end
 # php
 describe file('/etc/phpstack.ini') do
   it { should be_file }
-end
-
-describe command("#{apache2ctl} -M") do
-  it { should return_stdout(/^ ssl_module/) }
 end
