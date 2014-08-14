@@ -28,10 +28,10 @@ search_add_iptables_rules("tags:php_app_node AND chef_environment:#{node.chef_en
                           70,
                           'web nodes access to rabbitmq')
 
-include_recipe 'rabbitmq'
-
 # disable the default user
 node.default['rabbitmq']['disabled_users'] = %w(guest)
+
+include_recipe 'rabbitmq'
 
 node['apache']['sites'].each do |site_name|
   site_name = site_name[0]
