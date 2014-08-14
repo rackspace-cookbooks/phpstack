@@ -9,6 +9,9 @@ provisioner:
   client_rb:
     environment: _default
   attributes:
+    phpstack:
+      demo:
+        enabled: true
     platformstack:
       cloudbackup:
         enabled: false
