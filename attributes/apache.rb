@@ -18,6 +18,8 @@
 # limitations under the License.
 #
 
+include_attribute 'phpstack::demo'
+
 if node['phpstack']['demo']['enabled']
   site1 = 'example.com'
   version1 = '0.0.9'
