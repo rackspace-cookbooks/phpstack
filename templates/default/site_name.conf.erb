@@ -1,0 +1,60 @@
+<VirtualHost *:<%= @params[:port] || node['apache']['listen_ports'].first %>>
+  ServerName <%= @params[:server_name] %>
+  ServerAlias <% @params[:server_aliases].each do |a| %><%= a %> <% end %>
+  DocumentRoot <%= @params[:docroot] %>/current
+  RewriteEngine On
+
+  <Directory <%= @params[:docroot] %>>
+    Options <%= [@params[:directory_options] || "FollowSymLinks" ].flatten.join " " %>
+    AllowOverride <%= [@params[:allow_override] || "None" ].flatten.join " " %>
+    <% if node['apache']['version'] == '2.2' -%>
+    Order allow,deny
+    Allow from all
+    <% elsif node['apache']['version'] == '2.4' -%>
+    Require all granted
+    <% end -%>
+  </Directory>
+
+  <Directory />
+    Options FollowSymLinks
+    AllowOverride None
+  </Directory>
+
+  <Location /server-status>
+    SetHandler server-status
+
+    <% if node['apache']['version'] == '2.2' -%>
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+    <% elsif node['apache']['version'] == '2.4' -%>
+    Require host 127.0.0.1
+    <% end -%>
+  </Location>
+
+  LogLevel info
+  ErrorLog <%= node['apache']['log_dir'] %>/<%= @params[:name] %>-error.log
+  CustomLog <%= node['apache']['log_dir'] %>/<%= @params[:name] %>-access.log combined
+
+  <% if @params[:directory_index] -%>
+  DirectoryIndex <%= [@params[:directory_index]].flatten.join " " %>
+  <% end -%>
+
+  RewriteEngine On
+  <% if node['apache']['version'] == '2.2' -%>
+  RewriteLog <%= node['apache']['log_dir'] %>/<%= @application_name %>-rewrite.log
+  RewriteLogLevel 0
+  <% elsif node['apache']['version'] == '2.4' -%>
+  LogLevel alert rewrite:trace1
+  <% end -%>
+
+  # DO NOT canonicalize example.com's template
+  # Canonical host, <%= @params[:server_name] %>
+  #RewriteCond %{HTTP_HOST}   !^<%= @params[:server_name] %> [NC]
+  #RewriteCond %{HTTP_HOST}   !^$
+  #RewriteRule ^/(.*)$        http://<%= @params[:server_name] %>/$1 [L,R=301]
+
+  RewriteCond %{DOCUMENT_ROOT}/system/maintenance.html -f
+  RewriteCond %{SCRIPT_FILENAME} !maintenance.html
+  RewriteRule ^.*$ /system/maintenance.html [L]
+</VirtualHost>
