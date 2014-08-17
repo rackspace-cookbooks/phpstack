@@ -85,7 +85,6 @@ unless includes_recipe?('phpstack::mysql_slave')
     if node['apache']['sites'][site_name]['databases'].nil?
       db_name = site_name[0...64]
       node.set['apache']['sites'][site_name]['databases'][db_name]['mysql_user'] = site_name[0...16]
-      node.set['apache']['sites'][site_name]['databases'][db_name]['mysql_password'] = secure_password
     end
 
     node['apache']['sites'][site_name]['databases'].each do |database|
@@ -105,9 +104,14 @@ unless includes_recipe?('phpstack::mysql_slave')
     app_nodes.each do |app_node|
       node['apache']['sites'][site_name]['databases'].each do |database|
         database = database[0]
+        mysql_password = node['apache']['sites'][site_name]['databases'][database]['mysql_password']
+        if mysql_password.nil? or mysql_password.empty? or !node['apache']['sites'][site_name]['databases'][database]['mysql_password']
+          mysql_password = secure_password 
+        end
+
         mysql_database_user node['apache']['sites'][site_name]['databases'][database]['mysql_user'] do
           connection connection_info
-          password node['apache']['sites'][site_name]['databases'][database]['mysql_password']
+          password mysql_password
           host best_ip_for(app_node)
           database_name database
           privileges %w(select update insert)
