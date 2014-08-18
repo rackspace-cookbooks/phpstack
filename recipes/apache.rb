@@ -23,10 +23,14 @@
   include_recipe recipe
 end
 
+# Initialize listen_ports
+listen_ports = []
+
 # Create the sites.
 node['apache']['sites'].each do | site_name |
   site_name = site_name[0]
   site = node['apache']['sites'][site_name]
+  listen_ports.push(site['port']) unless listen_ports.include? site['port']
 
   add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site['port']} -j ACCEPT", 100, 'Allow access to apache')
 
@@ -58,3 +62,6 @@ node['apache']['sites'].each do | site_name |
     only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
   end
 end
+
+# Set listen_ports attribute
+node.set['apache']['listen_ports'] = listen_ports
