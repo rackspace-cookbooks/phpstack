@@ -82,13 +82,18 @@ search_add_iptables_rules(
 unless includes_recipe?('phpstack::mysql_slave')
   node['apache']['sites'].each do |site_name|
     site_name = site_name[0]
-
-    mysql_database site_name do
-      connection connection_info
-      action 'create'
+    if node['apache']['sites'][site_name]['databases'].nil?
+      db_name = site_name[0...64]
+      node.set['apache']['sites'][site_name]['databases'][db_name]['mysql_user'] = site_name[0...16]
     end
 
-    node.set_unless['apache']['sites'][site_name]['mysql_password'] = secure_password
+    node['apache']['sites'][site_name]['databases'].each do |database|
+      mysql_database database[0] do
+        connection connection_info
+        action 'create'
+      end
+    end
+
     if Chef::Config[:solo]
       Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
       app_nodes = []
@@ -97,15 +102,23 @@ unless includes_recipe?('phpstack::mysql_slave')
     end
 
     app_nodes.each do |app_node|
-      mysql_database_user site_name do
-        connection connection_info
-        password node['apache']['sites'][site_name]['mysql_password']
-        host best_ip_for(app_node)
-        database_name site_name
-        privileges %w(select update insert)
-        retries 2
-        retry_delay 2
-        action %w(create grant)
+      node['apache']['sites'][site_name]['databases'].each do |database|
+        database = database[0]
+        mysql_password = node['apache']['sites'][site_name]['databases'][database]['mysql_password']
+        if mysql_password.nil? or mysql_password.empty? or !node['apache']['sites'][site_name]['databases'][database]['mysql_password']
+          mysql_password = secure_password 
+        end
+
+        mysql_database_user node['apache']['sites'][site_name]['databases'][database]['mysql_user'] do
+          connection connection_info
+          password mysql_password
+          host best_ip_for(app_node)
+          database_name database
+          privileges %w(select update insert)
+          retries 2
+          retry_delay 2
+          action %w(create grant)
+        end
       end
     end
   end

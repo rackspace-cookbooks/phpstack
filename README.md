@@ -81,6 +81,7 @@ Setup a cronjob based on holland attributes
 Includes recipe phpstack::mysql_base, mysql-multi::mysql_master, chef-sugar
 Creates mysql-monitor template if node[platformstack][cloud_monitoring] = enabled
 Creates an user with select, update and insert permissions, for each server that matches application_php recipe within the specified environment using site_name as username and node['apache']['sites'][site_name]['mysql_password'] for password.
+Can configure multiple databases and users with passwords from node['apache']['sites'][site]['databases'] array
 #### mysql_slave
 Includes recipe phpstack::mysql_base and mysql-multi::mysql_slave
 #### php_fpm
@@ -149,6 +150,10 @@ Attributes
   * Indicates repository variable to be used to deploy this site
 * node.default['apache']['sites'][site1]['deploy_key'] = '/root/.ssh/id_rsa'
   * Indicates deploy_key variable to be used when getting data from repository
+* node.default['apache']['sites'][site1]['databases'][site1]['mysql_user'] = site1
+  * Indicates a database and database user to be configured
+* node.default['apache']['sites'][site1]['databases'][site1]['mysql_password'] = ''
+  * Indicates the password to configure for database user with blank being random
 
 #### elasticsearch.rb
 
