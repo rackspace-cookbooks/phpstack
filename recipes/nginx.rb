@@ -18,24 +18,25 @@
 # limitations under the License.
 #
 # Include the necessary recipes.
-%w(apt platformstack::monitors platformstack::iptables nginx).each do |recipe|
+%w(apt platformstack::monitors platformstack::iptables nginx chef-sugar).each do |recipe|
   include_recipe recipe
 end
 
 template '/etc/nginx/conf.d/php.conf' do
-  source 'nginx/php-fpm.erb'
-  notifies :restart, 'service[nginx]', :delayed
+  if ubuntu_trusty?
+    source 'nginx/php-fpm14.erb'
+  else
+    source 'nginx/php-fpm12.erb'
+  end
 end
 
 template "/etc/nginx/sites-available/#{node['nginx']['domain']}" do
   source 'nginx/nginx-site.erb'
-  notifies :restart, 'service[nginx]'
 end
 
 # Workaround for default config in conf.d instead of sites-enabled.
 template '/etc/nginx/conf.d/default.conf' do
   source 'nginx/nginx-default.erb'
-  notifies :restart, 'service[nginx]', :delayed
 end
 
 nginx_site 'default' do
@@ -44,4 +45,5 @@ end
 
 nginx_site node['nginx']['domain'] do
   enable true
+  notifies :restart, 'service[nginx]', :delayed
 end
