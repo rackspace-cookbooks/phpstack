@@ -26,10 +26,16 @@ elsif platform_family?('debian')
   include_recipe 'apt'
 end
 include_recipe 'git'
-include_recipe 'php'
-include_recipe 'php::ini'
-include_recipe 'phpstack::apache'
-include_recipe 'php-fpm'
+
+if node['phpstack']['webserver'] == 'nginx'
+  include_recipe 'phpstack::nginx'
+  include_recipe 'php-fpm'
+else
+  include_recipe 'php'
+  include_recipe 'php::ini'
+  include_recipe 'phpstack::apache'
+end
+
 include_recipe 'chef-sugar'
 
 # if gluster is in our environment, install the utils and mount it to /var/www
@@ -55,19 +61,6 @@ if gluster_cluster.key?('nodes')
     device "#{node['phpstack']['gluster_connect_ip']}:/#{node['rackspace_gluster']['config']['server']['glusters'].values[0]['volume']}"
     mount_point node['apache']['docroot_dir']
     action %w(mount enable)
-  end
-end
-
-node['apache']['sites'].each do | site_name |
-  site_name = site_name[0]
-
-  application site_name do
-    path node['apache']['sites'][site_name]['docroot']
-    owner node['apache']['user']
-    group node['apache']['group']
-    deploy_key node['apache']['sites'][site_name]['deploy_key']
-    repository node['apache']['sites'][site_name]['repository']
-    revision node['apache']['sites'][site_name]['revision']
   end
 end
 

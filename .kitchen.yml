@@ -50,9 +50,16 @@ suites:
       holland:
         password: "randompass"
 
-  - name: web
+  - name: web-apache
     run_list:
       - recipe[phpstack::application_php]
+
+  - name: web-nginx
+    run_list:
+      - recipe[phpstack::application_php]
+    attributes:
+      phpstack:
+        webserver: 'nginx'    
 
   - name: mysql
     run_list:
