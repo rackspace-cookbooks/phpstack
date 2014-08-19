@@ -34,6 +34,15 @@ node['apache']['sites'].each do | site_name |
 
   add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site['port']} -j ACCEPT", 100, 'Allow access to apache')
 
+  application site_name do
+    path node['apache']['sites'][site_name]['docroot']
+    owner node['apache']['user']
+    group node['apache']['group']
+    deploy_key node['apache']['sites'][site_name]['deploy_key']
+    repository node['apache']['sites'][site_name]['repository']
+    revision node['apache']['sites'][site_name]['revision']
+  end
+
   web_app site_name do
     port site['port']
     cookbook site['cookbook']
