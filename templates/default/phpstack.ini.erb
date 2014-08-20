@@ -10,10 +10,14 @@
 master-host = <%= node['mysql-multi']['master'] %>
 slave-hosts = <%= node['mysql-multi']['slaves'].join(', ') %>
 port = <%= node['mysql']['port'] %>
-db_name = <%= site_name %>
-username = <%= site_name %>
-password = <%= @mysql['apache']['sites'][site_name]['mysql_password'] %>
 
+<%-     @mysql['apache']['sites'][site_name]['databases'].each do |database| -%>
+<%-       database = database[0] -%>
+db_name = <%= database %>
+username = <%= @mysql['apache']['sites'][site_name]['databases'][database]['mysql_user'] %>
+password = <%= @mysql['apache']['sites'][site_name]['databases'][database]['mysql_password'] %>
+
+<%-     end -%>
 <%-   end -%>
 <%- end -%>
 <%- unless @rabbit_host.nil? -%>

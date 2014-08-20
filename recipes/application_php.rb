@@ -86,7 +86,7 @@ template 'phpstack.ini' do
              if mysql_node.deep_fetch('apache', 'sites').nil?
                nil
              else
-               mysql_node.deep_fetch('apache', 'sites').values[0]['mysql_password'].nil? ? nil : mysql_node
+               mysql_node.deep_fetch('apache', 'sites').values[0].nil? ? nil : mysql_node
              end
            end,
     # need to do here because sugar is not available inside the template
