@@ -27,13 +27,19 @@ elsif platform_family?('debian')
 end
 include_recipe 'git'
 
+include_recipe 'php'
+include_recipe 'php::ini'
+
 if node['phpstack']['webserver'] == 'nginx'
   include_recipe 'phpstack::nginx'
   include_recipe 'php-fpm'
 else
-  include_recipe 'php'
-  include_recipe 'php::ini'
   include_recipe 'phpstack::apache'
+end
+
+# Adding mongod compatibility
+php_pear "mongo" do
+  action :install
 end
 
 include_recipe 'chef-sugar'
