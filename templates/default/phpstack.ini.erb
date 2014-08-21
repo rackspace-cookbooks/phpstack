@@ -20,6 +20,7 @@ password = <%= @mysql['apache']['sites'][site_name]['databases'][database]['mysq
 <%-     end -%>
 <%-   end -%>
 <%- end -%>
+
 <%- unless @rabbit_host.nil? -%>
 <%-   node['apache']['sites'].each do |site_name| -%>
 <%-     site_name = site_name[0] -%>
