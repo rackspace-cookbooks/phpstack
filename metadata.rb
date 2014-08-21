@@ -9,7 +9,7 @@ description 'Provides a full php stack'
 
 version '1.1.1'
 
-depends 'apache2'
+depends 'apache2', '~> 2.0.0'
 depends 'application'
 depends 'application_php'
 depends 'apt'

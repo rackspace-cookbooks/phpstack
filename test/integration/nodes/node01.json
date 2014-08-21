@@ -21,6 +21,9 @@
     "apache": {
       "sites": {
         "example.com": {
+          "databases": {
+            "foobar": {}
+          },
           "port": 80
         }
       }
