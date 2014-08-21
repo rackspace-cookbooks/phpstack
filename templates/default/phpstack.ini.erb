@@ -6,13 +6,12 @@
 <%- unless @mysql.nil? -%>
 <%-   node['apache']['sites'].each do |site_name| -%>
 <%-     site_name = site_name[0] -%>
-[MySQL-<%= site_name -%>]
-master-host = <%= node['mysql-multi']['master'] %>
-slave-hosts = <%= node['mysql-multi']['slaves'].join(', ') %>
-port = <%= node['mysql']['port'] %>
-
 <%-     @mysql['apache']['sites'][site_name]['databases'].each do |database| -%>
 <%-       database = database[0] -%>
+[MySQL-<%= site_name -%>-<%= database -%>]
+master-host = <%= node['mysql-multi']['master'] %>
+slave-hosts = <%= node['mysql-multi']['slaves'].join(', ') %>
+port = <%= @mysql['mysql']['port'] %>
 db_name = <%= database %>
 username = <%= @mysql['apache']['sites'][site_name]['databases'][database]['mysql_user'] %>
 password = <%= @mysql['apache']['sites'][site_name]['databases'][database]['mysql_password'] %>
