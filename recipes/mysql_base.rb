@@ -105,8 +105,8 @@ unless includes_recipe?('phpstack::mysql_slave')
       node['apache']['sites'][site_name]['databases'].each do |database|
         database = database[0]
         mysql_password = node['apache']['sites'][site_name]['databases'][database]['mysql_password']
-        if mysql_password.nil? or mysql_password.empty? or !node['apache']['sites'][site_name]['databases'][database]['mysql_password']
-          mysql_password = secure_password 
+        if mysql_password.nil? || mysql_password.empty? || !node['apache']['sites'][site_name]['databases'][database]['mysql_password']
+          mysql_password = secure_password
         end
 
         mysql_database_user node['apache']['sites'][site_name]['databases'][database]['mysql_user'] do
