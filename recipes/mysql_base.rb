@@ -95,15 +95,6 @@ unless includes_recipe?('phpstack::mysql_slave')
       app_nodes = search(:node, "tags:php_app_node AND chef_environment:#{node.chef_environment}")
     end
 
-<<<<<<< HEAD
-    app_nodes.each do |app_node|
-      node['apache']['sites'][site_name]['databases'].each do |database|
-        database = database[0]
-        mysql_password = node['apache']['sites'][site_name]['databases'][database]['mysql_password']
-        if mysql_password.nil? || mysql_password.empty? || !node['apache']['sites'][site_name]['databases'][database]['mysql_password']
-          mysql_password = secure_password
-        end
-=======
     node['apache']['sites'][site_name]['databases'].each do |database|
       database = database[0]
       # sets up the default database and the others, if specified for the site
@@ -115,7 +106,6 @@ unless includes_recipe?('phpstack::mysql_slave')
       # set up db user and pass for database (the non-default ones) unless set (both to random)
       node.set_unless['apache']['sites'][site_name]['databases'][database]['mysql_user'] = ::SecureRandom.hex
       node.set_unless['apache']['sites'][site_name]['databases'][database]['mysql_password'] = secure_password
->>>>>>> 7fb9751416728463e75f7d337efbe1960f707331
 
       app_nodes.each do |app_node|
         mysql_database_user node['apache']['sites'][site_name]['databases'][database]['mysql_user'] do
