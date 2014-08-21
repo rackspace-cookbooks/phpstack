@@ -14,6 +14,14 @@ include_recipe 'pg-multi'
 # allow traffic to postgresql port for local addresses only
 add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['postgresql']['config']['port']} -j ACCEPT", 9999, 'Open port for postgresql')
 
+directory '/usr/lib/rackspace-monitoring-agent/plugins/' do
+  owner 'root'
+  group 'root'
+  mode 0755
+  action :create
+  recursive true
+end
+
 remote_file '/usr/lib/rackspace-monitoring-agent/plugins/pg_check.py' do
   owner 'root'
   group 'root'
@@ -29,6 +37,6 @@ template '/etc/rackspace-monitoring-agent.conf.d/pg-monitor.yaml' do
   group 'root'
   mode 00600
   notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
-  action 'create'
+  action :create
   only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
 end
