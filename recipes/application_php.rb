@@ -37,6 +37,7 @@ else
   include_recipe 'phpstack::apache'
 end
 
+include_recipe 'build-essential'
 # Adding mongod compatibility
 php_pear 'mongo' do
   action :install
