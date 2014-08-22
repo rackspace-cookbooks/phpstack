@@ -18,6 +18,12 @@
 # limitations under the License.
 #
 
+if node['platform_version'].to_f <= 14.04
+  node.default['php']['ext_conf_dir']  = '/etc/php5/cli/conf.d'
+else
+  node.default['php']['ext_conf_dir']  = '/etc/php5/conf.d'
+end
+
 case node['platform_family']
 when 'rhel'
   node.default['php']['packages'] = %w(
