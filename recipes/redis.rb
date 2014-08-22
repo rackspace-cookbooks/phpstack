@@ -19,18 +19,5 @@
 #
 
 include_recipe 'redisio'
-
-redisio_install 'redis-servers' do
-  version node['redisio']['version']
-  download_url node['redisio']['download_url']
-  default_settings node['redisio']['default_settings']
-  servers node['redisio']['servers']
-  safe_install node['redisio']['safe_install']
-  base_piddir node['redisio']['base_piddir']
-end
-
-node['redisio']['servers'].each do |current_server|
-  service "redis#{current_server['port']}" do
-    action :start
-  end
-end
+include_recipe 'redisio::install'
+include_recipe 'redisio::enable'
