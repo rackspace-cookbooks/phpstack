@@ -19,7 +19,7 @@
 #
 
 # Include the necessary recipes.
-%w(platformstack apache2::default apache2::mod_php5 apache2::mod_ssl).each do |recipe|
+%w(platformstack::monitors platformstack::iptables apt apache2::default apache2::mod_php5 apache2::mod_ssl).each do |recipe|
   include_recipe recipe
 end
 
