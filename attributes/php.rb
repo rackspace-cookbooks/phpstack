@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-if ubuntu_before_trusty?
+if node['platform_version'].to_f <= 14.04
   node.default['php']['ext_conf_dir']  = '/etc/php5/cli/conf.d'
 else
   node.default['php']['ext_conf_dir']  = '/etc/php5/conf.d'
