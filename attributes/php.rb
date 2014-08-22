@@ -45,3 +45,9 @@ when 'debian'
 end
 
 default['phpstack']['ini']['cookbook'] = 'phpstack'
+
+if node['platform_version'].to_f <= 14.04
+  default['php']['ext_conf_dir']  = '/etc/php5/cli/conf.d'
+else
+  default['php']['ext_conf_dir']  = '/etc/php5/conf.d'
+end

@@ -38,7 +38,7 @@ else
 end
 
 # Adding mongod compatibility
-php_pear "mongo" do
+php_pear 'mongo' do
   action :install
 end
 
