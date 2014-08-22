@@ -37,10 +37,12 @@ suites:
   - name: default
     run_list:
       - recipe[phpstack::mysql_base]
+      - recipe[phpstack::postgresql_base]
       - recipe[phpstack::mongodb_standalone]
       - recipe[phpstack::memcache]
       - recipe[phpstack::varnish]
       - recipe[phpstack::rabbitmq]
+      - recipe[phpstack::redis]
       - recipe[phpstack::application_php]
     attributes:
       mysql:
@@ -71,3 +73,7 @@ suites:
         server_debian_password: "randompass"
       holland:
         password: "randompass"
+
+  - name: postgresql
+    run_list:
+      - recipe[phpstack::postgresql_base]
