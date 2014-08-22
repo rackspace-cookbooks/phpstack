@@ -38,6 +38,7 @@ when 'rhel'
     php55u-gmp
     php55u-mysqlnd
     php55u-xml )
+  node.default['php']['ext_conf_dir']  = '/etc/php.d'
 when 'debian'
   node.default['php']['packages'] = %w(
     php5
