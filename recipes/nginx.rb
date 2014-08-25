@@ -53,51 +53,49 @@ if !node['nginx']['default_site_enabled'] && (node['platform_family'] == 'rhel' 
 end
 
 # Create the sites.
-node['nginx']['sites'].each do | site_name |
-  site_name = site_name[0]
-  site = node['nginx']['sites'][site_name]
-  add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site['port']} -j ACCEPT", 100, 'Allow access to nginx')
+node['nginx']['sites'].each do |site_name, site_opts|
+  add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site_opts['port']} -j ACCEPT", 100, 'Allow access to nginx')
 
   application site_name do
-    path site['docroot']
+    path site_opts['docroot']
     owner node['nginx']['user']
     group node['nginx']['group']
-    deploy_key site['deploy_key']
-    repository site['repository']
-    revision site['revision']
+    deploy_key site_opts['deploy_key']
+    repository site_opts['repository']
+    revision site_opts['revision']
   end
 
   # Nginx set up
   template site_name do
-    cookbook 'phpstack'
+    cookbook site_opts['cookbook']
     source "nginx/sites/#{site_name}.erb"
     path "#{node['nginx']['dir']}/sites-available/#{site_name}"
     owner 'root'
     group 'root'
     mode '0644'
     variables(
-      port: site['port'],
-      server_name: site['server_name'],
-      server_aliases: site['server_alias'],
-      docroot: site['docroot'],
-      errorlog: site['errorlog'],
-      customlog: site['customlog']
+      port: site_opts['port'],
+      server_name: site_opts['server_name'],
+      server_aliases: site_opts['server_alias'],
+      docroot: site_opts['docroot'],
+      errorlog: site_opts['errorlog'],
+      customlog: site_opts['customlog']
     )
     notifies :reload, 'service[nginx]'
   end
   nginx_site site_name do
     enable true
   end
-  template "http-monitor-#{site['server_name']}" do
+  template "http-monitor-#{site_opts['server_name']}" do
     cookbook 'phpstack'
     source 'monitoring-remote-http.yaml.erb'
-    path "/etc/rackspace-monitoring-agent.conf.d/#{site['server_name']}-http-monitor.yaml"
+    path "/etc/rackspace-monitoring-agent.conf.d/#{site_opts['server_name']}-http-monitor.yaml"
     owner 'root'
     group 'root'
     mode '0644'
     variables(
-      http_port: site['port'],
-      server_name: site['server_name']
+      http_port: site_opts['port'],
+      server_name: site_opts['server_name']
     )
     notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
     action 'create'
