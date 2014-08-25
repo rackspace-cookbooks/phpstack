@@ -9,6 +9,9 @@ cookbook 'rackops_rolebook', git: 'git@github.com:rackops/rackops_rolebook.git'
 cookbook 'cron', git: 'git@github.com:rackspace-cookbooks/cron.git'
 cookbook 'pg-multi', git: 'git@github.com:rackspace-cookbooks/pg-multi.git'
 
+# Just until the next release. This should be removed ASAP
+cookbook 'mysql', git: 'git@github.com:opscode-cookbooks/mysql.git', ref: 'master'
+
 group :integration do
   cookbook 'apt'
   cookbook 'yum'
