@@ -19,14 +19,14 @@
 #
 
 if node['platform_version'].to_f <= 14.04
-  node.default['php']['ext_conf_dir']  = '/etc/php5/cli/conf.d'
+  default['php']['ext_conf_dir']  = '/etc/php5/cli/conf.d'
 else
-  node.default['php']['ext_conf_dir']  = '/etc/php5/conf.d'
+  default['php']['ext_conf_dir']  = '/etc/php5/conf.d'
 end
 
 case node['platform_family']
 when 'rhel'
-  node.default['php']['packages'] = %w(
+  default['php']['packages'] = %w(
     php55u
     php55u-devel
     php55u-mcrypt
@@ -38,9 +38,9 @@ when 'rhel'
     php55u-gmp
     php55u-mysqlnd
     php55u-xml )
-  node.default['php']['ext_conf_dir']  = '/etc/php.d'
+  default['php']['ext_conf_dir']  = '/etc/php.d'
 when 'debian'
-  node.default['php']['packages'] = %w(
+  default['php']['packages'] = %w(
     php5
     php5-dev
     php5-mcrypt

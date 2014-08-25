@@ -27,15 +27,19 @@ elsif platform_family?('debian')
 end
 include_recipe 'git'
 
+# if we are nginx we need to install php-fpm before php... (php pulls in apache)
 if node['phpstack']['webserver'] == 'nginx'
   include_recipe 'phpstack::nginx'
   include_recipe 'php-fpm'
-else
-  include_recipe 'phpstack::apache'
 end
 
+# we need to run this before apache to pull in the correct version of php
 include_recipe 'php'
 include_recipe 'php::ini'
+
+if node['phpstack']['webserver'] == 'apache'
+  include_recipe 'phpstack::apache'
+end
 
 include_recipe 'build-essential'
 # Adding mongod compatibility

@@ -22,7 +22,7 @@ default['nginx']['listen_ports'] = %w(80)
 
 if node['phpstack']['demo']['enabled']
   site1 = 'example.com'
-  version1 = '0.0.6'
+  version1 = '0.0.9'
 
   default['nginx']['sites'][site1]['port']         = '80'
   default['nginx']['sites'][site1]['cookbook']     = 'phpstack'
