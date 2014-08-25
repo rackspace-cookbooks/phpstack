@@ -80,13 +80,13 @@ search_add_iptables_rules(
 
 # we don't want to create DBs or users and the like on slaves, do we?
 unless includes_recipe?('phpstack::mysql_slave')
-  node['apache']['sites'].each do |site_name|
+  node[node['phpstack']['webserver']]['sites'].each do |site_name|
     site_name = site_name[0]
 
     # set up the default DB name, user and password
     db_name = site_name[0...64]
-    node.set_unless['apache']['sites'][site_name]['databases'][db_name]['mysql_user'] = site_name[0...16]
-    node.set_unless['apache']['sites'][site_name]['databases'][db_name]['mysql_password'] = secure_password
+    node.set_unless[node['phpstack']['webserver']]['sites'][site_name]['databases'][db_name]['mysql_user'] = site_name[0...16]
+    node.set_unless[node['phpstack']['webserver']]['sites'][site_name]['databases'][db_name]['mysql_password'] = secure_password
 
     if Chef::Config[:solo]
       Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
@@ -104,13 +104,13 @@ unless includes_recipe?('phpstack::mysql_slave')
       end
 
       # set up db user and pass for database (the non-default ones) unless set (both to random)
-      node.set_unless['apache']['sites'][site_name]['databases'][database]['mysql_user'] = ::SecureRandom.hex
-      node.set_unless['apache']['sites'][site_name]['databases'][database]['mysql_password'] = secure_password
+      node.set_unless[node['phpstack']['webserver']]['sites'][site_name]['databases'][database]['mysql_user'] = ::SecureRandom.hex
+      node.set_unless[node['phpstack']['webserver']]['sites'][site_name]['databases'][database]['mysql_password'] = secure_password
 
       app_nodes.each do |app_node|
         mysql_database_user node['apache']['sites'][site_name]['databases'][database]['mysql_user'] do
           connection connection_info
-          password node['apache']['sites'][site_name]['databases'][database]['mysql_password']
+          password node[node['phpstack']['webserver']]['sites'][site_name]['databases'][database]['mysql_password']
           host best_ip_for(app_node)
           database_name database
           privileges %w(select update insert)

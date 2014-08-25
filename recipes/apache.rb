@@ -18,8 +18,22 @@
 # limitations under the License.
 #
 
+include_recipe 'chef-sugar'
+
+if rhel?
+  include_recipe 'yum-epel'
+  include_recipe 'yum-ius'
+end
+
 # Include the necessary recipes.
-%w(platformstack::monitors platformstack::iptables apt apache2::default apache2::mod_php5 apache2::mod_ssl).each do |recipe|
+%w(
+  platformstack::monitors
+  platformstack::iptables
+  apt
+  apache2
+  apache2::mod_php5
+  apache2::mod_ssl
+).each do |recipe|
   include_recipe recipe
 end
 
@@ -35,12 +49,12 @@ node['apache']['sites'].each do | site_name |
   add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site['port']} -j ACCEPT", 100, 'Allow access to apache')
 
   application site_name do
-    path node['apache']['sites'][site_name]['docroot']
+    path site['docroot']
     owner node['apache']['user']
     group node['apache']['group']
-    deploy_key node['apache']['sites'][site_name]['deploy_key']
-    repository node['apache']['sites'][site_name]['repository']
-    revision node['apache']['sites'][site_name]['revision']
+    deploy_key site['deploy_key']
+    repository site['repository']
+    revision site['revision']
   end
 
   web_app site_name do

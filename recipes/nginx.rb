@@ -3,9 +3,9 @@
 # Cookbook Name:: phpstack
 # Recipe:: nginx
 #
-# Copyright 2014, Rackspace Hosting
+# Copyright 2014, Rackspace US, Inc.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
+# Licensed under the apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
@@ -17,33 +17,90 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+include_recipe 'chef-sugar'
+
+if rhel?
+  include_recipe 'yum-epel'
+  include_recipe 'yum-ius'
+end
+
 # Include the necessary recipes.
-%w(apt platformstack::monitors platformstack::iptables nginx chef-sugar).each do |recipe|
+%w(
+  platformstack::monitors
+  platformstack::iptables
+  apt
+).each do |recipe|
   include_recipe recipe
 end
 
-template '/etc/nginx/conf.d/php.conf' do
-  if ubuntu_trusty?
-    source 'nginx/php-fpm14.erb'
-  else
-    source 'nginx/php-fpm12.erb'
+# Pid is different on Ubuntu 14, causing nginx service to fail https://github.com/miketheman/nginx/issues/248
+if ubuntu_trusty?
+  node.default['nginx']['pid'] = '/run/nginx.pid'
+end
+
+# Install Nginx
+include_recipe 'nginx'
+
+# Properly disable default vhost on Rhel (https://github.com/miketheman/nginx/pull/230/files)
+# FIXME: should be removed once the PR has been merged
+if !node['nginx']['default_site_enabled'] && (node['platform_family'] == 'rhel' || node['platform_family'] == 'fedora')
+  %w(default.conf example_ssl.conf).each do |config|
+    file "/etc/nginx/conf.d/#{config}" do
+      action :delete
+    end
   end
 end
 
-template "/etc/nginx/sites-available/#{node['nginx']['domain']}" do
-  source 'nginx/nginx-site.erb'
-end
+# Create the sites.
+node['nginx']['sites'].each do | site_name |
+  site_name = site_name[0]
+  site = node['nginx']['sites'][site_name]
+  add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site['port']} -j ACCEPT", 100, 'Allow access to nginx')
 
-# Workaround for default config in conf.d instead of sites-enabled.
-template '/etc/nginx/conf.d/default.conf' do
-  source 'nginx/nginx-default.erb'
-end
+  application site_name do
+    path site['docroot']
+    owner node['nginx']['user']
+    group node['nginx']['group']
+    deploy_key site['deploy_key']
+    repository site['repository']
+    revision site['revision']
+  end
 
-nginx_site 'default' do
-  enable false
-end
-
-nginx_site node['nginx']['domain'] do
-  enable true
-  notifies :restart, 'service[nginx]', :delayed
+  # Nginx set up
+  template site_name do
+    cookbook 'phpstack'
+    source "nginx/sites/#{site_name}.erb"
+    path "#{node['nginx']['dir']}/sites-available/#{site_name}"
+    owner 'root'
+    group 'root'
+    mode '0644'
+    variables(
+      port: site['port'],
+      server_name: site['server_name'],
+      server_aliases: site['server_alias'],
+      docroot: site['docroot'],
+      errorlog: site['errorlog'],
+      customlog: site['customlog']
+    )
+    notifies :reload, 'service[nginx]'
+  end
+  nginx_site site_name do
+    enable true
+  end
+  template "http-monitor-#{site['server_name']}" do
+    cookbook 'phpstack'
+    source 'monitoring-remote-http.yaml.erb'
+    path "/etc/rackspace-monitoring-agent.conf.d/#{site['server_name']}-http-monitor.yaml"
+    owner 'root'
+    group 'root'
+    mode '0644'
+    variables(
+      http_port: site['port'],
+      server_name: site['server_name']
+    )
+    notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
+    action 'create'
+    only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
+  end
 end

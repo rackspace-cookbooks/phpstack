@@ -55,13 +55,16 @@ suites:
   - name: web-apache
     run_list:
       - recipe[phpstack::application_php]
+    attributes:
+      phpstack:
+        webserver: 'apache'
 
   - name: web-nginx
     run_list:
       - recipe[phpstack::application_php]
     attributes:
       phpstack:
-        webserver: 'nginx'    
+        webserver: 'nginx'
 
   - name: mysql
     run_list:
