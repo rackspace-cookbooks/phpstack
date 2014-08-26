@@ -18,13 +18,22 @@
 # limitations under the License.
 #
 
-default['php-fpm']['pools'] = false
+include_attribute 'phpstack::demo'
+
+if node['phpstack']['webserver'] == 'apache'
+  default['php-fpm']['user'] = node['apache']['user']
+  default['php-fpm']['group'] = node['apache']['group']
+else
+  default['php-fpm']['user'] = node['nginx']['user']
+  default['php-fpm']['group'] = node['nginx']['group']
+end
+
+# default['php-fpm']['pools'] = false
 
 case node['platform_family']
 when 'rhel'
-  node.default['php-fpm']['package_name'] = 'php55u-fpm'
-  node.default['php-fpm']['service_name'] = 'php-fpm'
+  default['php-fpm']['package_name'] = 'php55u-fpm'
+  default['php-fpm']['service_name'] = 'php-fpm'
 when 'debian'
-  node.default['php']['package-name'] = %w(
-    php5-fpm )
+  default['php']['package-name'] = %w(php5-fpm)
 end

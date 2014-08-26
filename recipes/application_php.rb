@@ -27,13 +27,17 @@ elsif platform_family?('debian')
 end
 include_recipe 'git'
 
-include_recipe 'php'
-include_recipe 'php::ini'
-
+# if we are nginx we need to install php-fpm before php... (php pulls in apache)
 if node['phpstack']['webserver'] == 'nginx'
   include_recipe 'phpstack::nginx'
   include_recipe 'php-fpm'
-else
+end
+
+# we need to run this before apache to pull in the correct version of php
+include_recipe 'php'
+include_recipe 'php::ini'
+
+if node['phpstack']['webserver'] == 'apache'
   include_recipe 'phpstack::apache'
 end
 
@@ -71,6 +75,21 @@ if gluster_cluster.key?('nodes')
   end
 end
 
+#  recipes/application_php.rb:      location: node[node['pythonstack']['webserver']]['docroot_dir'],
+
+node[node['phpstack']['webserver']]['sites'].each do | site_name |
+  site_name = site_name[0]
+
+  application site_name do
+    path node[node['phpstack']['webserver']]['sites'][site_name]['docroot']
+    owner node[node['phpstack']['webserver']]['user']
+    group node[node['phpstack']['webserver']]['group']
+    deploy_key node[node['phpstack']['webserver']]['sites'][site_name]['deploy_key']
+    repository node[node['phpstack']['webserver']]['sites'][site_name]['repository']
+    revision node[node['phpstack']['webserver']]['sites'][site_name]['revision']
+  end
+end
+
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
   mysql_node = nil
@@ -84,7 +103,7 @@ template 'phpstack.ini' do
   cookbook node['phpstack']['ini']['cookbook']
   source 'phpstack.ini.erb'
   owner 'root'
-  group node['apache']['group']
+  group node[node['phpstack']['webserver']]['group']
   mode '00640'
   variables(
     cookbook_name: cookbook_name,
@@ -118,8 +137,8 @@ node.set_unless['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email
 node.default['rackspace_cloudbackup']['backups'] =
   [
     {
-      location: node['apache']['docroot_dir'],
-      enable: node['phpstack']['rackspace_cloudbackup']['apache_docroot']['enable'],
+      location: node[node['phpstack']['webserver']]['docroot_dir'],
+      enable: node['phpstack']['rackspace_cloudbackup']['http_docroot']['enable'],
       comment: 'Web Content Backup',
       cloud: { notify_email: node['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] }
     }

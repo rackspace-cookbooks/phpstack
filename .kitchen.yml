@@ -58,6 +58,9 @@ suites:
   - name: web-apache
     run_list:
       - recipe[phpstack::application_php]
+    attributes:
+      phpstack:
+        webserver: 'apache'
 
   - name: web-nginx
     run_list:

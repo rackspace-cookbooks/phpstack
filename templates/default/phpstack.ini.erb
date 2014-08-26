@@ -4,24 +4,24 @@
 # Controlling Cookbook: <%=  @cookbook_name %>
 #
 <%- unless @mysql.nil? -%>
-<%-   node['apache']['sites'].each do |site_name| -%>
+<%-   node[node['phpstack']['webserver']]['sites'].each do |site_name| -%>
 <%-     site_name = site_name[0] -%>
-<%-     @mysql['apache']['sites'][site_name]['databases'].each do |database| -%>
+<%-     @mysql[node['phpstack']['webserver']]['sites'][site_name]['databases'].each do |database| -%>
 <%-       database = database[0] -%>
 [MySQL-<%= site_name -%>-<%= database -%>]
 master-host = <%= node['mysql-multi']['master'] %>
 slave-hosts = <%= node['mysql-multi']['slaves'].join(', ') %>
 port = <%= @mysql['mysql']['port'] %>
 db_name = <%= database %>
-username = <%= @mysql['apache']['sites'][site_name]['databases'][database]['mysql_user'] %>
-password = <%= @mysql['apache']['sites'][site_name]['databases'][database]['mysql_password'] %>
+username = <%= @mysql[node['phpstack']['webserver']]['sites'][site_name]['databases'][database]['mysql_user'] %>
+password = <%= @mysql[node['phpstack']['webserver']]['sites'][site_name]['databases'][database]['mysql_password'] %>
 
 <%-     end -%>
 <%-   end -%>
 <%- end -%>
 
 <%- unless @rabbit_host.nil? -%>
-<%-   node['apache']['sites'].each do |site_name| -%>
+<%-   node[node['phpstack']['webserver']]['sites'].each do |site_name| -%>
 <%-     site_name = site_name[0] -%>
 [RabbitMQ-<%= site_name -%>]
 host = <%= @rabbit_host %>

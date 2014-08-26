@@ -1,9 +1,9 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: phpstack
-# Recipe:: holland
+# Recipe:: default
 #
-# Copyright 2014, Rackspace Hosting
+# Copyright 2014, Rackspace UK, Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,11 +16,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-default['holland']['enabled'] = false
-default['holland']['password'] = 'notagudpassword'
-default['holland']['cron']['day'] = '*'
-default['holland']['cron']['hour'] = '3'
-default['holland']['cron']['minute'] = '12'
-
-default['phpstack']['rackspace_cloudbackup']['http_docroot']['enable'] = false
+default['phpstack']['newrelic']['application_monitoring'] = ''
+default['phpstack']['webserver'] = 'apache'
