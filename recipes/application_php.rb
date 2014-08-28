@@ -75,8 +75,6 @@ if gluster_cluster.key?('nodes')
   end
 end
 
-#  recipes/application_php.rb:      location: node[node['pythonstack']['webserver']]['docroot_dir'],
-
 node[node['phpstack']['webserver']]['sites'].each do | site_name, site_opts |
   application site_name do
     path site_opts['docroot']
