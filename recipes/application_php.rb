@@ -77,16 +77,14 @@ end
 
 #  recipes/application_php.rb:      location: node[node['pythonstack']['webserver']]['docroot_dir'],
 
-node[node['phpstack']['webserver']]['sites'].each do | site_name |
-  site_name = site_name[0]
-
+node[node['phpstack']['webserver']]['sites'].each do | site_name, site_opts |
   application site_name do
-    path node[node['phpstack']['webserver']]['sites'][site_name]['docroot']
+    path site_opts['docroot']
     owner node[node['phpstack']['webserver']]['user']
     group node[node['phpstack']['webserver']]['group']
-    deploy_key node[node['phpstack']['webserver']]['sites'][site_name]['deploy_key']
-    repository node[node['phpstack']['webserver']]['sites'][site_name]['repository']
-    revision node[node['phpstack']['webserver']]['sites'][site_name]['revision']
+    deploy_key site_opts['deploy_key']
+    repository site_opts['repository']
+    revision site_opts['revision']
   end
 end
 
