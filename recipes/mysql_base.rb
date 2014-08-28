@@ -80,7 +80,7 @@ search_add_iptables_rules(
 
 # we don't want to create DBs or users and the like on slaves, do we?
 unless includes_recipe?('phpstack::mysql_slave')
-  node.default[node['phpstack']['webserver']]['sites'] = [] unless node[node['phpstack']['webserver']]['sites'].respond_to?('each')
+  node.default[node['phpstack']['webserver']]['sites'] = [] unless node[node['phpstack']['webserver']]['sites'].respond_to?('each') # ~FC047
   node[node['phpstack']['webserver']]['sites'].each do |site_name|
     site_name = site_name[0]
 
