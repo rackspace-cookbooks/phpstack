@@ -46,15 +46,6 @@ node['apache']['sites'].each do |site_name, site_opts|
 
   add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site_opts['port']} -j ACCEPT", 100, 'Allow access to apache')
 
-  application site_name do
-    path site_opts['docroot']
-    owner node['apache']['user']
-    group node['apache']['group']
-    deploy_key site_opts['deploy_key']
-    repository site_opts['repository']
-    revision site_opts['revision']
-  end
-
   web_app site_name do
     port site_opts['port']
     cookbook site_opts['cookbook']
