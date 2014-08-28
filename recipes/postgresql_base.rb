@@ -9,6 +9,15 @@ include_recipe 'chef-sugar'
 include_recipe 'platformstack::iptables'
 include_recipe 'platformstack::monitors'
 
+# https://github.com/hw-cookbooks/postgresql/issues/167
+directory '/etc/sysconfig/pgsql/' do
+  owner 'root'
+  group 'root'
+  mode 0755
+  action :create
+  recursive true
+end
+
 include_recipe 'pg-multi'
 
 # allow traffic to postgresql port for local addresses only
