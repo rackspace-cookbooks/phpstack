@@ -22,9 +22,9 @@
 if node['newrelic']['license']
   node.override['newrelic']['application_monitoring']['daemon']['ssl'] = true
   node.override['newrelic']['server_monitoring']['ssl'] = true
-  node.override['newrelic']['php-agent']['agent_action'] = 'upgrade'
+  node.override['newrelic']['php_agent']['agent_action'] = 'upgrade'
   include_recipe 'platformstack::default'
-  include_recipe 'newrelic::php-agent'
+  include_recipe 'newrelic::php_agent'
 else
   Chef::Log.warn('The NewRelic license attribute is not set!')
 end
