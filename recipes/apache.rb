@@ -38,7 +38,7 @@ end
 end
 
 # Initialize listen_ports
-listen_ports = []
+listen_ports = ['80']
 
 # If not defined, initialize sites
 node.set_unless['apache']['sites'] = []
