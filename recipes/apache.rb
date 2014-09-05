@@ -40,6 +40,9 @@ end
 # Initialize listen_ports
 listen_ports = []
 
+# If not defined, initialize sites
+node.set_unless['apache']['sites'] = []
+
 # Create the sites.
 node['apache']['sites'].each do |site_name, site_opts|
   listen_ports.push(site_opts['port']) unless listen_ports.include? site_opts['port']
