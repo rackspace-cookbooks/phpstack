@@ -96,7 +96,7 @@ unless includes_recipe?('phpstack::mysql_slave')
       app_nodes = search(:node, "tags:php_app_node AND chef_environment:#{node.chef_environment}")
     end
 
-    node['apache']['sites'][site_name]['databases'].each do |database|
+    node[node['phpstack']['webserver']]['sites'][site_name]['databases'].each do |database|
       database = database[0]
       # sets up the default database and the others, if specified for the site
       mysql_database database do
@@ -109,7 +109,7 @@ unless includes_recipe?('phpstack::mysql_slave')
       node.set_unless[node['phpstack']['webserver']]['sites'][site_name]['databases'][database]['mysql_password'] = secure_password # ~FC047
 
       app_nodes.each do |app_node|
-        mysql_database_user node['apache']['sites'][site_name]['databases'][database]['mysql_user'] do
+        mysql_database_user node[node['phpstack']['webserver']]['sites'][site_name]['databases'][database]['mysql_user'] do
           connection connection_info
           password node[node['phpstack']['webserver']]['sites'][site_name]['databases'][database]['mysql_password']
           host best_ip_for(app_node)
