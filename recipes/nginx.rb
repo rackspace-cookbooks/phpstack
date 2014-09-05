@@ -53,9 +53,9 @@ if !node['nginx']['default_site_enabled'] && (node['platform_family'] == 'rhel' 
 end
 
 # If not defined drop out
-if node.deep_fetch('apache', 'sites').nil?
+if node.deep_fetch('nginx', 'sites').nil?
   return 0
-elsif node.deep_fetch('apache', 'sites').values[0].nil?
+elsif node.deep_fetch('nginx', 'sites').values[0].nil?
   return 0
 end
 

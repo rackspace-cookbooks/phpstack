@@ -25,6 +25,13 @@ if rhel?
   include_recipe 'yum-ius'
 end
 
+# If not defined drop out
+if node.deep_fetch('apache', 'sites').nil?
+  return 0
+elsif node.deep_fetch('apache', 'sites').values[0].nil?
+  return 0
+end
+
 # Include the necessary recipes.
 %w(
   platformstack::monitors
@@ -39,13 +46,6 @@ end
 
 # Initialize listen_ports
 listen_ports = []
-
-# If not defined drop out
-if node.deep_fetch('apache', 'sites').nil?
-  return 0
-elsif node.deep_fetch('apache', 'sites').values[0].nil?
-  return 0
-end
 
 # Create the sites.
 node['apache']['sites'].each do |site_name, site_opts|
