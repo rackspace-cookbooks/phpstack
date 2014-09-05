@@ -38,10 +38,14 @@ end
 end
 
 # Initialize listen_ports
-listen_ports = ['80']
+listen_ports = []
 
-# If not defined, initialize sites
-node.set_unless['apache']['sites'] = []
+# If not defined drop out
+if node.deep_fetch('apache', 'sites').nil?
+  return 0
+elsif node.deep_fetch('apache', 'sites').values[0].nil?
+  return 0
+end
 
 # Create the sites.
 node['apache']['sites'].each do |site_name, site_opts|

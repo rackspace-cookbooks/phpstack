@@ -52,8 +52,12 @@ if !node['nginx']['default_site_enabled'] && (node['platform_family'] == 'rhel' 
   end
 end
 
-# If not defined, initialize sites
-node.set_unless['nginx']['sites'] = []
+# If not defined drop out
+if node.deep_fetch('apache', 'sites').nil?
+  return 0
+elsif node.deep_fetch('apache', 'sites').values[0].nil?
+  return 0
+end
 
 # Create the sites.
 node['nginx']['sites'].each do |site_name, site_opts|
