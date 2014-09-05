@@ -44,7 +44,7 @@ listen_ports = []
 node['apache']['sites'].each do |site_name, site_opts|
   listen_ports.push(site_opts['port']) unless listen_ports.include? site_opts['port']
 
-  add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site_opts['port']} -j ACCEPT", 100, 'Allow access to apache')
+  add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site_opts['port']} -j ACCEPT", 100, 'Allow access to apache') unless site_opts['port'].nil?
 
   web_app site_name do
     port site_opts['port']
