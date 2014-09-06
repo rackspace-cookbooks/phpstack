@@ -52,6 +52,13 @@ if !node['nginx']['default_site_enabled'] && (node['platform_family'] == 'rhel' 
   end
 end
 
+# If not defined drop out
+if node.deep_fetch('nginx', 'sites').nil?
+  return 0
+elsif node.deep_fetch('nginx', 'sites').values[0].nil?
+  return 0
+end
+
 # Create the sites.
 node['nginx']['sites'].each do |site_name, site_opts|
   add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site_opts['port']} -j ACCEPT", 100, 'Allow access to nginx')

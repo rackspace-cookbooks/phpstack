@@ -105,10 +105,10 @@ template 'phpstack.ini' do
     cookbook_name: cookbook_name,
     # if it responds then we will create the config section in the ini file
     mysql: if mysql_node.respond_to?('deep_fetch')
-             if mysql_node.deep_fetch('apache', 'sites').nil?
+             if mysql_node.deep_fetch(node['phpstack']['webserver'], 'sites').nil?
                nil
              else
-               mysql_node.deep_fetch('apache', 'sites').values[0].nil? ? nil : mysql_node
+               mysql_node.deep_fetch(node['phpstack']['webserver'], 'sites').values[0].nil? ? nil : mysql_node
              end
            end,
     # need to do here because sugar is not available inside the template
