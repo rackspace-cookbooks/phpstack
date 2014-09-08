@@ -42,3 +42,16 @@ default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['details']['
 default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['alarm']['label'] = ''
 default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['alarm']['notification_plan_id'] = 'npMANAGED'
 default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['alarm']['criteria'] = ''
+
+default['platformstack']['cloud_monitoring']['plugins']['varnish']['label'] = 'varnish'
+default['platformstack']['cloud_monitoring']['plugins']['varnish']['disabled'] = true
+default['platformstack']['cloud_monitoring']['plugins']['varnish']['period'] = 60
+default['platformstack']['cloud_monitoring']['plugins']['varnish']['timeout'] = 30
+default['platformstack']['cloud_monitoring']['plugins']['varnish']['file_url'] = 'https://raw.githubusercontent.com/racker/rackspace-monitoring-agent-plugins-contrib/master/varnish.py'
+default['platformstack']['cloud_monitoring']['plugins']['varnish']['cookbook'] = 'platformstack'
+default['platformstack']['cloud_monitoring']['plugins']['varnish']['details']['file'] = 'varnish.py'
+default['platformstack']['cloud_monitoring']['plugins']['varnish']['details']['args'] = []
+default['platformstack']['cloud_monitoring']['plugins']['varnish']['details']['timeout'] = 60
+default['platformstack']['cloud_monitoring']['plugins']['varnish']['alarm']['label'] = ''
+default['platformstack']['cloud_monitoring']['plugins']['varnish']['alarm']['notification_plan_id'] = 'npMANAGED'
+default['platformstack']['cloud_monitoring']['plugins']['varnish']['alarm']['criteria'] = ''
