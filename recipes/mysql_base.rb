@@ -22,6 +22,7 @@
 include_recipe 'apt' if node.platform_family?('debian')
 include_recipe 'chef-sugar'
 include_recipe 'platformstack::monitors'
+include_recipe 'phpstack::default'
 
 # set passwords dynamically...
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)

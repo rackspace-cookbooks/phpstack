@@ -28,7 +28,7 @@ end
 # If not defined drop out
 if node.deep_fetch('apache', 'sites').nil?
   return 0
-elsif node.deep_fetch('apache', 'sites').values[0].nil?
+elsif node.deep_fetch('apache', 'sites').first.nil?
   return 0
 end
 
