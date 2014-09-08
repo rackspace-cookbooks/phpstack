@@ -30,8 +30,6 @@ default['phpstack']['cloud_monitoring']['agent_mysql']['timeout'] = 15
 default['phpstack']['cloud_monitoring']['agent_mysql']['user'] = 'raxmon-agent'
 default['phpstack']['cloud_monitoring']['agent_mysql']['password'] = nil
 
-default['platformstack']['cloud_monitoring']['plugins'] = {}
-# Generic plugin support. Requires hash like:
 default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['label'] = 'rabbitmq'
 default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['disabled'] = true
 default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['period'] = 60
