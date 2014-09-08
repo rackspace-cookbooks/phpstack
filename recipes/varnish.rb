@@ -28,7 +28,7 @@ end
 add_iptables_rule('INPUT', "-p tcp --dport #{node['varnish']['listen_port']} -j ACCEPT", 9997, 'allow web browsers to connect')
 
 # enable agent for cloud monitoring
-node.set['platformstack']['cloud_monitoring']['plugins']['varnish']['disabled'] = true
+node.set['platformstack']['cloud_monitoring']['plugins']['varnish']['disabled'] = false
 
 # set the default port to send things on to something that might be useful
 node.default['varnish']['backend_port'] = node[node['phpstack']['webserver']]['listen_ports'].first
