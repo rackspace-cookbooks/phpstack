@@ -31,6 +31,9 @@ search_add_iptables_rules("tags:php_app_node AND chef_environment:#{node.chef_en
 # disable the default user
 node.default['rabbitmq']['disabled_users'] = %w(guest)
 
+# enable cloud_monitoring plugin
+node.set['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['disabled'] = true
+
 include_recipe 'rabbitmq'
 
 node['apache']['sites'].each do |site_name|
