@@ -33,18 +33,18 @@ if node['phpstack']['webserver'] == 'nginx'
     site1 = 'example.com'
     version1 = '0.0.9'
 
-    default['nginx']['sites'][site1]['port']         = '80'
-    default['nginx']['sites'][site1]['cookbook']     = 'phpstack'
-    default['nginx']['sites'][site1]['template']     = "nginx/sites/#{site1}.erb"
-    default['nginx']['sites'][site1]['server_name']  = site1
-    default['nginx']['sites'][site1]['server_alias'] = ["test.#{site1}", "www.#{site1}"]
-    default['nginx']['sites'][site1]['docroot']      = "%{node['nginx']['default_root']}/#{site1}"
-    default['nginx']['sites'][site1]['errorlog']     = "%{node['nginx']['log_dir']}/#{site1}-error.log info"
-    default['nginx']['sites'][site1]['customlog']    = "%{node['nginx']['log_dir']}/#{site1}-access.log combined"
-    default['nginx']['sites'][site1]['server_admin'] = 'demo@demo.com'
-    default['nginx']['sites'][site1]['revision'] = "v#{version1}"
-    default['nginx']['sites'][site1]['repository'] = 'https://github.com/rackops/php-test-app'
-    default['nginx']['sites'][site1]['deploy_key'] = '/root/.ssh/id_rsa'
+    node.default['nginx']['sites'][site1]['port']         = '80'
+    node.default['nginx']['sites'][site1]['cookbook']     = 'phpstack'
+    node.default['nginx']['sites'][site1]['template']     = "nginx/sites/#{site1}.erb"
+    node.default['nginx']['sites'][site1]['server_name']  = site1
+    node.default['nginx']['sites'][site1]['server_alias'] = ["test.#{site1}", "www.#{site1}"]
+    node.default['nginx']['sites'][site1]['docroot']      = "%{node['nginx']['default_root']}/#{site1}"
+    node.default['nginx']['sites'][site1]['errorlog']     = "%{node['nginx']['log_dir']}/#{site1}-error.log info"
+    node.default['nginx']['sites'][site1]['customlog']    = "%{node['nginx']['log_dir']}/#{site1}-access.log combined"
+    node.default['nginx']['sites'][site1]['server_admin'] = 'demo@demo.com'
+    node.default['nginx']['sites'][site1]['revision'] = "v#{version1}"
+    node.default['nginx']['sites'][site1]['repository'] = 'https://github.com/rackops/php-test-app'
+    node.default['nginx']['sites'][site1]['deploy_key'] = '/root/.ssh/id_rsa'
   end
   include_recipe 'phpstack::nginx'
   include_recipe 'php-fpm'
@@ -59,20 +59,20 @@ if node['phpstack']['webserver'] == 'apache'
     site1 = 'example.com'
     version1 = '0.0.9'
 
-    default['apache']['sites'][site1]['port']         = 80
-    default['apache']['sites'][site1]['cookbook']     = 'phpstack'
-    default['apache']['sites'][site1]['template']     = "apache2/sites/#{site1}.erb"
-    default['apache']['sites'][site1]['server_name']  = site1
-    default['apache']['sites'][site1]['server_alias'] = ["test.#{site1}", "www.#{site1}"]
-    default['apache']['sites'][site1]['docroot']      = "%{node['apache']['docroot_dir']}/#{site1}"
-    default['apache']['sites'][site1]['allow_override'] = ['All']
-    default['apache']['sites'][site1]['errorlog']     = "%{node['apache']['log_dir']}/#{site1}-error.log"
-    default['apache']['sites'][site1]['customlog']    = "%{node['apache']['log_dir']}/#{site1}-access.log combined"
-    default['apache']['sites'][site1]['loglevel']     = 'warn'
-    default['apache']['sites'][site1]['server_admin'] = 'demo@demo.com'
-    default['apache']['sites'][site1]['revision'] = "v#{version1}"
-    default['apache']['sites'][site1]['repository'] = 'https://github.com/rackops/php-test-app'
-    default['apache']['sites'][site1]['deploy_key'] = '/root/.ssh/id_rsa'
+    node.default['apache']['sites'][site1]['port']         = 80
+    node.default['apache']['sites'][site1]['cookbook']     = 'phpstack'
+    node.default['apache']['sites'][site1]['template']     = "apache2/sites/#{site1}.erb"
+    node.default['apache']['sites'][site1]['server_name']  = site1
+    node.default['apache']['sites'][site1]['server_alias'] = ["test.#{site1}", "www.#{site1}"]
+    node.default['apache']['sites'][site1]['docroot']      = "%{node['apache']['docroot_dir']}/#{site1}"
+    node.default['apache']['sites'][site1]['allow_override'] = ['All']
+    node.default['apache']['sites'][site1]['errorlog']     = "%{node['apache']['log_dir']}/#{site1}-error.log"
+    node.default['apache']['sites'][site1]['customlog']    = "%{node['apache']['log_dir']}/#{site1}-access.log combined"
+    node.default['apache']['sites'][site1]['loglevel']     = 'warn'
+    node.default['apache']['sites'][site1]['server_admin'] = 'demo@demo.com'
+    node.default['apache']['sites'][site1]['revision'] = "v#{version1}"
+    node.default['apache']['sites'][site1]['repository'] = 'https://github.com/rackops/php-test-app'
+    node.default['apache']['sites'][site1]['deploy_key'] = '/root/.ssh/id_rsa'
   end
   include_recipe 'phpstack::apache'
 end
