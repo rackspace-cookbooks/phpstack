@@ -59,7 +59,7 @@ if node['phpstack']['webserver'] == 'apache'
     site1 = 'example.com'
     version1 = '0.0.9'
 
-    node.default['apache']['sites'][site1]['port']         = 80
+    node.default['apache']['sites'][site1]['port']         = '80'
     node.default['apache']['sites'][site1]['cookbook']     = 'phpstack'
     node.default['apache']['sites'][site1]['template']     = "apache2/sites/#{site1}.erb"
     node.default['apache']['sites'][site1]['server_name']  = site1
