@@ -18,4 +18,3 @@
 # limitations under the License.
 
 default['nginx']['default_site_enabled'] = false
-default['nginx']['listen_ports'] = %w(80)
