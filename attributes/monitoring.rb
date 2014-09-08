@@ -33,7 +33,7 @@ default['phpstack']['cloud_monitoring']['agent_mysql']['password'] = nil
 default['platformstack']['cloud_monitoring']['plugins'] = {}
 # Generic plugin support. Requires hash like:
 default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['label'] = 'rabbitmq'
-default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['disabled'] = false
+default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['disabled'] = true
 default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['period'] = 60
 default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['timeout'] = 30
 default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['file_url'] = 'https://raw.githubusercontent.com/racker/rackspace-monitoring-agent-plugins-contrib/master/rabbitmq.py'
