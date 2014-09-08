@@ -233,7 +233,7 @@ Usage
   "recipe[platformstack::default]",
   "recipe[rackops_rolebook::default]",
   "recipe[phpstack::mysql_base]",
-  "recipe[phpstack::application_php]
+  "recipe[phpstack::application_php]"
   ]
 }
 ```
@@ -245,7 +245,7 @@ Usage
   "recipe[platformstack::default]",
   "recipe[rackops_rolebook::default]",
   "recipe[phpstack::mysql_base]",
-  "recipe[phpstack::application_php]
+  "recipe[phpstack::application_php]"
   ]
 }
 ```
@@ -256,7 +256,7 @@ Usage
   "run_list": [
   "recipe[platformstack::default]",
   "recipe[rackops_rolebook::default]",
-  "recipe[phpstack::application_php]
+  "recipe[phpstack::application_php]"
   ]
 }
 ```
@@ -289,7 +289,7 @@ MySQL DB Slave Node: Include recipe `platformstack::default`, `rackops_rolebook:
   "recipe[platformstack::default]",
   "recipe[rackops_rolebook::default]",
   "recipe[phpstack::mysql_slave]",
-  "recipe[phpstack::application_php]
+  "recipe[phpstack::application_php]"
   ]
 }
 ```
@@ -300,7 +300,7 @@ App Node: Include recipe `platformstack::default`, `rackops_rolebook::default`, 
   "run_list": [
   "recipe[platformstack::default]",
   "recipe[rackops_rolebook::default]",
-  "recipe[phpstack::application_php]
+  "recipe[phpstack::application_php]"
   ]
 }
 ```
