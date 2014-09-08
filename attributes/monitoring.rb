@@ -29,3 +29,18 @@ default['phpstack']['cloud_monitoring']['agent_mysql']['period'] = 60
 default['phpstack']['cloud_monitoring']['agent_mysql']['timeout'] = 15
 default['phpstack']['cloud_monitoring']['agent_mysql']['user'] = 'raxmon-agent'
 default['phpstack']['cloud_monitoring']['agent_mysql']['password'] = nil
+
+default['platformstack']['cloud_monitoring']['plugins'] = {}
+# Generic plugin support. Requires hash like:
+default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['label'] = 'rabbitmq'
+default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['disabled'] = false
+default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['period'] = 60
+default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['timeout'] = 30
+default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['file_url'] = 'https://raw.githubusercontent.com/racker/rackspace-monitoring-agent-plugins-contrib/master/rabbitmq.py'
+default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['cookbook'] = 'platformstack'
+default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['details']['file'] = 'rabbitmq.py'
+default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['details']['args'] = []
+default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['details']['timeout'] = 60
+default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['alarm']['label'] = ''
+default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['alarm']['notification_plan_id'] = 'npMANAGED'
+default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['alarm']['criteria'] = ''
