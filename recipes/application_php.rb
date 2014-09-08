@@ -27,9 +27,6 @@ elsif platform_family?('debian')
 end
 include_recipe 'git'
 
-# set demo if needed
-include_recipe 'phpstack::default'
-
 # if we are nginx we need to install php-fpm before php... (php pulls in apache)
 if node['phpstack']['webserver'] == 'nginx'
   include_recipe 'phpstack::nginx'
