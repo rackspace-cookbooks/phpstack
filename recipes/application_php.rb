@@ -27,25 +27,11 @@ elsif platform_family?('debian')
 end
 include_recipe 'git'
 
+# set demo if needed
+include_recipe 'phpstack::default'
+
 # if we are nginx we need to install php-fpm before php... (php pulls in apache)
 if node['phpstack']['webserver'] == 'nginx'
-  if node['phpstack']['demo']['enabled']
-    site1 = 'example.com'
-    version1 = '0.0.9'
-
-    node.default['nginx']['sites'][site1]['port']         = '80'
-    node.default['nginx']['sites'][site1]['cookbook']     = 'phpstack'
-    node.default['nginx']['sites'][site1]['template']     = "nginx/sites/#{site1}.erb"
-    node.default['nginx']['sites'][site1]['server_name']  = site1
-    node.default['nginx']['sites'][site1]['server_alias'] = ["test.#{site1}", "www.#{site1}"]
-    node.default['nginx']['sites'][site1]['docroot']      = "%{node['nginx']['default_root']}/#{site1}"
-    node.default['nginx']['sites'][site1]['errorlog']     = "%{node['nginx']['log_dir']}/#{site1}-error.log info"
-    node.default['nginx']['sites'][site1]['customlog']    = "%{node['nginx']['log_dir']}/#{site1}-access.log combined"
-    node.default['nginx']['sites'][site1]['server_admin'] = 'demo@demo.com'
-    node.default['nginx']['sites'][site1]['revision'] = "v#{version1}"
-    node.default['nginx']['sites'][site1]['repository'] = 'https://github.com/rackops/php-test-app'
-    node.default['nginx']['sites'][site1]['deploy_key'] = '/root/.ssh/id_rsa'
-  end
   include_recipe 'phpstack::nginx'
   include_recipe 'php-fpm'
 end
@@ -55,25 +41,6 @@ include_recipe 'php'
 include_recipe 'php::ini'
 
 if node['phpstack']['webserver'] == 'apache'
-  if node['phpstack']['demo']['enabled']
-    site1 = 'example.com'
-    version1 = '0.0.9'
-
-    node.default['apache']['sites'][site1]['port']         = 80
-    node.default['apache']['sites'][site1]['cookbook']     = 'phpstack'
-    node.default['apache']['sites'][site1]['template']     = "apache2/sites/#{site1}.erb"
-    node.default['apache']['sites'][site1]['server_name']  = site1
-    node.default['apache']['sites'][site1]['server_alias'] = ["test.#{site1}", "www.#{site1}"]
-    node.default['apache']['sites'][site1]['docroot']      = "%{node['apache']['docroot_dir']}/#{site1}"
-    node.default['apache']['sites'][site1]['allow_override'] = ['All']
-    node.default['apache']['sites'][site1]['errorlog']     = "%{node['apache']['log_dir']}/#{site1}-error.log"
-    node.default['apache']['sites'][site1]['customlog']    = "%{node['apache']['log_dir']}/#{site1}-access.log combined"
-    node.default['apache']['sites'][site1]['loglevel']     = 'warn'
-    node.default['apache']['sites'][site1]['server_admin'] = 'demo@demo.com'
-    node.default['apache']['sites'][site1]['revision'] = "v#{version1}"
-    node.default['apache']['sites'][site1]['repository'] = 'https://github.com/rackops/php-test-app'
-    node.default['apache']['sites'][site1]['deploy_key'] = '/root/.ssh/id_rsa'
-  end
   include_recipe 'phpstack::apache'
 end
 
@@ -144,7 +111,7 @@ template 'phpstack.ini' do
              if mysql_node.deep_fetch(node['phpstack']['webserver'], 'sites').nil?
                nil
              else
-               mysql_node.deep_fetch(node['phpstack']['webserver'], 'sites').first.nil? ? nil : mysql_node
+               mysql_node.deep_fetch(node['phpstack']['webserver'], 'sites').values[0].nil? ? nil : mysql_node
              end
            end,
     # need to do here because sugar is not available inside the template
