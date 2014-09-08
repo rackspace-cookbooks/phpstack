@@ -22,3 +22,6 @@ if platform_family?('debian')
   include_recipe 'apt'
 end
 include_recipe 'memcached'
+
+# enable agent for cloud monitoring
+node.set['platformstack']['cloud_monitoring']['plugins']['memcached']['disabled'] = true
