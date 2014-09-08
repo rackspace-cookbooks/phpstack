@@ -3,7 +3,7 @@
 require_relative 'spec_helper'
 
 # postgresql-master
-if os[:family] == 'RedHat'
+if ['RedHat', 'RedHat7'].include?(os[:family])
   # process is named postgres
   describe service('postgres') do
     it { should be_running }
