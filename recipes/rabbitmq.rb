@@ -32,7 +32,7 @@ search_add_iptables_rules("tags:php_app_node AND chef_environment:#{node.chef_en
 node.default['rabbitmq']['disabled_users'] = %w(guest)
 
 # enable cloud_monitoring plugin
-node.set['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['disabled'] = true
+node.set['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['disabled'] = false
 
 include_recipe 'rabbitmq'
 
