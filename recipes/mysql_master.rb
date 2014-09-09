@@ -20,3 +20,8 @@
 
 include_recipe 'phpstack::mysql_base'
 include_recipe 'mysql-multi::mysql_master'
+include_recipe 'platformstack::iptables'
+
+node['mysql-multi']['slaves'].each do |slave|
+  add_iptables_rule('INPUT', "-p tcp --dport #{node['mysql']['port']} -s #{slave} -j ACCEPT", 9243, 'allow slaves to connect to master')
+end
