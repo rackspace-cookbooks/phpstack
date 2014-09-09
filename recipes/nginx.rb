@@ -55,7 +55,7 @@ end
 # If not defined drop out
 if node.deep_fetch('nginx', 'sites').nil?
   return 0
-elsif node.deep_fetch('nginx', 'sites').first.nil?
+elsif node.deep_fetch('nginx', 'sites').values[0].nil?
   return 0
 end
 
