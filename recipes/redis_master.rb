@@ -1,9 +1,9 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: phpstack
-# Recipe:: redis
+# Recipe:: redis_master
 #
-# Copyright 2014, Rackspace Hosting
+# Copyright 2014, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +18,5 @@
 # limitations under the License.
 #
 
-include_recipe 'redisio'
-include_recipe 'redisio::install'
-include_recipe 'redisio::enable'
+include_recipe 'redis-multi::master'
+include_recipe 'phpstack::redis_base'

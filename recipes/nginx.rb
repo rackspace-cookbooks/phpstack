@@ -63,6 +63,7 @@ end
 node['nginx']['sites'].each do |site_name, site_opts|
   add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site_opts['port']} -j ACCEPT", 100, 'Allow access to nginx')
 
+  # Nginx set up
   template site_name do
     cookbook site_opts['cookbook']
     source "nginx/sites/#{site_name}.erb"
@@ -82,6 +83,7 @@ node['nginx']['sites'].each do |site_name, site_opts|
   end
   nginx_site site_name do
     enable true
+    notifies :reload, 'service[nginx]'
   end
   template "http-monitor-#{site_opts['server_name']}" do
     cookbook 'phpstack'

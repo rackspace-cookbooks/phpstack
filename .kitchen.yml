@@ -42,7 +42,7 @@ suites:
       - recipe[phpstack::memcache]
       - recipe[phpstack::varnish]
       - recipe[phpstack::rabbitmq]
-      - recipe[phpstack::redis]
+      - recipe[phpstack::redis_single]
       - recipe[phpstack::application_php]
     attributes:
       mysql:

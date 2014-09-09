@@ -1,9 +1,9 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: phpstack
-# Recipe:: yum
+# Recipe:: redis_slave
 #
-# Copyright 2014, Rackspace Hosting
+# Copyright 2014, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,18 +18,5 @@
 # limitations under the License.
 #
 
-include_recipe 'yum'
-
-yum_repository 'epel' do
-  description 'Extra Packages for Enterprise Linux'
-  mirrorlist 'http://mirrors.fedoraproject.org/mirrorlist?repo=epel-6&arch=$basearch'
-  gpgkey 'http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-6'
-  action :create
-end
-
-yum_repository 'IUS' do
-  description 'IUS Community Packages for Enterprise Linux/CentOS 6'
-  mirrorlist 'http://dmirr.iuscommunity.org/mirrorlist/?repo=ius-centos6&arch=$basearch'
-  gpgkey 'http://dl.iuscommunity.org/pub/ius/IUS-COMMUNITY-GPG-KEY'
-  action :create
-end
+include_recipe 'redis-multi::slave'
+include_recipe 'phpstack::redis_base'

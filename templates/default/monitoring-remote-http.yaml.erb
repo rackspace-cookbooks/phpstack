@@ -4,7 +4,7 @@
 # Controlling Cookbook: <%=  @cookbook_name %>
 #
 type: remote.http
-label: Remote HTTP check on <%= "#{node['cloud']['public_ipv4']} port #{@apache_port} for #{@server_name}" %>
+label: Remote HTTP check on <%= "#{node['cloud']['public_ipv4']} port #{@http_port} for #{@server_name}" %>
 disabled: <%= node['phpstack']['cloud_monitoring']['remote_http']['disabled'] %>
 period: <%= node['phpstack']['cloud_monitoring']['remote_http']['period'] %>
 timeout: <%= node['phpstack']['cloud_monitoring']['remote_http']['timeout'] %>
@@ -17,11 +17,11 @@ details:
   hostname: <%= @server_name %>
   method: GET
   body: MySQL Service OK
-  url: http://<%= "#{node['cloud']['public_ipv4']}:#{@apache_port}" %>
+  url: http://<%= "#{node['cloud']['public_ipv4']}:#{@http_port}" %>
 <% if node['phpstack']['cloud_monitoring']['remote_http']['alarm'] == true %>
 alarms:
   http-check:
-    label: Remote HTTP check on <%= "#{node['cloud']['public_ipv4']} port #{@apache_port} for #{@server_name}" %>
+    label: Remote HTTP check on <%= "#{node['cloud']['public_ipv4']} port #{@http_port} for #{@server_name}" %>
     notification_plan_id: npTechnicalContactsEmail
     criteria: |
       if (metric['code'] regex '4[0-9][0-9]') {
