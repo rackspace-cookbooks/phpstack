@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: phpstack
-# Recipe:: application_php
+# Recipe:: varnish
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -18,6 +18,8 @@
 # limitations under the License.
 #
 
+stackname = 'phpstack'
+
 include_recipe 'chef-sugar'
 if platform_family?('debian')
   include_recipe 'apt'
@@ -31,26 +33,26 @@ add_iptables_rule('INPUT', "-p tcp --dport #{node['varnish']['listen_port']} -j 
 node.set['platformstack']['cloud_monitoring']['plugins']['varnish']['disabled'] = false
 
 # set the default port to send things on to something that might be useful
-node.default['varnish']['backend_port'] = node[node['phpstack']['webserver']]['listen_ports'].first
+node.default['varnish']['backend_port'] = node[node[stackname]['webserver']]['listen_ports'].first
 
 # pull a list of backend hosts to populate the template
-# node.default['phpstack']['varnish']['backend_hosts'] = Hash.new
+# node.default[stackname]['varnish']['backend_hosts'] = Hash.new
 backend_hosts = {}
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
   backend_nodes = nil
 else
-  backend_nodes = search('node', "tags:php_app_node AND chef_environment:#{node.chef_environment}")
+  backend_nodes = search('node', "tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}")
 end
 
 backend_nodes.each do |backend_node|
-  if backend_node.deep_fetch(node['phpstack']['webserver'], 'sites').nil?
+  if backend_node.deep_fetch(node[stackname]['webserver'], 'sites').nil?
     errmsg = 'Did not find sites, default.vcl not configured'
     Chef::Log.warn(errmsg)
   else
-    backend_node[node['phpstack']['webserver']]['sites'].each do |site_name|
+    backend_node[node[stackname]['webserver']]['sites'].each do |site_name|
       site_name = site_name[0]
-      site = backend_node[node['phpstack']['webserver']]['sites'][site_name]
+      site = backend_node[node[stackname]['webserver']]['sites'][site_name]
       backend_hosts.merge!(
         best_ip_for(backend_node) => {
           site['port'] => {
@@ -62,7 +64,7 @@ backend_nodes.each do |backend_node|
   end
 end
 
-node.default['phpstack']['varnish']['backends'] = backend_hosts
+node.default[stackname]['varnish']['backends'] = backend_hosts
 
 # only set if we have backends to populate (aka not on first run with an all in one node)
 if backend_nodes.first.nil?
@@ -71,7 +73,7 @@ if backend_nodes.first.nil?
   node.default['varnish']['vcl_source'] = 'default.vcl.erb'
 else
   # let us set up a more complicated vcl config if needed
-  node.default['varnish']['vcl_cookbook'] = 'phpstack' if node['phpstack']['varnish']['multi']
-  node.default['varnish']['vcl_source'] = 'varnish-default-vcl.erb' if node['phpstack']['varnish']['multi']
+  node.default['varnish']['vcl_cookbook'] = stackname if node[stackname]['varnish']['multi']
+  node.default['varnish']['vcl_source'] = 'varnish-default-vcl.erb' if node[stackname]['varnish']['multi']
 end
 include_recipe 'varnish::default'

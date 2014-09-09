@@ -73,7 +73,7 @@ node['apache']['sites'].each do |site_name, site_opts|
     group 'root'
     mode '0644'
     variables(
-      apache_port: site_opts['port'],
+      http_port: site_opts['port'],
       server_name: site_opts['server_name']
     )
     notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'

@@ -18,11 +18,13 @@
 # limitations under the License.
 #
 
+stackname = 'phpstack'
+
 include_recipe 'platformstack::iptables'
 
-# allow application_php nodes to connect
+# allow app nodes to connect
 node.default['rabbitmq']['port'] = '5672' if node['rabbitmq']['port'].nil?
-search_add_iptables_rules("tags:php_app_node AND chef_environment:#{node.chef_environment}",
+search_add_iptables_rules("tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}",
                           'INPUT',
                           "-m tcp -p tcp --dport #{node['rabbitmq']['port']} -j ACCEPT",
                           70,
@@ -30,13 +32,22 @@ search_add_iptables_rules("tags:php_app_node AND chef_environment:#{node.chef_en
 
 # disable the default user
 node.default['rabbitmq']['disabled_users'] = %w(guest)
+node.default['rabbitmq']['job_control'] = 'upstart'
 
 # enable cloud_monitoring plugin
 node.set['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['disabled'] = false
 
 include_recipe 'rabbitmq'
 
-node['apache']['sites'].each do |site_name|
+::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
+node.set_unless[stackname]['rabbitmq']['monitor_password'] = secure_password
+rabbitmq_user 'monitor' do
+  action %w(add set_permissions change_password)
+  permissions '.* .* .*'
+  password node[stackname]['rabbitmq']['monitor_password']
+end
+
+node[node[stackname]['webserver']]['sites'].each do |site_name|
   site_name = site_name[0]
 
   # create the rabbit vhost
@@ -46,13 +57,13 @@ node['apache']['sites'].each do |site_name|
 
   # set random app passwords
   ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
-  node.set_unless['phpstack']['rabbitmq']['passwords'][site_name] = secure_password
+  node.set_unless[stackname]['rabbitmq']['passwords'][site_name] = secure_password
 
   # add the queue per site
   rabbitmq_user site_name do
     action %w(add set_permissions change_password)
     vhost "/#{site_name}"
     permissions '.* .* .*'
-    password node['phpstack']['rabbitmq']['passwords'][site_name]
+    password node[stackname]['rabbitmq']['passwords'][site_name]
   end
 end
