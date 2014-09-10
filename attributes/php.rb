@@ -50,5 +50,3 @@ when 'debian'
     php5-mysqlnd
     php-pear )
 end
-
-default['phpstack']['ini']['cookbook'] = 'phpstack'

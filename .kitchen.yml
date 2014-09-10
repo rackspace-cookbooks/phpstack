@@ -6,21 +6,20 @@ driver_config:
 
 provisioner:
   name: chef_zero
-  client_rb:
-    environment: _default
   attributes:
     phpstack:
       demo:
         enabled: true
-    platformstack:
-      cloudbackup:
-        enabled: false
-      cloud_monitoring:
-        enabled: false
     authorization:
       sudo:
         users: ['vagrant']
         passwordless: true
+    mysql:
+      server_root_password: "randompass"
+      server_repl_password: "randompass"
+      server_debian_password: "randompass"
+    holland:
+      password: "randompass"
 
 platforms:
   - name: ubuntu-12.04
@@ -34,7 +33,18 @@ platforms:
     - recipe[yum]
 
 suites:
-  - name: default
+  - name: aio-apache
+    run_list:
+      - recipe[phpstack::mysql_base]
+      - recipe[phpstack::postgresql_base]
+      - recipe[phpstack::mongodb_standalone]
+      - recipe[phpstack::memcache]
+      - recipe[phpstack::varnish]
+      - recipe[phpstack::rabbitmq]
+      - recipe[phpstack::redis_single]
+      - recipe[phpstack::application_php]
+
+  - name: aio-nginx
     run_list:
       - recipe[phpstack::mysql_base]
       - recipe[phpstack::postgresql_base]
@@ -45,21 +55,14 @@ suites:
       - recipe[phpstack::redis_single]
       - recipe[phpstack::application_php]
     attributes:
-      mysql:
-        server_root_password: "randompass"
-        server_repl_password: "randompass"
-        server_debian_password: "randompass"
-      holland:
-        password: "randompass"
+      phpstack:
+        webserver: 'nginx'
 
-  - name: web-apache
+  - name: application-php-apache
     run_list:
       - recipe[phpstack::application_php]
-    attributes:
-      phpstack:
-        webserver: 'apache'
 
-  - name: web-nginx
+  - name: application-php-nginx
     run_list:
       - recipe[phpstack::application_php]
     attributes:
@@ -69,13 +72,6 @@ suites:
   - name: mysql
     run_list:
       - recipe[phpstack::mysql_base]
-    attributes:
-      mysql:
-        server_root_password: "randompass"
-        server_repl_password: "randompass"
-        server_debian_password: "randompass"
-      holland:
-        password: "randompass"
 
   - name: postgresql
     run_list:

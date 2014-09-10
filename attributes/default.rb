@@ -20,3 +20,4 @@
 
 default['phpstack']['newrelic']['application_monitoring'] = ''
 default['phpstack']['webserver'] = 'apache'
+default['phpstack']['ini']['cookbook'] = 'phpstack'

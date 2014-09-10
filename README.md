@@ -29,7 +29,6 @@ Requirements
 * `mysql-multi`
 * `pg-multi`  
 * `java`  
-* `elasticsearch`  
 * `varnish`  
 * `rabbitmq`  
 * `varnish`
@@ -46,10 +45,6 @@ Includes recipes: git, yum, yum-epel, yum-ius, apt, php, php::ini, php::module_m
 If gluster is part of the environment attributes, installs the utils and mount it to /var/www (the default of node['apache']['docroot_dir'] on debian/ubuntu)
 Creates application_deployment configuration, checking out the code from node['apache']['sites']['repository'] and putting into the path specified in node['apache']['sites']['docroot']
 Creates a configuration file for applications using variables for mysql_master node and rabbitmq node and placing this file in /etc/phpstack.ini
-#### elasticsearch
-Includes recipe java
-Defines allocated memory to be around 50% of total memory.
-Installs elasticsearch
 #### gluster
 Includes recipe chef-sugar
 Gets the number of nodes to be part of the cluster
@@ -154,12 +149,6 @@ Attributes
   * Indicates a database and database user to be configured
 * node.default['apache']['sites'][site1]['databases'][site1]['mysql_password'] = ''
   * Indicates the password to configure for database user with blank being random
-
-#### elasticsearch.rb
-
-* normal['elasticsearch']['discovery.zen.ping.multicast.enabled'] = 'false'
-* normal['elasticsearch']['bootstrap.mlockall'] = 'true'
-* normal['elasticsearch']['network.host'] = '_local_'
 
 #### gluster.rb
 
@@ -358,11 +347,6 @@ node.override['newrelic']['meetme-plugin']['services'] = {
     "name": "localhost",
     "host":  "host",
     "port":  11211
-  },
-  "elasticsearch": {
-    "name": "clustername",
-    "host": "localhost",
-    "port": 9200
   }
 }
 ```

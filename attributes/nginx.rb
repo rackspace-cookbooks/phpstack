@@ -18,3 +18,6 @@
 # limitations under the License.
 
 default['nginx']['default_site_enabled'] = false
+
+# needed to be like this so it acts like apache
+default['nginx']['listen_ports'] = %w(80)

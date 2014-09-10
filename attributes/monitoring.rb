@@ -9,7 +9,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -50,7 +50,7 @@ default['platformstack']['cloud_monitoring']['plugins']['varnish']['period'] = 6
 default['platformstack']['cloud_monitoring']['plugins']['varnish']['timeout'] = 30
 default['platformstack']['cloud_monitoring']['plugins']['varnish']['file_url'] = 'https://raw.githubusercontent.com/racker/rackspace-monitoring-agent-plugins-contrib/master/varnish.sh'
 default['platformstack']['cloud_monitoring']['plugins']['varnish']['cookbook'] = 'platformstack'
-default['platformstack']['cloud_monitoring']['plugins']['varnish']['details']['file'] = 'varnish.py'
+default['platformstack']['cloud_monitoring']['plugins']['varnish']['details']['file'] = 'varnish.sh'
 default['platformstack']['cloud_monitoring']['plugins']['varnish']['details']['args'] = []
 default['platformstack']['cloud_monitoring']['plugins']['varnish']['details']['timeout'] = 60
 default['platformstack']['cloud_monitoring']['plugins']['varnish']['alarm']['label'] = ''

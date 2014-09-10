@@ -18,6 +18,16 @@
   },
   "chef_type": "node",
   "default": {
+    "nginx": {
+      "sites": {
+        "example.com": {
+          "databases": {
+            "foobar": {}
+          },
+          "port": 80
+        }
+      }
+    },
     "apache": {
       "sites": {
         "example.com": {
