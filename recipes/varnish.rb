@@ -27,6 +27,9 @@ else
   include_recipe 'yum-epel'
 end
 
+# include demo if needed
+include_recipe "#{stackname}::default"
+
 add_iptables_rule('INPUT', "-p tcp --dport #{node['varnish']['listen_port']} -j ACCEPT", 9997, 'allow web browsers to connect')
 
 # enable agent for cloud monitoring
