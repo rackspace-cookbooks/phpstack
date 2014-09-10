@@ -18,6 +18,8 @@
 # limitations under the License.
 #
 
+stackname = 'phpstack'
+
 if platform_family?('rhel')
   include_recipe 'yum'
   include_recipe 'yum-epel'
@@ -28,11 +30,11 @@ end
 include_recipe 'git'
 
 # set demo if needed
-include_recipe 'phpstack::default'
+include_recipe "#{stackname}::default"
 
 # if we are nginx we need to install php-fpm before php... (php pulls in apache)
-if node['phpstack']['webserver'] == 'nginx'
-  include_recipe 'phpstack::nginx'
+if node[stackname]['webserver'] == 'nginx'
+  include_recipe "#{stackname}::nginx"
   include_recipe 'php-fpm'
 end
 
@@ -40,8 +42,8 @@ end
 include_recipe 'php'
 include_recipe 'php::ini'
 
-if node['phpstack']['webserver'] == 'apache'
-  include_recipe 'phpstack::apache'
+if node[stackname]['webserver'] == 'apache'
+  include_recipe "#{stackname}::apache"
 end
 
 include_recipe 'build-essential'
@@ -62,7 +64,7 @@ if gluster_cluster.key?('nodes')
       gluster_ips.push(server[1]['ip'])
     end
   end
-  node.set_unless['phpstack']['gluster_connect_ip'] = gluster_ips.sample
+  node.set_unless[stackname]['gluster_connect_ip'] = gluster_ips.sample
 
   # install gluster mount
   package 'glusterfs-client' do
@@ -72,17 +74,17 @@ if gluster_cluster.key?('nodes')
   # set up the mountpoint
   mount 'webapp-mountpoint' do
     fstype 'glusterfs'
-    device "#{node['phpstack']['gluster_connect_ip']}:/#{node['rackspace_gluster']['config']['server']['glusters'].values[0]['volume']}"
+    device "#{node[stackname]['gluster_connect_ip']}:/#{node['rackspace_gluster']['config']['server']['glusters'].values[0]['volume']}"
     mount_point node['apache']['docroot_dir']
     action %w(mount enable)
   end
 end
 
-node[node['phpstack']['webserver']]['sites'].each do | site_name, site_opts |
+node[node[stackname]['webserver']]['sites'].each do | site_name, site_opts |
   application site_name do
     path site_opts['docroot']
-    owner node[node['phpstack']['webserver']]['user']
-    group node[node['phpstack']['webserver']]['group']
+    owner node[node[stackname]['webserver']]['user']
+    group node[node[stackname]['webserver']]['group']
     deploy_key site_opts['deploy_key']
     repository site_opts['repository']
     revision site_opts['revision']
@@ -94,24 +96,24 @@ if Chef::Config[:solo]
   mysql_node = nil
   rabbit_node = nil
 else
-  mysql_node = search('node', "recipes:phpstack\\:\\:mysql_base AND chef_environment:#{node.chef_environment}").first
-  rabbit_node = search('node', "recipes:phpstack\\:\\:rabbitmq AND chef_environment:#{node.chef_environment}").first
+  mysql_node = search('node', "recipes:#{stackname}\\:\\:mysql_master AND chef_environment:#{node.chef_environment}").first
+  rabbit_node = search('node', "recipes:#{stackname}\\:\\:rabbitmq AND chef_environment:#{node.chef_environment}").first
 end
-template 'phpstack.ini' do
-  path '/etc/phpstack.ini'
-  cookbook node['phpstack']['ini']['cookbook']
-  source 'phpstack.ini.erb'
+template "#{stackname}.ini" do
+  path "/etc/#{stackname}.ini"
+  cookbook node[stackname]['ini']['cookbook']
+  source "#{stackname}.ini.erb"
   owner 'root'
-  group node[node['phpstack']['webserver']]['group']
+  group node[node[stackname]['webserver']]['group']
   mode '00640'
   variables(
     cookbook_name: cookbook_name,
     # if it responds then we will create the config section in the ini file
     mysql: if mysql_node.respond_to?('deep_fetch')
-             if mysql_node.deep_fetch(node['phpstack']['webserver'], 'sites').nil?
+             if mysql_node.deep_fetch(node[stackname]['webserver'], 'sites').nil?
                nil
              else
-               mysql_node.deep_fetch(node['phpstack']['webserver'], 'sites').values[0]['mysql_password'].nil? ? nil : mysql_node
+               mysql_node.deep_fetch(node[stackname]['webserver'], 'sites').values[0]['mysql_password'].nil? ? nil : mysql_node
              end
            end,
     # need to do here because sugar is not available inside the template
@@ -121,12 +123,14 @@ template 'phpstack.ini' do
                    nil
                  end,
     rabbit_passwords: if rabbit_node.respond_to?('deep_fetch')
-                        rabbit_node.deep_fetch('phpstack', 'rabbitmq', 'passwords').values[0].nil? == true ? nil : rabbit_node['phpstack']['rabbitmq']['passwords']
+                        rabbit_node.deep_fetch(stackname, 'rabbitmq', 'passwords').values[0].nil? == true ? nil : rabbit_node[stackname]['rabbitmq']['passwords']
                       else
                         nil
                       end
   )
   action 'create'
+  # For Nginx the service Uwsgi subscribes to the template, as we need to restart each Uwsgi service
+  notifies 'restart', 'service[apache2]', 'delayed' unless node[stackname]['webserver'] == 'nginx'
 end
 
 # backups
@@ -136,8 +140,8 @@ node.set_unless['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email
 node.default['rackspace_cloudbackup']['backups'] =
   [
     {
-      location: node[node['phpstack']['webserver']]['docroot_dir'],
-      enable: node['phpstack']['rackspace_cloudbackup']['http_docroot']['enable'],
+      location: node[node[stackname]['webserver']]['docroot_dir'],
+      enable: node[stackname]['rackspace_cloudbackup']['http_docroot']['enable'],
       comment: 'Web Content Backup',
       cloud: { notify_email: node['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] }
     }
