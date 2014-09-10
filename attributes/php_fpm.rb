@@ -18,8 +18,6 @@
 # limitations under the License.
 #
 
-include_attribute 'phpstack::demo'
-
 if node['phpstack']['webserver'] == 'apache'
   default['php-fpm']['user'] = node['apache']['user']
   default['php-fpm']['group'] = node['apache']['group']
