@@ -20,7 +20,7 @@
 
 # set repository
 case node['platform_family']
-when 'debain'
+when 'debian'
   include_recipe 'apt'
   apt_repository 'Holland' do
     uri "http://download.opensuse.org/repositories/home:/holland-backup/x#{node['lsb']['id']}_#{node['lsb']['release']}/"
