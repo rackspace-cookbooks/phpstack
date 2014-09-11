@@ -85,14 +85,16 @@ if gluster_cluster.key?('nodes')
   end
 end
 
-node[node[stackname]['webserver']]['sites'].each do | site_name, site_opts |
-  application site_name do
-    path site_opts['docroot']
-    owner node[node[stackname]['webserver']]['user']
-    group node[node[stackname]['webserver']]['group']
-    deploy_key site_opts['deploy_key']
-    repository site_opts['repository']
-    revision site_opts['revision']
+if node.deep_fetch(stackname, 'code-deployment', 'enabled')
+  node[node[stackname]['webserver']]['sites'].each do | site_name, site_opts |
+    application site_name do
+      path site_opts['docroot']
+      owner node[node[stackname]['webserver']]['user']
+      group node[node[stackname]['webserver']]['group']
+      deploy_key site_opts['deploy_key']
+      repository site_opts['repository']
+      revision site_opts['revision']
+    end
   end
 end
 
