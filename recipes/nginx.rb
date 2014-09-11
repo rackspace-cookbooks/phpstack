@@ -20,6 +20,13 @@
 
 include_recipe 'chef-sugar'
 
+# If not defined drop out
+if node.deep_fetch('nginx', 'sites').nil?
+  return 0
+elsif node.deep_fetch('nginx', 'sites').values[0].nil?
+  return 0
+end
+
 if rhel?
   include_recipe 'yum-epel'
   include_recipe 'yum-ius'
@@ -50,13 +57,6 @@ if !node['nginx']['default_site_enabled'] && (node['platform_family'] == 'rhel' 
       action :delete
     end
   end
-end
-
-# If not defined drop out
-if node.deep_fetch('nginx', 'sites').nil?
-  return 0
-elsif node.deep_fetch('nginx', 'sites').values[0].nil?
-  return 0
 end
 
 # Create the sites.

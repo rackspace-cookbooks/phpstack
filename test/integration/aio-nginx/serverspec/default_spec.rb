@@ -19,7 +19,7 @@ describe 'configures our application' do
   describe file('/etc/nginx/sites-enabled/example.com') do
     it { should be_linked_to '/etc/nginx/sites-available/example.com' }
   end
-  describe file('/var/www/nginx-default/example.com') do
+  describe file('/var/www/example.com') do
     it { should be_directory }
   end
 end

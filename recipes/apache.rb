@@ -20,16 +20,16 @@
 
 include_recipe 'chef-sugar'
 
-if rhel?
-  include_recipe 'yum-epel'
-  include_recipe 'yum-ius'
-end
-
 # If not defined drop out
 if node.deep_fetch('apache', 'sites').nil?
   return 0
 elsif node.deep_fetch('apache', 'sites').values[0].nil?
   return 0
+end
+
+if rhel?
+  include_recipe 'yum-epel'
+  include_recipe 'yum-ius'
 end
 
 # Include the necessary recipes.
