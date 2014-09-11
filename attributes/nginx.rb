@@ -25,3 +25,5 @@ end
 
 # needed to be like this so it acts like apache
 default['nginx']['listen_ports'] = %w(80)
+
+default['nginx']['default_root'] = '/var/www'
