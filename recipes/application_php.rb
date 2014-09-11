@@ -36,6 +36,7 @@ include_recipe "#{stackname}::default"
 if node[stackname]['webserver'] == 'nginx'
   include_recipe "#{stackname}::nginx"
   include_recipe 'php-fpm'
+  node.default[stackname]['gluster_mountpoint'] = node['nginx']['default_root']
 end
 
 # we need to run this before apache to pull in the correct version of php
@@ -44,7 +45,11 @@ include_recipe 'php::ini'
 
 if node[stackname]['webserver'] == 'apache'
   include_recipe "#{stackname}::apache"
+  node.default[stackname]['gluster_mountpoint'] = node['apache']['docroot_dir']
 end
+
+# set gluster mountpoint unless set already
+node.default_unless[stackname]['gluster_mountpoint'] = '/var/www'
 
 include_recipe 'build-essential'
 # Adding mongod compatibility
@@ -75,7 +80,7 @@ if gluster_cluster.key?('nodes')
   mount 'webapp-mountpoint' do
     fstype 'glusterfs'
     device "#{node[stackname]['gluster_connect_ip']}:/#{node['rackspace_gluster']['config']['server']['glusters'].values[0]['volume']}"
-    mount_point node['apache']['docroot_dir']
+    mount_point node[stackname]['gluster_mountpoint']
     action %w(mount enable)
   end
 end
