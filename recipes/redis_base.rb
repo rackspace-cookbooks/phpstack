@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: phstack
+# Cookbook Name:: phpstack
 # Recipe:: redis_base
 #
 # Copyright 2014, Rackspace US, Inc.
