@@ -6,6 +6,7 @@ driver_config:
 
 provisioner:
   name: chef_zero
+  roles_path: ./test/integration/roles
   attributes:
     phpstack:
       demo:
@@ -76,3 +77,11 @@ suites:
   - name: postgresql
     run_list:
       - recipe[phpstack::postgresql_base]
+
+  - name: feature-flags
+    run_list:
+      - role[feature-flags]
+    attributes:
+      platformstack:
+        cloud_backup:
+          enabled: false
