@@ -7,17 +7,28 @@ group :lint do
 end
 
 group :unit do
+  # ChefSpec dependencies
+  #
+  # All gems loaded through the `chef_gem` resource should be included here
+  # because ChefSpec never really converges these resources and thus the gems are
+  # never installed during a Chef run. This makes all subsequent `requires` fail.
+  #
+  gem 'chef-sugar'
   gem 'berkshelf', '~> 3'
   gem 'chefspec'
 end
 
 group :kitchen_common do
   gem 'test-kitchen'
-  gem 'kitchen-rackspace'
 end
 
 group :kitchen_vagrant do
   gem 'kitchen-vagrant'
+  gem 'vagrant-wrapper'
+end
+
+group :kitchen_rackspace do
+  gem 'kitchen-rackspace'
 end
 
 group :development do
