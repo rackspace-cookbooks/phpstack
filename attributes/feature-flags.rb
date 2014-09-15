@@ -27,3 +27,5 @@ default['phpstack']['flags']['monitoring']['cloudmonitoring'] = false
 default['phpstack']['flags']['webserver']['enabled'] = false
 default['phpstack']['flags']['webserver']['apache'] = false
 default['phpstack']['flags']['webserver']['nginx'] = false
+## Application
+default['phpstack']['flags']['application']['enabled'] = false

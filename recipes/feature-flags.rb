@@ -31,3 +31,6 @@ if node['phpstack']['flags']['webserver']['enabled']
     include_recipe 'phpstack::nginx'
   end
 end
+if node['phpstack']['flags']['application']['enabled']
+  include_recipe 'phpstack::application_php'
+end
