@@ -99,6 +99,6 @@ node['nginx']['sites'].each do |site_name, site_opts|
     notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
     action 'create'
     only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
-    only_if { node['pythonstack']['monitoring']['cloudmonitoring'] }
+    only_if { node['phpstack']['flags']['monitoring']['cloudmonitoring'] }
   end
 end

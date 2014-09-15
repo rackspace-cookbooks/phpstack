@@ -1,6 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: phpstack
+# Recipe:: default
 #
 # Copyright 2014, Rackspace UK, Ltd.
 #
@@ -17,4 +18,12 @@
 # limitations under the License.
 #
 
-default['phpstack']['demo']['enabled'] = false
+# flags
+## Monitoring
+default['phpstack']['flags']['monitoring']['enabled'] = false
+default['phpstack']['flags']['monitoring']['newrelic'] = false
+default['phpstack']['flags']['monitoring']['cloudmonitoring'] = false
+## Webserver
+default['phpstack']['flags']['webserver']['enabled'] = false
+default['phpstack']['flags']['webserver']['apache'] = false
+default['phpstack']['flags']['webserver']['nginx'] = false

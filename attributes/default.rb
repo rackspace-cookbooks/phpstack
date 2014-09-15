@@ -23,11 +23,7 @@ default['phpstack']['webserver'] = 'apache'
 default['phpstack']['ini']['cookbook'] = 'phpstack'
 
 default['phpstack']['code-deployment']['enabled'] = true
-
-# flags
-default['phpstack']['monitoring']['enabled'] = false
-default['phpstack']['monitoring']['newrelic'] = false
-default['phpstack']['monitoring']['cloudmonitoring'] = false
+default['phpstack']['demo']['enabled'] = false
 
 if node['phpstack']['webserver'] == 'apache' && node['phpstack']['demo']['enabled']
   site1 = 'example.com'

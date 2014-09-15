@@ -18,8 +18,16 @@
 # limitations under the License.
 #
 
-if node['phpstack']['monitoring']['enabled']
-  if node['phpstack']['monitoring']['newrelic']
+if node['phpstack']['flags']['monitoring']['enabled']
+  if node['phpstack']['flags']['monitoring']['newrelic']
     include_recipe 'phpstack::newrelic'
+  end
+end
+if node['phpstack']['flags']['webserver']['enabled']
+  if node['phpstack']['flags']['webserver']['apache']
+    include_recipe 'phpstack::apache'
+  end
+  if node['phpstack']['flags']['webserver']['nginx']
+    include_recipe 'phpstack::nginx'
   end
 end

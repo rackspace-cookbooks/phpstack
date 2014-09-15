@@ -4,7 +4,7 @@ require 'chefspec'
 require 'chefspec/berkshelf'
 require 'chef/application'
 
-::LOG_LEVEL = :debug
+::LOG_LEVEL = :error
 ::UBUNTU_OPTS = {
   platform: 'ubuntu',
   version: '12.04',
