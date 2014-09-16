@@ -35,7 +35,7 @@ include_recipe "#{stackname}::demo"
 # we need to run this before apache to pull in the correct version of php
 include_recipe 'php'
 include_recipe 'php::ini'
-include_recipe "#{stackname}::#{node[stackname]['webserver']}" if %w(apache nginx).include(node[stackname]['webserver'])
+include_recipe "#{stackname}::#{node[stackname]['webserver']}" if %w(apache nginx).include?(node[stackname]['webserver'])
 
 if node[stackname]['webserver'] == 'nginx'
   include_recipe 'php-fpm'
