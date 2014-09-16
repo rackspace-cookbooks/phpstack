@@ -79,6 +79,7 @@ node['apache']['sites'].each do |site_name, site_opts|
     notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
     action 'create'
     only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
+    only_if { node.deep_fetch('phpstack', 'flags', 'monitoring', 'enabled') && node.deep_fetch('phpstack', 'flags', 'monitoring', 'cloudmonitoring') }
   end
 end
 
