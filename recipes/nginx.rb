@@ -83,7 +83,7 @@ node['nginx']['sites'].each do |port, sites|
       )
       notifies :reload, 'service[nginx]'
     end
-    nginx_site "#{site_name}-#{port}" do
+    nginx_site "#{site_name}-#{port}.conf" do
       enable true
       notifies :reload, 'service[nginx]'
     end
