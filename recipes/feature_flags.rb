@@ -3,7 +3,7 @@
 # Cookbook Name:: phpstack
 # Recipe:: default
 #
-# Copyright 2014, Rackspace Hosting
+v# Copyright 2014, Rackspace Hosting
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ if node['phpstack']['flags']['mysql']['enabled']
   if node['phpstack']['flags']['mysql']['slave']
     include_recipe 'phpstack::mysql_slave'
   end
-  if node['phpstack']['flags']['mysql']['holland']
+  if node['phpstack']['flags']['mysql']['holland'] && !node['phpstack']['flags']['mysql']['master']
     include_recipe 'phpstack::mysql_holland'
   end
   if node['phpstack']['flags']['mysql']['drive']
