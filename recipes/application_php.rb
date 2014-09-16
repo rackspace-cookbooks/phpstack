@@ -32,24 +32,20 @@ include_recipe 'git'
 # set demo if needed
 include_recipe "#{stackname}::demo"
 
-# if we are nginx we need to install php-fpm before php... (php pulls in apache)
-if node[stackname]['webserver'] == 'nginx'
-  include_recipe "#{stackname}::nginx"
-  include_recipe 'php-fpm'
-  node.default[stackname]['gluster_mountpoint'] = node['nginx']['default_root']
-end
-
 # we need to run this before apache to pull in the correct version of php
 include_recipe 'php'
 include_recipe 'php::ini'
+include_recipe "#{stackname}::#{node[stackname]['webserver']}" if node[stackname]['webserver'].include('apache', 'nginx')
 
-if node[stackname]['webserver'] == 'apache'
-  include_recipe "#{stackname}::apache"
+if node[stackname]['webserver'] == 'nginx'
+  include_recipe 'php-fpm'
+  node.default[stackname]['gluster_mountpoint'] = node['nginx']['default_root']
+elsif node[stackname]['webserver'] == 'apache'
   node.default[stackname]['gluster_mountpoint'] = node['apache']['docroot_dir']
+else
+  # set gluster mountpoint unless set already
+  node.default_unless[stackname]['gluster_mountpoint'] = '/var/www'
 end
-
-# set gluster mountpoint unless set already
-node.default_unless[stackname]['gluster_mountpoint'] = '/var/www'
 
 include_recipe 'build-essential'
 # Adding mongod compatibility
@@ -71,12 +67,10 @@ if gluster_cluster.key?('nodes')
   end
   node.set_unless[stackname]['gluster_connect_ip'] = gluster_ips.sample
 
-  # install gluster mount
   package 'glusterfs-client' do
     action :install
   end
 
-  # set up the mountpoint
   mount 'webapp-mountpoint' do
     fstype 'glusterfs'
     device "#{node[stackname]['gluster_connect_ip']}:/#{node['rackspace_gluster']['config']['server']['glusters'].values[0]['volume']}"
@@ -86,10 +80,8 @@ if gluster_cluster.key?('nodes')
 end
 
 if node.deep_fetch(stackname, 'code-deployment', 'enabled')
-  # node[node[stackname]['webserver']]['sites'].each do | site_name, site_opts |
   node[node[stackname]['webserver']]['sites'].each do |port, sites|
     sites.each do |site_name, site_opts|
-
       application "#{site_name}-#{port}" do
         path site_opts['docroot']
         owner node[node[stackname]['webserver']]['user']
