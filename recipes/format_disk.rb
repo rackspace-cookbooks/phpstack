@@ -1,15 +1,16 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: phpstack
-# Recipe:: mysql_add_drive
+# Recipe:: format_disk
 #
-# Copyright 2014, Rackspace Hosting
+# Copyright 2014, Rackspace, US Inc.
+#
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,26 +21,22 @@
 
 # This recipe will format /dev/xvde1 (datadisk on Rackspace performance cloud nodes) and will prepare it for the mysql datadir.
 
-include_recipe 'phpstack::format_disk'
+device = node['disk']['name']
+fs = node['disk']['fs']
 
-user 'mysql' do
-  comment 'MySQL Server'
-  home '/var/lib/mysql'
-  shell '/sbin/nologin'
-end
-
-directory '/var/lib/mysql' do
-  owner 'mysql'
-  group 'mysql'
-  mode '0700'
-  action :create
-  not_if do
-    File.directory?('/var/lib/mysql')
+execute 'mkfs' do
+  command "mkfs -t #{fs} #{device}"
+  only_if do
+    loop do
+      if File.blockdev?(device)
+        Chef::Log.info("device #{device} exists")
+        break
+      else
+        fail("device #{device} does not exist")
+      end
+    end
+    # check volume filesystem
+    cmd = Mixlib::ShellOut.new("blkid -s TYPE -o value #{device}")
+    cmd.run_command.error?
   end
-end
-
-mount '/var/lib/mysql' do
-  device device
-  fstype 'ext3'
-  action [:mount, :enable]
 end
