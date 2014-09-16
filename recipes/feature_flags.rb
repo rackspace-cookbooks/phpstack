@@ -47,4 +47,7 @@ if node['phpstack']['flags']['mysql']['enabled']
   if node['phpstack']['flags']['mysql']['holland']
     include_recipe 'phpstack::mysql_holland'
   end
+  if node['phpstack']['flags']['mysql']['drive']
+    include_recipe 'phpstack::mysql_add_drive'
+  end
 end
