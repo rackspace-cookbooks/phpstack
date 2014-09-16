@@ -78,9 +78,9 @@ suites:
     run_list:
       - recipe[phpstack::postgresql_base]
 
-  - name: feature-flags
+  - name: feature_flags
     run_list:
-      - role[feature-flags]
+      - role[feature_flags]
     attributes:
       platformstack:
         cloud_backup:
