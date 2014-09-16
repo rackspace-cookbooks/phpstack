@@ -86,14 +86,18 @@ if gluster_cluster.key?('nodes')
 end
 
 if node.deep_fetch(stackname, 'code-deployment', 'enabled')
-  node[node[stackname]['webserver']]['sites'].each do | site_name, site_opts |
-    application site_name do
-      path site_opts['docroot']
-      owner node[node[stackname]['webserver']]['user']
-      group node[node[stackname]['webserver']]['group']
-      deploy_key site_opts['deploy_key']
-      repository site_opts['repository']
-      revision site_opts['revision']
+  # node[node[stackname]['webserver']]['sites'].each do | site_name, site_opts |
+  node[node[stackname]['webserver']]['sites'].each do |port, sites|
+    sites.each do |site_name, site_opts|
+
+      application "#{site_name}-#{port}" do
+        path site_opts['docroot']
+        owner node[node[stackname]['webserver']]['user']
+        group node[node[stackname]['webserver']]['group']
+        deploy_key site_opts['deploy_key']
+        repository site_opts['repository']
+        revision site_opts['revision']
+      end
     end
   end
 end
@@ -120,7 +124,7 @@ template "#{stackname}.ini" do
              if mysql_node.deep_fetch(node[stackname]['webserver'], 'sites').nil?
                nil
              else
-               mysql_node.deep_fetch(node[stackname]['webserver'], 'sites').values[0]['mysql_password'].nil? ? nil : mysql_node
+               mysql_node.deep_fetch(node[stackname]['webserver'], 'sites').values[0].values[0]['mysql_password'].nil? ? nil : mysql_node
              end
            end,
     # need to do here because sugar is not available inside the template

@@ -18,6 +18,8 @@
 # limitations under the License.
 #
 
+stackname = phpstack
+
 include_recipe 'chef-sugar'
 
 # If not defined drop out
@@ -60,44 +62,45 @@ if !node['nginx']['default_site_enabled'] && (node['platform_family'] == 'rhel' 
 end
 
 # Create the sites.
-node['nginx']['sites'].each do |site_name, site_opts|
-  add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site_opts['port']} -j ACCEPT", 100, 'Allow access to nginx')
-
-  # Nginx set up
-  template site_name do
-    cookbook site_opts['cookbook']
-    source "nginx/sites/#{site_name}.erb"
-    path "#{node['nginx']['dir']}/sites-available/#{site_name}"
-    owner 'root'
-    group 'root'
-    mode '0644'
-    variables(
-      port: site_opts['port'],
-      server_name: site_opts['server_name'],
-      server_aliases: site_opts['server_alias'],
-      docroot: site_opts['docroot'],
-      errorlog: site_opts['errorlog'],
-      customlog: site_opts['customlog']
-    )
-    notifies :reload, 'service[nginx]'
-  end
-  nginx_site site_name do
-    enable true
-    notifies :reload, 'service[nginx]'
-  end
-  template "http-monitor-#{site_opts['server_name']}" do
-    cookbook 'phpstack'
-    source 'monitoring-remote-http.yaml.erb'
-    path "/etc/rackspace-monitoring-agent.conf.d/#{site_opts['server_name']}-http-monitor.yaml"
-    owner 'root'
-    group 'root'
-    mode '0644'
-    variables(
-      http_port: site_opts['port'],
-      server_name: site_opts['server_name']
-    )
-    notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
-    action 'create'
-    only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
+node['nginx']['sites'].each do |port, sites|
+  add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{port} -j ACCEPT", 100, 'Allow access to nginx')
+  sites.each do |site_name, site_opts|
+    # Nginx set up
+    template "#{site_name}-#{port}" do
+      cookbook site_opts['cookbook']
+      source site_opts['template']
+      path "#{node['nginx']['dir']}/sites-available/#{site_name}-#{port}.conf"
+      owner 'root'
+      group 'root'
+      mode '0644'
+      variables(
+        port: port,
+        server_name: site_opts['server_name'],
+        server_aliases: site_opts['server_alias'],
+        docroot: site_opts['docroot'],
+        errorlog: site_opts['errorlog'],
+        customlog: site_opts['customlog']
+      )
+      notifies :reload, 'service[nginx]'
+    end
+    nginx_site "#{site_name}-#{port}" do
+      enable true
+      notifies :reload, 'service[nginx]'
+    end
+    template "http-monitor-#{site_opts['server_name']}-#{port}" do
+      cookbook stackname
+      source 'monitoring-remote-http.yaml.erb'
+      path "/etc/rackspace-monitoring-agent.conf.d/#{site_opts['server_name']}-#{port}-http-monitor.yaml"
+      owner 'root'
+      group 'root'
+      mode '0644'
+      variables(
+        http_port: port,
+        server_name: site_opts['server_name']
+      )
+      notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
+      action 'create'
+      only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
+    end
   end
 end
