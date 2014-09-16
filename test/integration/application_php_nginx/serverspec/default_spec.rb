@@ -13,11 +13,11 @@ describe 'configures and runs Nginx' do
 end
 
 describe 'configures our application' do
-  describe file('/etc/nginx/sites-available/example.com') do
+  describe file('/etc/nginx/sites-available/example.com-80.conf') do
     it { should be_file }
   end
-  describe file('/etc/nginx/sites-enabled/example.com') do
-    it { should be_linked_to '/etc/nginx/sites-available/example.com' }
+  describe file('/etc/nginx/sites-enabled/example.com-80.conf') do
+    it { should be_linked_to '/etc/nginx/sites-available/example.com-80.conf' }
   end
   describe file('/var/www/example.com') do
     it { should be_directory }
