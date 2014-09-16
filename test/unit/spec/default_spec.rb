@@ -16,18 +16,53 @@ describe 'phpstack::feature_flags' do
       expect(chef_run).to_not include_recipe('phpstack::mysql_slave')
     end
   end
-  context 'if MySQL is enabled' do
+  describe 'if MySQL is enabled' do
     let(:chef_run) do
       ChefSpec::Runner.new(::UBUNTU_OPTS) do |node|
         node.set['phpstack']['flags']['mysql']['enabled'] = true
-        node.set['phpstack']['flags']['mysql']['standalone'] = true
       end.converge(described_recipe)
     end
-    it 'includes the mysql recipe' do
+    it 'includes the mysql base recipe' do
       expect(chef_run).to include_recipe('phpstack::mysql_base')
     end
-    it 'includes the mysql master recipe' do
-      expect(chef_run).to include_recipe('phpstack::mysql_master')
+    context 'as a standalone node' do
+      let(:chef_run) do
+        ChefSpec::Runner.new(::UBUNTU_OPTS) do |node|
+          node.set['phpstack']['flags']['mysql']['enabled'] = true
+          node.set['phpstack']['flags']['mysql']['standalone'] = true
+        end.converge(described_recipe)
+      end
+      it 'includes the mysql master recipe' do
+        expect(chef_run).to include_recipe('phpstack::mysql_master')
+      end
+    end
+    context 'as a master node' do
+      let(:chef_run) do
+        ChefSpec::Runner.new(::UBUNTU_OPTS) do |node|
+          node.set['phpstack']['flags']['mysql']['enabled'] = true
+          node.set['phpstack']['flags']['mysql']['master'] = true
+        end.converge(described_recipe)
+      end
+      it 'includes the mysql base recipe' do
+        expect(chef_run).to include_recipe('phpstack::mysql_base')
+      end
+      it 'includes the mysql master recipe' do
+        expect(chef_run).to include_recipe('phpstack::mysql_master')
+      end
+    end
+    context 'as a slave node' do
+      let(:chef_run) do
+        ChefSpec::Runner.new(::UBUNTU_OPTS) do |node|
+          node.set['phpstack']['flags']['mysql']['enabled'] = true
+          node.set['phpstack']['flags']['mysql']['slave'] = true
+        end.converge(described_recipe)
+      end
+      it 'includes the mysql base recipe' do
+        expect(chef_run).to include_recipe('phpstack::mysql_base')
+      end
+      it 'includes the mysql master recipe' do
+        expect(chef_run).to include_recipe('phpstack::mysql_slave')
+      end
     end
   end
   describe 'if Webserver is disabled(default)' do
