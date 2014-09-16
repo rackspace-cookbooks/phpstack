@@ -34,3 +34,4 @@ default['phpstack']['flags']['mysql']['enabled'] = false
 default['phpstack']['flags']['mysql']['standalone'] = false
 default['phpstack']['flags']['mysql']['master'] = false
 default['phpstack']['flags']['mysql']['slave'] = false
+default['phpstack']['flags']['mysql']['holland'] = false
