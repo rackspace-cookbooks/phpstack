@@ -53,16 +53,14 @@ backend_nodes.each do |backend_node|
     errmsg = 'Did not find sites, default.vcl not configured'
     Chef::Log.warn(errmsg)
   else
-    backend_node[node[stackname]['webserver']]['sites'].each do |site_name|
-      site_name = site_name[0]
-      site = backend_node[node[stackname]['webserver']]['sites'][site_name]
-      backend_hosts.merge!(
-        best_ip_for(backend_node) => {
-          site['port'] => {
-            site_name => site_name
+    backend_node[node[stackname]['webserver']]['sites'].each do |port, sites|
+      sites.each do |site_name, site_opts|
+        backend_hosts.merge!(
+          best_ip_for(backend_node) => {
+            port => { site_name: site_name }
           }
-        }
-      )
+        )
+      end
     end
   end
 end

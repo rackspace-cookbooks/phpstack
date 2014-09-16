@@ -82,16 +82,16 @@ search_add_iptables_rules(
   9998,
   'allow app nodes to connect to mysql')
 
-# we don't want to create DBs or users and the like on slaves, do we?
-unless includes_recipe?("#{stackname}::mysql_slave")
-  node.default[node[stackname]['webserver']]['sites'] = [] unless node[node[stackname]['webserver']]['sites'].respond_to?('each') # ~FC047
-  node[node[stackname]['webserver']]['sites'].each do |site_name|
-    site_name = site_name[0]
-
+# allow no sites to be set
+node.default[node[stackname]['webserver']]['sites'] = [] unless node[node[stackname]['webserver']]['sites'].respond_to?('each') # ~FC047
+node[node[stackname]['webserver']]['sites'].each do |port, sites|
+  # we don't want to create DBs or users and the like on slaves, do we?
+  next unless includes_recipe?("#{stackname}::mysql_slave")
+  sites.each do |site_name, site_opts|
     # set up the default DB name, user and password
-    db_name = site_name[0...64]
-    node.set_unless[node[stackname]['webserver']]['sites'][site_name]['databases'][db_name]['mysql_user'] = site_name[0...16] # ~FC047
-    node.set_unless[node[stackname]['webserver']]['sites'][site_name]['databases'][db_name]['mysql_password'] = secure_password # ~FC047
+    db_name = "#{site_name[0...64]}-#{port}"
+    node.set_unless[node[stackname]['webserver']]['sites'][site_name][port]['databases'][db_name]['mysql_user'] = site_name[0...16] # ~FC047
+    node.set_unless[node[stackname]['webserver']]['sites'][site_name][port]['databases'][db_name]['mysql_password'] = secure_password # ~FC047
 
     if Chef::Config[:solo]
       Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
@@ -100,18 +100,42 @@ unless includes_recipe?("#{stackname}::mysql_slave")
       app_nodes = search(:node, "tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}")
     end
 
-    node[node[stackname]['webserver']]['sites'][site_name]['databases'].each do |database|
+    # sets up the default database(s)
+    node[node[stackname]['webserver']]['sites'][site_name][port]['databases'].each do |database|
       database = database[0]
-      # sets up the default database and the others, if specified for the site
       mysql_database database do
         connection connection_info
         action 'create'
       end
 
-      # set up db user and pass for database (the non-default ones) unless set (both to random)
+      # allow access if needed
+      app_nodes.each do |app_node|
+        mysql_database_user node[node[stackname]['webserver']]['sites'][site_name][port]['databases'][database]['mysql_user'] do
+          connection connection_info
+          password node[node[stackname]['webserver']]['sites'][site_name][port]['databases'][database]['mysql_password']
+          host best_ip_for(app_node)
+          database_name database
+          privileges %w(select update insert)
+          retries 2
+          retry_delay 2
+          action %w(create grant)
+        end
+      end
+    end
+
+    # sets up the user defined databases, if defined
+    node.default[node[stackname]['webserver']]['sites'][site_name]['databases'] = [] unless node.deep_fetch(node[stackname]['webserver'], 'sites', site_name, 'databases')
+    node[node[stackname]['webserver']]['sites'][site_name]['databases'].each do |database|
+      database = database[0]
+      mysql_database database do
+        connection connection_info
+        action 'create'
+      end
+
       node.set_unless[node[stackname]['webserver']]['sites'][site_name]['databases'][database]['mysql_user'] = ::SecureRandom.hex # ~FC047
       node.set_unless[node[stackname]['webserver']]['sites'][site_name]['databases'][database]['mysql_password'] = secure_password # ~FC047
 
+      # allow access if needed
       app_nodes.each do |app_node|
         mysql_database_user node[node[stackname]['webserver']]['sites'][site_name]['databases'][database]['mysql_user'] do
           connection connection_info
