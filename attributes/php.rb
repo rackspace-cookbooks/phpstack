@@ -40,7 +40,10 @@ when 'rhel'
     php55u-xml )
   default['php']['ext_conf_dir']  = '/etc/php.d'
 when 'debian'
+  # the php5-common, php5-cgi, php5 ordering is needed to not install apache
   default['php']['packages'] = %w(
+    php5-common
+    php5-cgi
     php5
     php5-dev
     php5-mcrypt
