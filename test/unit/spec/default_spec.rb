@@ -66,15 +66,15 @@ describe 'phpstack::feature_flags' do
     end
   end
   describe 'if Webserver is disabled(default)' do
-    it 'doesn\'t includes the nginx recipe' do
+    it 'doesn\'t include the nginx recipe' do
       expect(chef_run).to_not include_recipe('phpstack::nginx')
     end
-    it 'doesn\'t includes the apache recipe' do
+    it 'doesn\'t include the apache recipe' do
       expect(chef_run).to_not include_recipe('phpstack::apache')
     end
   end
   describe 'if Application deployment is disabled(default)' do
-    it 'doesn\'t includes the application recipe' do
+    it 'doesn\'t include the application recipe' do
       expect(chef_run).to_not include_recipe('phpstack::application_php')
     end
   end
@@ -103,7 +103,7 @@ describe 'phpstack::feature_flags' do
       it 'includes the apache recipe' do
         expect(chef_run).to include_recipe('phpstack::apache')
       end
-      it 'doesn\'t includes the nginx recipe' do
+      it 'doesn\'t include the nginx recipe' do
         expect(chef_run).to_not include_recipe('phpstack::nginx')
       end
     end
@@ -117,7 +117,7 @@ describe 'phpstack::feature_flags' do
       it 'includes the nginx recipe' do
         expect(chef_run).to include_recipe('phpstack::nginx')
       end
-      it 'doesn\'t includes the apache recipe' do
+      it 'doesn\'t include the apache recipe' do
         expect(chef_run).to_not include_recipe('phpstack::apache')
       end
     end
