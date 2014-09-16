@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-stackname = phpstack
+stackname = 'phpstack'
 
 include_recipe 'chef-sugar'
 
