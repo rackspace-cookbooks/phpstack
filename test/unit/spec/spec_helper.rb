@@ -15,10 +15,8 @@ require 'chef/application'
 }
 
 def stub_resources
-  stub_command("which nginx").and_return(true)
-  stub_command("/usr/sbin/apache2 -t").and_return(true)
+  stub_command('which nginx').and_return(true)
+  stub_command('/usr/sbin/apache2 -t').and_return(true)
 end
 
-
 at_exit { ChefSpec::Coverage.report! }
-
