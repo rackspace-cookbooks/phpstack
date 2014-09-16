@@ -21,7 +21,23 @@ provisioner:
       server_debian_password: "randompass"
     holland:
       password: "randompass"
-
+    openssh:
+      server:
+        password_authentication: 'yes'
+        permit_root_login: 'yes'
+    cloud:
+      public_ipv4: '127.0.0.1'
+    platformstack:
+      cloud_backup:
+        enabled: false
+      omnibus_updater:
+        enabled: false
+      iptables:
+        allow_ssh_from_world: true
+    rackspace:
+      cloud_credentials:
+        username: 'racker'
+        api_key: 'sekrit'
 platforms:
   - name: ubuntu-12.04
     run_list:
@@ -81,7 +97,3 @@ suites:
   - name: feature_flags
     run_list:
       - role[feature_flags]
-    attributes:
-      platformstack:
-        cloud_backup:
-          enabled: false

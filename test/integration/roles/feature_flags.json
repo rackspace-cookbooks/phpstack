@@ -1,6 +1,6 @@
 {
    "env_run_lists" : {},
-   "run_list" : [ "recipe[phpstack::feature-flags]" ],
+   "run_list" : [ "recipe[phpstack::feature_flags]" ],
    "json_class" : "Chef::Role",
    "chef_type" : "role",
    "override_attributes" : {},
@@ -33,10 +33,10 @@
             "apache": true
           },
           "application": { "enabled": true },
-          "mysql": { 
+          "mysql": {
             "enabled": true,
-            "standalone": true 
-          },        
+            "standalone": true
+          }
         },
         "demo": {
           "enabled": true
