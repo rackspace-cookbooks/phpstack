@@ -44,12 +44,12 @@ describe 'phpstack::feature_flags' do
           ChefSpec::Runner.new(::UBUNTU_OPTS) do |node|
             node.set['phpstack']['flags']['mysql']['enabled'] = true
             node.set['phpstack']['flags']['mysql']['standalone'] = true
-            node.set['phpstack']['flags']['mysql']['holland'] = true            
+            node.set['phpstack']['flags']['mysql']['holland'] = true
           end.converge(described_recipe)
         end
         it 'includes holland'
-          expect(chef_run).to include_recipe('phpstack::mysql_holland')
-        end
+        expect(chef_run).to include_recipe('phpstack::mysql_holland')
+      end
     end
     context 'as a master node' do
       let(:chef_run) do
