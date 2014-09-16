@@ -35,8 +35,11 @@ if node['phpstack']['flags']['application']['enabled']
   include_recipe 'phpstack::application_php'
 end
 if node['phpstack']['flags']['mysql']['enabled']
-  if node['phpstack']['flags']['mysql']['master'] || node['phpstack']['flags']['mysql']['standalone']
+  if  node['phpstack']['flags']['mysql']['standalone']
     include_recipe 'phpstack::mysql_base'
+  end
+  if node['phpstack']['flags']['mysql']['master']
+    include_recipe 'phpstack::mysql_master'
   end
   if node['phpstack']['flags']['mysql']['slave']
     include_recipe 'phpstack::mysql_slave'
