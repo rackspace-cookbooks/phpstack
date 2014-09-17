@@ -114,60 +114,6 @@ No Data_Bag configured for this cookbook
 Attributes
 ----------
 
-#### apache.rb
-* site1 = 'example.com'
-  * Indicate the fqdn of the site number 1
-* node.default['apache']['sites'][site1]['port']         = 80
-  * Indicates what port should be this site listening on
-* node.default['apache']['sites'][site1]['cookbook']     = 'phpstack'
-  * Indicates the name of the cookbook to get templates from
-* node.default['apache']['sites'][site1]['template']     = "apache2/sites/#{site1}.erb"
-  * Indicates template file location for this site
-* node.default['apache']['sites'][site1]['server_name']  = site1
-  * Indicates server_name variable to be used in template file
-* node.default['apache']['sites'][site1]['server_alias'] = ["test.#{site1}", "www.#{site1}"]
-  * Indicates server_alias variable to be used in template file
-* node.default['apache']['sites'][site1]['docroot']      = "/var/www/#{site1}"
-  * Indicates docroot variable to be used in template file
-* node.default['apache']['sites'][site1]['allow_override'] = ['All']
-  * Indicates allow_override variable to be used in template file
-* node.default['apache']['sites'][site1]['errorlog']     = "#{node['apache']['log_dir']}/#{site1}-error.log"
-  * Indicates errorlog variable to be used in template file
-* node.default['apache']['sites'][site1]['customlog']    = "#{node['apache']['log_dir']}/#{site1}-access.log combined"
-  * Indicates customlog variable to be used in template file
-* node.default['apache']['sites'][site1]['loglevel']     = 'warn'
-  * Indicates loglevel variable to be used in template file
-* node.default['apache']['sites'][site1]['server_admin'] = 'demo@demo.com'
-  * Indicates server_admin variable to be used in template file
-* node.default['apache']['sites'][site1]['revision'] = "v#{version1}"
-  * Indicates revision variable to be used to deploy this site files
-* node.default['apache']['sites'][site1]['repository'] = 'https://github.com/rackops/php-test-app'
-  * Indicates repository variable to be used to deploy this site
-* node.default['apache']['sites'][site1]['deploy_key'] = '/root/.ssh/id_rsa'
-  * Indicates deploy_key variable to be used when getting data from repository
-* node.default['apache']['sites'][site1]['databases'][site1]['mysql_user'] = site1
-  * Indicates a database and database user to be configured
-* node.default['apache']['sites'][site1]['databases'][site1]['mysql_password'] = ''
-  * Indicates the password to configure for database user with blank being random
-
-#### gluster.rb
-
-* default['rackspace_gluster']['config']['server']['glusters']['Gluster Cluster 1'] = {}
-* default['rackspace_gluster']['config']['server']['glusters']['Gluster Cluster 1']['volume'] = 'vol0'
-
-#### holland.rb
-
-* default['holland']['enabled'] = false
-  * Defines if holland is enabled or not in this node
-* default['holland']['password'] = 'notagudpassword'
-  * Defines the password for holland user in mysql database
-* default['holland']['cron']['day'] = '*'
-  * Defines day for backup
-* default['holland']['cron']['hour'] = '3'
-  * Defines hour for backup
-* default['holland']['cron']['minute'] = '12'
-  * Defines minute for backup
-
 #### monitoring.rb
 
 * default['phpstack']['cloud_monitoring']['remote_http']['disabled'] = false
@@ -181,28 +127,10 @@ Attributes
 * default['phpstack']['cloud_monitoring']['agent_mysql']['user'] = 'raxmon-agent'
 * default['phpstack']['cloud_monitoring']['agent_mysql']['password'] = nil
 
-#### mysql.rb
-
-* default['mysql-multi']['master'] = ''
-* default['mysql-multi']['slaves'] = []
-* default['mysql-multi']['slave_user'] = 'replicant'
-
 #### php.rb
 
-* default['php']['packages'] = []
-  * List of packages needed based on platform_family
 * default['phpstack']['ini']['cookbook'] = 'phpstack'
   * Indicates the cookbook where to get ini template to override
-
-#### php_fpm.rb
-* default['php-fpm']['pools'] = false
-  * Defines if a pool needs to be created at this time
-* default['php']['package-name'] = []
-  * Installs required packages based on platform_family
-
-#### postgresql.rb
-* default['postgresql']['password']['postgres'] = 'randompasswordforpostgresql'
-  * Indicates admin password for postgresql
 
 #### rabbitmq.rb
 * default['phpstack']['rabbitmq']['passwords'] = {}
