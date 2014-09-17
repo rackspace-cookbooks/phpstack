@@ -82,6 +82,13 @@ search_add_iptables_rules(
   9998,
   'allow app nodes to connect to mysql')
 
+if Chef::Config[:solo]
+  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+  app_nodes = []
+else
+  app_nodes = search(:node, "tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}")
+end
+
 # allow no sites to be set
 node.default[node[stackname]['webserver']]['sites'] = [] unless node[node[stackname]['webserver']]['sites'].respond_to?('each') # ~FC047
 node[node[stackname]['webserver']]['sites'].each do |port, sites|
@@ -94,14 +101,7 @@ node[node[stackname]['webserver']]['sites'].each do |port, sites|
     node.set_unless[node[stackname]['webserver']]['sites'][site_name][port]['databases'][db_name]['mysql_user'] = site_name[0...16] # ~FC047
     node.set_unless[node[stackname]['webserver']]['sites'][site_name][port]['databases'][db_name]['mysql_password'] = secure_password # ~FC047
 
-    if Chef::Config[:solo]
-      Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
-      app_nodes = []
-    else
-      app_nodes = search(:node, "tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}")
-    end
-
-    # sets up the default database(s)
+    # sets up the default, autodefined database(s)
     node[node[stackname]['webserver']]['sites'][site_name][port]['databases'].each do |database|
       database = database[0]
       mysql_database database do
