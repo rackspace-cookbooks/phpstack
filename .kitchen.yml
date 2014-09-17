@@ -39,11 +39,28 @@ provisioner:
         username: 'racker'
         api_key: 'sekrit'
 platforms:
+  - name: ubuntu-12.04
+    run_list:
+    - recipe[apt]
+  - name: ubuntu-14.04
+    run_list:
+    - recipe[apt]
   - name: centos-6.5
     run_list:
     - recipe[yum]
 
 suites:
+  - name: aio-apache
+    run_list:
+      - recipe[phpstack::mysql_base]
+      - recipe[phpstack::postgresql_base]
+      - recipe[phpstack::mongodb_standalone]
+      - recipe[phpstack::memcache]
+      - recipe[phpstack::varnish]
+      - recipe[phpstack::rabbitmq]
+      - recipe[phpstack::redis_single]
+      - recipe[phpstack::application_php]
+
   - name: aio-nginx
     run_list:
       - recipe[phpstack::mysql_base]
@@ -58,3 +75,25 @@ suites:
       phpstack:
         webserver: 'nginx'
 
+  - name: application-php-apache
+    run_list:
+      - recipe[phpstack::application_php]
+
+  - name: application-php-nginx
+    run_list:
+      - recipe[phpstack::application_php]
+    attributes:
+      phpstack:
+        webserver: 'nginx'
+
+  - name: mysql
+    run_list:
+      - recipe[phpstack::mysql_base]
+
+  - name: postgresql
+    run_list:
+      - recipe[phpstack::postgresql_base]
+
+  - name: feature_flags
+    run_list:
+      - role[feature_flags]
