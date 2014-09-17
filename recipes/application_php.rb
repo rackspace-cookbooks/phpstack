@@ -39,10 +39,6 @@ if node[stackname]['webserver'] == 'nginx'
   node.default[stackname]['gluster_mountpoint'] = node['nginx']['default_root']
 end
 
-# we need to run this before apache to pull in the correct version of php
-include_recipe 'php'
-include_recipe 'php::ini'
-
 if node[stackname]['webserver'] == 'apache'
   include_recipe "#{stackname}::apache"
   node.default[stackname]['gluster_mountpoint'] = node['apache']['docroot_dir']

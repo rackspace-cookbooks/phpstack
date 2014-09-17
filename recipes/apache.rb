@@ -32,6 +32,11 @@ if rhel?
   include_recipe 'yum-ius'
 end
 
+# FIXME upstream, apache cookbook doesn't support different package name https://github.com/onehealth-cookbooks/apache2/blob/master/recipes/mod_php5.rb#L32
+# we need to run this before apache otherwise there is a conflict version between php from ['php']['packages'] (package = php55u) and apache2::mod_php5(package = php53) https://github.com/onehealth-cookbooks/apache2/blob/master/recipes/mod_php5.rb#L32
+include_recipe 'php'
+include_recipe 'php::ini'
+
 # Include the necessary recipes.
 %w(
   platformstack::monitors
