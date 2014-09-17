@@ -136,6 +136,30 @@ Attributes
 * default['phpstack']['rabbitmq']['passwords'] = {}
   * Indicates admin password for rabbitmq
 
+#### default.rb
+
+* default['phpstack']['webserver'] = 'apache'
+* default['phpstack']['db-autocreate']['enabled'] = true
+* default['phpstack']['newrelic']['application_monitoring'] = ''
+  * No default application monitoring set
+* default['phpstack']['ini']['cookbook'] = 'phpstack'
+  * sets php.ini template
+* default['phpstack']['code-deployment']['enabled'] = true
+  * For customers that do not want to deploy sites through cookbook
+
+#### varnish.rb
+
+* default['phpstack']['varnish']['multi'] = true
+  * Enables multi-site support for Varnish
+
+#### backups.rb
+
+* default['phpstack']['rackspace_cloudbackup']['http_docroot']['enable'] = false
+  * Disables Cloud Backup on apache's documentroot
+
+#### demo.rb
+
+* default['phpstack']['demo']['enabled'] = false
 
 Usage
 -----
