@@ -82,25 +82,26 @@ search_add_iptables_rules(
   9998,
   'allow app nodes to connect to mysql')
 
+if Chef::Config[:solo]
+  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+  app_nodes = []
+else
+  app_nodes = search(:node, "tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}")
+end
+
 # allow no sites to be set
 node.default[node[stackname]['webserver']]['sites'] = [] unless node[node[stackname]['webserver']]['sites'].respond_to?('each') # ~FC047
 node[node[stackname]['webserver']]['sites'].each do |port, sites|
   # we don't want to create DBs or users and the like on slaves, do we?
   next unless includes_recipe?("#{stackname}::mysql_slave")
   sites.each do |site_name, site_opts|
+    next unless node['phpstack']['db-autocreate']['enabled']
     # set up the default DB name, user and password
     db_name = "#{site_name[0...64]}-#{port}"
     node.set_unless[node[stackname]['webserver']]['sites'][site_name][port]['databases'][db_name]['mysql_user'] = site_name[0...16] # ~FC047
     node.set_unless[node[stackname]['webserver']]['sites'][site_name][port]['databases'][db_name]['mysql_password'] = secure_password # ~FC047
 
-    if Chef::Config[:solo]
-      Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
-      app_nodes = []
-    else
-      app_nodes = search(:node, "tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}")
-    end
-
-    # sets up the default database(s)
+    # sets up the default, autodefined database(s)
     node[node[stackname]['webserver']]['sites'][site_name][port]['databases'].each do |database|
       database = database[0]
       mysql_database database do
@@ -122,7 +123,10 @@ node[node[stackname]['webserver']]['sites'].each do |port, sites|
         end
       end
     end
+  end
 
+  # need to do this loop twice to properly encapsulate the db autocreation
+  sites.each do |site_name, site_opts|
     # sets up the user defined databases, if defined
     node.default[node[stackname]['webserver']]['sites'][site_name]['databases'] = [] unless node.deep_fetch(node[stackname]['webserver'], 'sites', site_name, 'databases')
     node[node[stackname]['webserver']]['sites'][site_name]['databases'].each do |database|
