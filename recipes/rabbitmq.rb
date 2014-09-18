@@ -57,13 +57,13 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
       action 'add'
     end
 
-    node.set_unless[stackname]['rabbitmq']['passwords']["#{rabbit_vhost}"] = secure_password
+    node.set_unless[stackname]['rabbitmq']['passwords'][rabbit_vhost] = secure_password
 
     rabbitmq_user rabbit_vhost do
       action %w(add set_permissions change_password)
       vhost "/#{rabbit_vhost}"
       permissions '.* .* .*'
-      password node[stackname]['rabbitmq']['passwords']["#{rabbit_vhost}"]
+      password node[stackname]['rabbitmq']['passwords'][rabbit_vhost]
     end
   end
 end

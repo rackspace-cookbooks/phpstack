@@ -43,7 +43,7 @@ host = <%= @rabbit['phpstack']['rabbitmq']['best_ip_for'] %>
 port = <%= @rabbit['rabbitmq']['port'] %>
 vhost = <%= rabbit_vhost %>
 user = <%= rabbit_vhost %>
-pass = <%= @rabbit['phpstack']['rabbitmq']['passwords']["#{rabbit_vhost}"] %>
+pass = <%= @rabbit['phpstack']['rabbitmq']['passwords'][rabbit_vhost] %>
 
 <%-     end -%>
 <%-   end -%>
