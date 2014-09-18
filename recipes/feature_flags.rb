@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: phpstack
-# Recipe:: default
+# Recipe:: feature_flags
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -18,11 +18,6 @@
 # limitations under the License.
 #
 
-if node['phpstack']['flags']['monitoring']['enabled']
-  if node['phpstack']['flags']['monitoring']['newrelic']
-    include_recipe 'phpstack::newrelic'
-  end
-end
 if node['phpstack']['flags']['webserver']['enabled']
   if node['phpstack']['flags']['webserver']['apache']
     include_recipe 'phpstack::apache'
@@ -49,5 +44,10 @@ if node['phpstack']['flags']['mysql']['enabled']
   end
   if node['phpstack']['flags']['mysql']['drive']
     include_recipe 'phpstack::mysql_add_drive'
+  end
+end
+if node['phpstack']['flags']['monitoring']['enabled']
+  if node['phpstack']['flags']['monitoring']['newrelic']
+    include_recipe 'phpstack::newrelic'
   end
 end
