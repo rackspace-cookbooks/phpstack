@@ -22,5 +22,10 @@ default['phpstack']['newrelic']['application_monitoring'] = ''
 default['phpstack']['webserver'] = 'apache'
 default['phpstack']['ini']['cookbook'] = 'phpstack'
 
+default['phpstack']['mysql']['databases'] = []
+default['phpstack']['apache']['sites'] = []
+default['phpstack']['nginx']['sites'] = []
+
+default['phpstack']['webserver_deployment']['enabled'] = true
 default['phpstack']['code-deployment']['enabled'] = true
 default['phpstack']['db-autocreate']['enabled'] = true

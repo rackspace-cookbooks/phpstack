@@ -30,7 +30,8 @@ end
 include_recipe 'git'
 
 # set demo if needed
-include_recipe "#{stackname}::demo"
+demo_hash = node[stackname][node[stackname]['webserver']]['sites'].merge(node[stackname]['demo'][node[stackname]['webserver']]['sites'])
+node.default[stackname][node[stackname]['webserver']]['sites'] = demo_hash if node[stackname]['demo']['enabled']
 
 # we need to run this before apache to pull in the correct version of php
 include_recipe 'php'
@@ -80,7 +81,7 @@ if gluster_cluster.key?('nodes')
 end
 
 if node.deep_fetch(stackname, 'code-deployment', 'enabled')
-  node[node[stackname]['webserver']]['sites'].each do |port, sites|
+  node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
     sites.each do |site_name, site_opts|
       application "#{site_name}-#{port}" do
         path site_opts['docroot']
@@ -113,10 +114,10 @@ template "#{stackname}.ini" do
     cookbook_name: cookbook_name,
     # if it responds then we will create the config section in the ini file
     mysql: if mysql_node.respond_to?('deep_fetch')
-             if mysql_node.deep_fetch(node[stackname]['webserver'], 'sites').nil?
+             if mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').nil?
                nil
              else
-               mysql_node.deep_fetch(node[stackname]['webserver'], 'sites').values[0].values[0]['mysql_password'].nil? ? nil : mysql_node
+               mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').values[0].values[0]['mysql_password'].nil? ? nil : mysql_node
              end
            end,
     # need to do here because sugar is not available inside the template
@@ -143,7 +144,7 @@ node.set_unless['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email
 node.default['rackspace_cloudbackup']['backups'] =
   [
     {
-      location: node[node[stackname]['webserver']]['docroot_dir'],
+      location: [stackname]['gluster_mountpoint'],
       enable: node[stackname]['rackspace_cloudbackup']['http_docroot']['enable'],
       comment: 'Web Content Backup',
       cloud: { notify_email: node['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] }

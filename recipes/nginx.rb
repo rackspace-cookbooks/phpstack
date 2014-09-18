@@ -19,15 +19,7 @@
 #
 
 stackname = 'phpstack'
-
-include_recipe 'chef-sugar'
-
-# If not defined drop out
-if node.deep_fetch('nginx', 'sites').nil?
-  return 0
-elsif node.deep_fetch('nginx', 'sites').values[0].nil?
-  return 0
-end
+return 0 unless node[stackname]['webserver_deployment']['enabled']
 
 if rhel?
   include_recipe 'yum-epel'
@@ -36,17 +28,16 @@ end
 
 # Include the necessary recipes.
 %w(
+  apt
+  chef-sugar
   platformstack::monitors
   platformstack::iptables
-  apt
 ).each do |recipe|
   include_recipe recipe
 end
 
 # Pid is different on Ubuntu 14, causing nginx service to fail https://github.com/miketheman/nginx/issues/248
-if ubuntu_trusty?
-  node.default['nginx']['pid'] = '/run/nginx.pid'
-end
+node.default['nginx']['pid'] = '/run/nginx.pid' if ubuntu_trusty?
 
 # Install Nginx
 include_recipe 'nginx'
@@ -61,8 +52,10 @@ if !node['nginx']['default_site_enabled'] && (node['platform_family'] == 'rhel' 
   end
 end
 
+listen_ports = []
 # Create the sites.
-node['nginx']['sites'].each do |port, sites|
+node[stackname]['nginx']['sites'].each do |port, sites|
+  listen_ports |= [port]
   add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{port} -j ACCEPT", 100, 'Allow access to nginx')
   sites.each do |site_name, site_opts|
     # Nginx set up
@@ -104,3 +97,5 @@ node['nginx']['sites'].each do |port, sites|
     end
   end
 end
+
+node.default['nginx']['listen_ports'] = listen_ports

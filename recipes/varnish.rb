@@ -21,6 +21,7 @@
 stackname = 'phpstack'
 
 include_recipe 'chef-sugar'
+include_recipe 'platformstack::iptables'
 if platform_family?('debian')
   include_recipe 'apt'
 else
@@ -28,7 +29,8 @@ else
 end
 
 # include demo if needed
-include_recipe "#{stackname}::demo"
+demo_hash = node[stackname][node[stackname]['webserver']]['sites'].merge(node[stackname]['demo'][node[stackname]['webserver']]['sites'])
+node.default[stackname][node[stackname]['webserver']]['sites'] = demo_hash if node[stackname]['demo']['enabled']
 
 add_iptables_rule('INPUT', "-p tcp --dport #{node['varnish']['listen_port']} -j ACCEPT", 9997, 'allow web browsers to connect')
 
@@ -39,7 +41,6 @@ node.set['platformstack']['cloud_monitoring']['plugins']['varnish']['disabled'] 
 node.default['varnish']['backend_port'] = node[node[stackname]['webserver']]['listen_ports'].first
 
 # pull a list of backend hosts to populate the template
-# node.default[stackname]['varnish']['backend_hosts'] = Hash.new
 backend_hosts = {}
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
@@ -49,18 +50,13 @@ else
 end
 
 backend_nodes.each do |backend_node|
-  if backend_node.deep_fetch(node[stackname]['webserver'], 'sites').nil?
-    errmsg = 'Did not find sites, default.vcl not configured'
-    Chef::Log.warn(errmsg)
-  else
-    backend_node[node[stackname]['webserver']]['sites'].each do |port, sites|
-      sites.each do |site_name, site_opts|
-        backend_hosts.merge!(
-          best_ip_for(backend_node) => {
-            port => { site_name: site_name }
-          }
-        )
-      end
+  backend_node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
+    sites.each do |site_name, site_opts|
+      backend_hosts.merge!(
+        best_ip_for(backend_node) => {
+          port => { site_name: site_name }
+        }
+      )
     end
   end
 end
