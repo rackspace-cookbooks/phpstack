@@ -26,8 +26,7 @@ include_recipe 'platformstack::monitors'
 include_recipe 'platformstack::iptables'
 
 # set demo attributes if needed
-demo_hash = node[stackname][node[stackname]['webserver']]['sites'].to_hash.merge(node[stackname]['demo'][node[stackname]['webserver']]['sites'].to_hash)
-node.default[stackname][node[stackname]['webserver']]['sites'] = demo_hash if node[stackname]['demo']['enabled']
+node.default[stackname][node[stackname]['webserver']]['sites'] = node[stackname]['demo'][node[stackname]['webserver']]['sites'] if node[stackname]['demo']['enabled']
 
 # set passwords dynamically...
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
@@ -109,7 +108,7 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
     node.set_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][db_name]['mysql_password'] = secure_password # ~FC047
 
     # sets up the default, autodefined database(s)
-    node[stackname][node[stackname]['webserver']]['sites'][site_name][port]['databases'].each do |database|
+    node[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'].each do |database|
       database = database[0]
       mysql_database database do
         connection connection_info
@@ -118,9 +117,9 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
 
       # allow access if needed
       app_nodes.each do |app_node|
-        mysql_database_user node[stackname][node[stackname]['webserver']]['sites'][site_name][port]['databases'][database]['mysql_user'] do
+        mysql_database_user node[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][database]['mysql_user'] do
           connection connection_info
-          password node[stackname][node[stackname]['webserver']]['sites'][site_name][port]['databases'][database]['mysql_password']
+          password node[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][database]['mysql_password']
           host best_ip_for(app_node)
           database_name database
           privileges %w(select update insert)

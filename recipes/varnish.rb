@@ -29,8 +29,7 @@ else
 end
 
 # include demo if needed
-demo_hash = node[stackname][node[stackname]['webserver']]['sites'].to_hash.merge(node[stackname]['demo'][node[stackname]['webserver']]['sites'].to_hash)
-node.default[stackname][node[stackname]['webserver']]['sites'] = demo_hash if node[stackname]['demo']['enabled']
+node.default[stackname][node[stackname]['webserver']]['sites'] = node[stackname]['demo'][node[stackname]['webserver']]['sites'] if node[stackname]['demo']['enabled']
 
 add_iptables_rule('INPUT', "-p tcp --dport #{node['varnish']['listen_port']} -j ACCEPT", 9997, 'allow web browsers to connect')
 

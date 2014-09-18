@@ -30,8 +30,7 @@ end
 include_recipe 'git'
 
 # set demo if needed
-demo_hash = node[stackname][node[stackname]['webserver']]['sites'].to_hash.merge(node[stackname]['demo'][node[stackname]['webserver']]['sites'].to_hash)
-node.default[stackname][node[stackname]['webserver']]['sites'] = demo_hash if node[stackname]['demo']['enabled']
+node.default[stackname][node[stackname]['webserver']]['sites'] = node[stackname]['demo'][node[stackname]['webserver']]['sites'] if node[stackname]['demo']['enabled']
 
 # we need to run this before apache to pull in the correct version of php
 include_recipe 'php'
@@ -144,7 +143,7 @@ node.set_unless['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email
 node.default['rackspace_cloudbackup']['backups'] =
   [
     {
-      location: [stackname]['gluster_mountpoint'],
+      location: node[stackname]['gluster_mountpoint'],
       enable: node[stackname]['rackspace_cloudbackup']['http_docroot']['enable'],
       comment: 'Web Content Backup',
       cloud: { notify_email: node['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] }

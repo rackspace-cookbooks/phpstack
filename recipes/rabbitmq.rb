@@ -47,7 +47,7 @@ rabbitmq_user 'monitor' do
   password node[stackname]['rabbitmq']['monitor_password']
 end
 
-node[node[stackname]['webserver']]['sites'].each do |site_name|
+node[stackname][node[stackname]['webserver']]['sites'].each do |site_name|
   site_name = site_name[0]
 
   # create the rabbit vhost
