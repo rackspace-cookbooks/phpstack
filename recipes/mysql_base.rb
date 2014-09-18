@@ -26,7 +26,7 @@ include_recipe 'platformstack::monitors'
 include_recipe 'platformstack::iptables'
 
 # set demo attributes if needed
-demo_hash = node[stackname][node[stackname]['webserver']]['sites'].merge(node[stackname]['demo'][node[stackname]['webserver']]['sites'])
+demo_hash = node[stackname][node[stackname]['webserver']]['sites'].to_hash.merge(node[stackname]['demo'][node[stackname]['webserver']]['sites'].to_hash)
 node.default[stackname][node[stackname]['webserver']]['sites'] = demo_hash if node[stackname]['demo']['enabled']
 
 # set passwords dynamically...

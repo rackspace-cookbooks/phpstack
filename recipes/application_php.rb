@@ -30,7 +30,7 @@ end
 include_recipe 'git'
 
 # set demo if needed
-demo_hash = node[stackname][node[stackname]['webserver']]['sites'].merge(node[stackname]['demo'][node[stackname]['webserver']]['sites'])
+demo_hash = node[stackname][node[stackname]['webserver']]['sites'].to_hash.merge(node[stackname]['demo'][node[stackname]['webserver']]['sites'].to_hash)
 node.default[stackname][node[stackname]['webserver']]['sites'] = demo_hash if node[stackname]['demo']['enabled']
 
 # we need to run this before apache to pull in the correct version of php
