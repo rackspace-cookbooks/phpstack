@@ -107,6 +107,9 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
     node.set_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][db_name]['mysql_user'] = "#{site_name[0...10]}-#{port}" # ~FC047
     node.set_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][db_name]['mysql_password'] = secure_password # ~FC047
 
+    # need to redefine site_opts because we just added user/passwords to that hash
+    site_opts = node[stackname][node[stackname]['webserver']]['sites'][port][site_name]
+
     # sets up the default, autodefined database(s)
     site_opts['databases'].each do |database, database_opts|
       mysql_database database do
@@ -142,6 +145,9 @@ node[stackname]['mysql']['databases'].each do |database, database_opts|
 
   node.set_unless[stackname]['mysql']['databases'][database]['mysql_user'] = ::SecureRandom.hex # ~FC047
   node.set_unless[stackname]['mysql']['databases'][database]['mysql_password'] = secure_password # ~FC047
+
+  # need to redefine database_opts because we just added user/passwords to that hash
+  database_opts = node[stackname]['mysql']['databases'][database]
 
   # allow access if needed
   app_nodes.each do |app_node|
