@@ -120,16 +120,13 @@ template "#{stackname}.ini" do
              end
            end,
     # need to do here because sugar is not available inside the template
-    rabbit_host: if rabbit_node.respond_to?('deep_fetch')
-                   best_ip_for(rabbit_node)
-                 else
-                   nil
-                 end,
-    rabbit_passwords: if rabbit_node.respond_to?('deep_fetch')
-                        rabbit_node.deep_fetch(stackname, 'rabbitmq', 'passwords').values[0].nil? == true ? nil : rabbit_node[stackname]['rabbitmq']['passwords']
-                      else
-                        nil
-                      end
+    rabbit: if rabbit_node.respond_to?('deep_fetch')
+              if rabbit_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').nil?
+                nil
+              else
+                rabbit_node.deep_fetch(stackname, 'rabbitmq', 'passwords').values[0].nil? ? nil : rabbit_node
+              end
+            end
   )
   action 'create'
   # For Nginx the service Uwsgi subscribes to the template, as we need to restart each Uwsgi service

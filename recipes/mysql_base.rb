@@ -103,13 +103,12 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
       next unless site_opts['db_autocreate']
     end
     # set up the default DB name, user and password
-    db_name = "#{site_name[0...62]}-#{port}"
-    node.set_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][db_name]['mysql_user'] = "#{site_name[0...13]}-#{port}" # ~FC047
+    db_name = "#{site_name[0...58]}-#{port}"
+    node.set_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][db_name]['mysql_user'] = "#{site_name[0...10]}-#{port}" # ~FC047
     node.set_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][db_name]['mysql_password'] = secure_password # ~FC047
 
     # sets up the default, autodefined database(s)
-    node[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'].each do |database|
-      database = database[0]
+    site_opts['databases'].each do |database, database_opts|
       mysql_database database do
         connection connection_info
         action 'create'
@@ -117,9 +116,9 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
 
       # allow access if needed
       app_nodes.each do |app_node|
-        mysql_database_user node[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][database]['mysql_user'] do
+        mysql_database_user database_opts['mysql_user'] do
           connection connection_info
-          password node[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][database]['mysql_password']
+          password database_opts['mysql_password']
           host best_ip_for(app_node)
           database_name database
           privileges %w(select update insert)
@@ -133,7 +132,7 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
 end
 
 # user defined databases exist somewhere else
-node[stackname]['mysql']['databases'].each do |database|
+node[stackname]['mysql']['databases'].each do |database, database_opts|
   next if includes_recipe?("#{stackname}::mysql_slave")
 
   mysql_database database do
@@ -146,9 +145,9 @@ node[stackname]['mysql']['databases'].each do |database|
 
   # allow access if needed
   app_nodes.each do |app_node|
-    mysql_database_user node[stackname]['mysql']['databases'][database]['mysql_user'] do
+    mysql_database_user database_opts['mysql_user'] do
       connection connection_info
-      password node[stackname]['mysql']['databases'][database]['mysql_password']
+      password database_opts['mysql_password']
       host best_ip_for(app_node)
       database_name database
       privileges %w(select update insert)
