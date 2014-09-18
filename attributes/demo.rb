@@ -26,11 +26,11 @@ port1 = '80'
 port2 = '8080'
 
 # apache site1
-default['phpstack']['demo']['apache']['sites'][port1][site1]['template']       = "apache2/sites/#{site1}-#{port}.erb"
+default['phpstack']['demo']['apache']['sites'][port1][site1]['template']       = "apache2/sites/#{site1}-#{port1}.erb"
 default['phpstack']['demo']['apache']['sites'][port1][site1]['cookbook']       = 'phpstack'
 default['phpstack']['demo']['apache']['sites'][port1][site1]['server_name']    = site1
 default['phpstack']['demo']['apache']['sites'][port1][site1]['server_alias']   = ["test.#{site1}", "www.#{site1}"]
-default['phpstack']['demo']['apache']['sites'][port1][site1]['docroot']        = "#{node['apache']['docroot_dir']}/#{site1}/#{port}"
+default['phpstack']['demo']['apache']['sites'][port1][site1]['docroot']        = "#{node['apache']['docroot_dir']}/#{site1}/#{port1}"
 default['phpstack']['demo']['apache']['sites'][port1][site1]['errorlog']       = "#{node['apache']['log_dir']}/#{site1}-error.log"
 default['phpstack']['demo']['apache']['sites'][port1][site1]['customlog']      = "#{node['apache']['log_dir']}/#{site1}-access.log combined"
 default['phpstack']['demo']['apache']['sites'][port1][site1]['allow_override'] = ['All']
@@ -40,11 +40,11 @@ default['phpstack']['demo']['apache']['sites'][port1][site1]['revision']       =
 default['phpstack']['demo']['apache']['sites'][port1][site1]['repository']     = 'https://github.com/rackops/php-test-app'
 default['phpstack']['demo']['apache']['sites'][port1][site1]['deploy_key']     = '/root/.ssh/id_rsa'
 
-default['phpstack']['demo']['apache']['sites'][port2][site1]['template']       = "apache2/sites/#{site1}-#{port}.erb"
+default['phpstack']['demo']['apache']['sites'][port2][site1]['template']       = "apache2/sites/#{site1}-#{port2}.erb"
 default['phpstack']['demo']['apache']['sites'][port2][site1]['cookbook']       = 'phpstack'
 default['phpstack']['demo']['apache']['sites'][port2][site1]['server_name']    = site1
 default['phpstack']['demo']['apache']['sites'][port2][site1]['server_alias']   = ["test.#{site1}", "www.#{site1}"]
-default['phpstack']['demo']['apache']['sites'][port2][site1]['docroot']        = "#{node['apache']['docroot_dir']}/#{site1}/#{port}"
+default['phpstack']['demo']['apache']['sites'][port2][site1]['docroot']        = "#{node['apache']['docroot_dir']}/#{site1}/#{port2}"
 default['phpstack']['demo']['apache']['sites'][port2][site1]['errorlog']       = "#{node['apache']['log_dir']}/#{site1}-error.log"
 default['phpstack']['demo']['apache']['sites'][port2][site1]['customlog']      = "#{node['apache']['log_dir']}/#{site1}-access.log combined"
 default['phpstack']['demo']['apache']['sites'][port2][site1]['allow_override'] = ['All']
@@ -55,11 +55,11 @@ default['phpstack']['demo']['apache']['sites'][port2][site1]['repository']     =
 default['phpstack']['demo']['apache']['sites'][port2][site1]['deploy_key']     = '/root/.ssh/id_rsa'
 
 # apache site2
-default['phpstack']['demo']['apache']['sites'][port1][site2]['template']       = "apache2/sites/#{site2}-#{port}.erb"
+default['phpstack']['demo']['apache']['sites'][port1][site2]['template']       = "apache2/sites/#{site2}-#{port1}.erb"
 default['phpstack']['demo']['apache']['sites'][port1][site2]['cookbook']       = 'phpstack'
 default['phpstack']['demo']['apache']['sites'][port1][site2]['server_name']    = site2
 default['phpstack']['demo']['apache']['sites'][port1][site2]['server_alias']   = ["test.#{site2}", "www.#{site2}"]
-default['phpstack']['demo']['apache']['sites'][port1][site2]['docroot']        = "#{node['apache']['docroot_dir']}/#{site2}/#{port}"
+default['phpstack']['demo']['apache']['sites'][port1][site2]['docroot']        = "#{node['apache']['docroot_dir']}/#{site2}/#{port1}"
 default['phpstack']['demo']['apache']['sites'][port1][site2]['errorlog']       = "#{node['apache']['log_dir']}/#{site2}-error.log"
 default['phpstack']['demo']['apache']['sites'][port1][site2]['customlog']      = "#{node['apache']['log_dir']}/#{site2}-access.log combined"
 default['phpstack']['demo']['apache']['sites'][port1][site2]['allow_override'] = ['All']
@@ -69,11 +69,11 @@ default['phpstack']['demo']['apache']['sites'][port1][site2]['revision']       =
 default['phpstack']['demo']['apache']['sites'][port1][site2]['repository']     = 'https://github.com/rackops/php-test-app'
 default['phpstack']['demo']['apache']['sites'][port1][site2]['deploy_key']     = '/root/.ssh/id_rsa'
 
-default['phpstack']['demo']['apache']['sites'][port2][site2]['template']       = "apache2/sites/#{site2}-#{port}.erb"
+default['phpstack']['demo']['apache']['sites'][port2][site2]['template']       = "apache2/sites/#{site2}-#{port2}.erb"
 default['phpstack']['demo']['apache']['sites'][port2][site2]['cookbook']       = 'phpstack'
 default['phpstack']['demo']['apache']['sites'][port2][site2]['server_name']    = site2
 default['phpstack']['demo']['apache']['sites'][port2][site2]['server_alias']   = ["test.#{site2}", "www.#{site2}"]
-default['phpstack']['demo']['apache']['sites'][port2][site2]['docroot']        = "#{node['apache']['docroot_dir']}/#{site2}/#{port}"
+default['phpstack']['demo']['apache']['sites'][port2][site2]['docroot']        = "#{node['apache']['docroot_dir']}/#{site2}/#{port2}"
 default['phpstack']['demo']['apache']['sites'][port2][site2]['errorlog']       = "#{node['apache']['log_dir']}/#{site2}-error.log"
 default['phpstack']['demo']['apache']['sites'][port2][site2]['customlog']      = "#{node['apache']['log_dir']}/#{site2}-access.log combined"
 default['phpstack']['demo']['apache']['sites'][port2][site2]['allow_override'] = ['All']
@@ -84,11 +84,11 @@ default['phpstack']['demo']['apache']['sites'][port2][site2]['repository']     =
 default['phpstack']['demo']['apache']['sites'][port2][site2]['deploy_key']     = '/root/.ssh/id_rsa'
 
 # nginx site1
-default['phpstack']['demo']['nginx']['sites'][port1][site1]['template']       = "nginx/sites/#{site1}-#{port}.erb"
+default['phpstack']['demo']['nginx']['sites'][port1][site1]['template']       = "nginx/sites/#{site1}-#{port1}.erb"
 default['phpstack']['demo']['nginx']['sites'][port1][site1]['cookbook']       = 'phpstack'
 default['phpstack']['demo']['nginx']['sites'][port1][site1]['server_name']    = site1
 default['phpstack']['demo']['nginx']['sites'][port1][site1]['server_alias']   = ["test.#{site1}", "www.#{site1}"]
-default['phpstack']['demo']['nginx']['sites'][port1][site1]['docroot']        = "#{node['nginx']['default_root']}/#{site1}/#{port}"
+default['phpstack']['demo']['nginx']['sites'][port1][site1]['docroot']        = "#{node['nginx']['default_root']}/#{site1}/#{port1}"
 default['phpstack']['demo']['nginx']['sites'][port1][site1]['errorlog']       = "#{node['nginx']['log_dir']}/#{site1}-error.log info"
 default['phpstack']['demo']['nginx']['sites'][port1][site1]['customlog']      = "#{node['nginx']['log_dir']}/#{site1}-access.log combined"
 default['phpstack']['demo']['nginx']['sites'][port1][site1]['server_admin']   = 'demo@demo.com'
@@ -96,11 +96,11 @@ default['phpstack']['demo']['nginx']['sites'][port1][site1]['revision']       = 
 default['phpstack']['demo']['nginx']['sites'][port1][site1]['repository']     = 'https://github.com/rackops/php-test-app'
 default['phpstack']['demo']['nginx']['sites'][port1][site1]['deploy_key']     = '/root/.ssh/id_rsa'
 
-default['phpstack']['demo']['nginx']['sites'][port2][site1]['template']       = "nginx/sites/#{site1}-#{port}.erb"
+default['phpstack']['demo']['nginx']['sites'][port2][site1]['template']       = "nginx/sites/#{site1}-#{port2}.erb"
 default['phpstack']['demo']['nginx']['sites'][port2][site1]['cookbook']       = 'phpstack'
 default['phpstack']['demo']['nginx']['sites'][port2][site1]['server_name']    = site1
 default['phpstack']['demo']['nginx']['sites'][port2][site1]['server_alias']   = ["test.#{site1}", "www.#{site1}"]
-default['phpstack']['demo']['nginx']['sites'][port2][site1]['docroot']        = "#{node['nginx']['default_root']}/#{site1}/#{port}"
+default['phpstack']['demo']['nginx']['sites'][port2][site1]['docroot']        = "#{node['nginx']['default_root']}/#{site1}/#{port2}"
 default['phpstack']['demo']['nginx']['sites'][port2][site1]['errorlog']       = "#{node['nginx']['log_dir']}/#{site1}-error.log info"
 default['phpstack']['demo']['nginx']['sites'][port2][site1]['customlog']      = "#{node['nginx']['log_dir']}/#{site1}-access.log combined"
 default['phpstack']['demo']['nginx']['sites'][port2][site1]['server_admin']   = 'demo@demo.com'
@@ -109,11 +109,11 @@ default['phpstack']['demo']['nginx']['sites'][port2][site1]['repository']     = 
 default['phpstack']['demo']['nginx']['sites'][port2][site1]['deploy_key']     = '/root/.ssh/id_rsa'
 
 # nginx site2
-default['phpstack']['demo']['nginx']['sites'][port1][site2]['template']       = "nginx/sites/#{site2}-#{port}.erb"
+default['phpstack']['demo']['nginx']['sites'][port1][site2]['template']       = "nginx/sites/#{site2}-#{port1}.erb"
 default['phpstack']['demo']['nginx']['sites'][port1][site2]['cookbook']       = 'phpstack'
 default['phpstack']['demo']['nginx']['sites'][port1][site2]['server_name']    = site2
 default['phpstack']['demo']['nginx']['sites'][port1][site2]['server_alias']   = ["test.#{site2}", "www.#{site2}"]
-default['phpstack']['demo']['nginx']['sites'][port1][site2]['docroot']        = "#{node['nginx']['default_root']}/#{site2}/#{port}"
+default['phpstack']['demo']['nginx']['sites'][port1][site2]['docroot']        = "#{node['nginx']['default_root']}/#{site2}/#{port1}"
 default['phpstack']['demo']['nginx']['sites'][port1][site2]['errorlog']       = "#{node['nginx']['log_dir']}/#{site2}-error.log info"
 default['phpstack']['demo']['nginx']['sites'][port1][site2]['customlog']      = "#{node['nginx']['log_dir']}/#{site2}-access.log combined"
 default['phpstack']['demo']['nginx']['sites'][port1][site2]['server_admin']   = 'demo@demo.com'
@@ -121,11 +121,11 @@ default['phpstack']['demo']['nginx']['sites'][port1][site2]['revision']       = 
 default['phpstack']['demo']['nginx']['sites'][port1][site2]['repository']     = 'https://github.com/rackops/php-test-app'
 default['phpstack']['demo']['nginx']['sites'][port1][site2]['deploy_key']     = '/root/.ssh/id_rsa'
 
-default['phpstack']['demo']['nginx']['sites'][port2][site2]['template']       = "nginx/sites/#{site2}-#{port}.erb"
+default['phpstack']['demo']['nginx']['sites'][port2][site2]['template']       = "nginx/sites/#{site2}-#{port2}.erb"
 default['phpstack']['demo']['nginx']['sites'][port2][site2]['cookbook']       = 'phpstack'
 default['phpstack']['demo']['nginx']['sites'][port2][site2]['server_name']    = site2
 default['phpstack']['demo']['nginx']['sites'][port2][site2]['server_alias']   = ["test.#{site2}", "www.#{site2}"]
-default['phpstack']['demo']['nginx']['sites'][port2][site2]['docroot']        = "#{node['nginx']['default_root']}/#{site2}/#{port}"
+default['phpstack']['demo']['nginx']['sites'][port2][site2]['docroot']        = "#{node['nginx']['default_root']}/#{site2}/#{port2}"
 default['phpstack']['demo']['nginx']['sites'][port2][site2]['errorlog']       = "#{node['nginx']['log_dir']}/#{site2}-error.log info"
 default['phpstack']['demo']['nginx']['sites'][port2][site2]['customlog']      = "#{node['nginx']['log_dir']}/#{site2}-access.log combined"
 default['phpstack']['demo']['nginx']['sites'][port2][site2]['server_admin']   = 'demo@demo.com'
