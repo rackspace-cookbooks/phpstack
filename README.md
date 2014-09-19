@@ -38,10 +38,6 @@
 - `yum-ius`
 - `yum-epel`
 
-### Attributes
-
-- foo
-
 ## Recipes
 
 ### default
