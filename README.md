@@ -299,7 +299,8 @@ shouldn't really be messed with
         }
       }
     }
-}```
+}
+```
 
 - applications (combine this with the vhost to deploy a full site)
 ```json
@@ -320,7 +321,8 @@ shouldn't really be messed with
         }
       }
     }
-}```
+}
+```
 
 - databases
 ```json
@@ -333,7 +335,8 @@ shouldn't really be messed with
         }
       }
     }
-}```
+}
+```
 
 ### phpstack
 
