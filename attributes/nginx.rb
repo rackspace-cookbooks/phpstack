@@ -27,4 +27,4 @@ end
 default['nginx']['listen_ports'] = %w(80)
 
 # wasn't obeyed as default
-set['nginx']['default_root'] = '/var/www'
+default['nginx']['default_root'] = '/var/www'
