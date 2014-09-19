@@ -26,8 +26,6 @@ else
   default['php-fpm']['group'] = node['nginx']['group']
 end
 
-# default['php-fpm']['pools'] = false
-
 case node['platform_family']
 when 'rhel'
   default['php-fpm']['package_name'] = 'php55u-fpm'

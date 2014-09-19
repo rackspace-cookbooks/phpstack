@@ -26,6 +26,7 @@ if node['newrelic']['license']
   node.override['newrelic']['application_monitoring']['daemon']['ssl'] = true
   node.override['newrelic']['server_monitoring']['ssl'] = true
   include_recipe 'platformstack::default'
+  include_recipe 'php'  # needed so that we don't install apache by installing the agent
   node.override['newrelic']['php_agent']['agent_action'] = 'upgrade'
   include_recipe 'newrelic::php_agent'
   node.default['newrelic_meetme_plugin']['license'] = node['newrelic']['license']
