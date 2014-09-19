@@ -26,4 +26,5 @@ end
 # needed to be like this so it acts like apache
 default['nginx']['listen_ports'] = %w(80)
 
+# wasn't obeyed as default
 default['nginx']['default_root'] = '/var/www'

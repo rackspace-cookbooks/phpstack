@@ -20,6 +20,7 @@
 
 stackname = 'phpstack'
 
+include_recipe 'chef-sugar'
 include_recipe 'platformstack::iptables'
 
 # allow app nodes to connect
@@ -47,23 +48,25 @@ rabbitmq_user 'monitor' do
   password node[stackname]['rabbitmq']['monitor_password']
 end
 
-node[node[stackname]['webserver']]['sites'].each do |site_name|
-  site_name = site_name[0]
+# create a rabbit vhost and associated user for each site
+node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
+  sites.each do |site_name, site_opts|
+    rabbit_vhost = "#{site_name}-#{port}"
 
-  # create the rabbit vhost
-  rabbitmq_vhost "/#{site_name}" do
-    action 'add'
-  end
+    rabbitmq_vhost "/#{rabbit_vhost}" do
+      action 'add'
+    end
 
-  # set random app passwords
-  ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
-  node.set_unless[stackname]['rabbitmq']['passwords'][site_name] = secure_password
+    node.set_unless[stackname]['rabbitmq']['passwords'][rabbit_vhost] = secure_password
 
-  # add the queue per site
-  rabbitmq_user site_name do
-    action %w(add set_permissions change_password)
-    vhost "/#{site_name}"
-    permissions '.* .* .*'
-    password node[stackname]['rabbitmq']['passwords'][site_name]
+    rabbitmq_user rabbit_vhost do
+      action %w(add set_permissions change_password)
+      vhost "/#{rabbit_vhost}"
+      permissions '.* .* .*'
+      password node[stackname]['rabbitmq']['passwords'][rabbit_vhost]
+    end
   end
 end
+
+# set the best ip to reach rabbit at for searching
+node.default[stackname]['rabbitmq']['best_ip_for'] = best_ip_for(node)

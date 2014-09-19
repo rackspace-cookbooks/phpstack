@@ -19,15 +19,9 @@
 #
 
 stackname = 'phpstack'
+return 0 unless node[stackname]['webserver_deployment']['enabled']
 
 include_recipe 'chef-sugar'
-
-# If not defined drop out
-if node.deep_fetch('apache', 'sites').nil?
-  return 0
-elsif node.deep_fetch('apache', 'sites').values[0].nil?
-  return 0
-end
 
 if rhel?
   include_recipe 'yum-epel'
@@ -46,12 +40,11 @@ end
   include_recipe recipe
 end
 
-# Initialize listen_ports
 listen_ports = []
 
 # Create the sites.
 # node['apache']['sites'].each do |site_name, site_opts|
-node['apache']['sites'].each do |port, sites|
+node[stackname]['apache']['sites'].each do |port, sites|
   listen_ports |= [port]
   add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{port} -j ACCEPT", 100, 'Allow access to apache')
   sites.each do |site_name, site_opts|
@@ -85,5 +78,4 @@ node['apache']['sites'].each do |port, sites|
   end
 end
 
-# Set listen_ports attribute
-node.set['apache']['listen_ports'] = listen_ports
+node.default['apache']['listen_ports'] = listen_ports

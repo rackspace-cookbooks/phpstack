@@ -18,37 +18,39 @@
   },
   "chef_type": "node",
   "default": {
-    "nginx": {
-      "sites": {
-        "80": {
-          "example.com": {
-            "databases": {
-              "foobar": {}
+    "phpstack": {
+      "nginx": {
+        "sites": {
+          "80": {
+            "example.com": {
+              "databases": {
+                "foobar": {}
+              }
             }
-          }
-        },
-        "8080": {
-          "example.com": {
-            "databases": {
-              "foobar": {}
+          },
+          "8080": {
+            "example.com": {
+              "databases": {
+                "foobar": {}
+              }
             }
           }
         }
-      }
-    },
-    "apache": {
-      "sites": {
-        "80": {
-          "example.com": {
-            "databases": {
-              "foobar": {}
+      },
+      "apache": {
+        "sites": {
+          "80": {
+            "example.com": {
+              "databases": {
+                "foobar": {}
+              }
             }
-          }
-        },
-        "8080": {
-          "example.com": {
-            "databases": {
-              "foobar": {}
+          },
+          "8080": {
+            "example.com": {
+              "databases": {
+                "foobar": {}
+              }
             }
           }
         }

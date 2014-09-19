@@ -23,7 +23,10 @@ stackname = 'phpstack'
 include_recipe 'apt' if node.platform_family?('debian')
 include_recipe 'chef-sugar'
 include_recipe 'platformstack::monitors'
-include_recipe "#{stackname}::demo"
+include_recipe 'platformstack::iptables'
+
+# set demo attributes if needed
+node.default[stackname][node[stackname]['webserver']]['sites'] = node[stackname]['demo'][node[stackname]['webserver']]['sites'] if node[stackname]['demo']['enabled']
 
 # set passwords dynamically...
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
@@ -89,21 +92,26 @@ else
   app_nodes = search(:node, "tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}")
 end
 
-# allow no sites to be set
-node.default[node[stackname]['webserver']]['sites'] = [] unless node[node[stackname]['webserver']]['sites'].respond_to?('each') # ~FC047
-node[node[stackname]['webserver']]['sites'].each do |port, sites|
+# auto-generate databases
+node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
   # we don't want to create DBs or users and the like on slaves, do we?
-  next unless includes_recipe?("#{stackname}::mysql_slave")
+  next if includes_recipe?("#{stackname}::mysql_slave")
+  # only auto-generate databases if needed
+  next unless node['phpstack']['db-autocreate']['enabled']
   sites.each do |site_name, site_opts|
-    next unless node['phpstack']['db-autocreate']['enabled']
+    if site_opts.include?('db_autocreate')
+      next unless site_opts['db_autocreate']
+    end
     # set up the default DB name, user and password
-    db_name = "#{site_name[0...64]}-#{port}"
-    node.set_unless[node[stackname]['webserver']]['sites'][site_name][port]['databases'][db_name]['mysql_user'] = site_name[0...16] # ~FC047
-    node.set_unless[node[stackname]['webserver']]['sites'][site_name][port]['databases'][db_name]['mysql_password'] = secure_password # ~FC047
+    db_name = "#{site_name[0...58]}-#{port}"
+    node.set_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][db_name]['mysql_user'] = "#{site_name[0...10]}-#{port}" # ~FC047
+    node.set_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][db_name]['mysql_password'] = secure_password # ~FC047
+
+    # need to redefine site_opts because we just added user/passwords to that hash
+    site_opts = node[stackname][node[stackname]['webserver']]['sites'][port][site_name]
 
     # sets up the default, autodefined database(s)
-    node[node[stackname]['webserver']]['sites'][site_name][port]['databases'].each do |database|
-      database = database[0]
+    site_opts['databases'].each do |database, database_opts|
       mysql_database database do
         connection connection_info
         action 'create'
@@ -111,9 +119,9 @@ node[node[stackname]['webserver']]['sites'].each do |port, sites|
 
       # allow access if needed
       app_nodes.each do |app_node|
-        mysql_database_user node[node[stackname]['webserver']]['sites'][site_name][port]['databases'][database]['mysql_user'] do
+        mysql_database_user database_opts['mysql_user'] do
           connection connection_info
-          password node[node[stackname]['webserver']]['sites'][site_name][port]['databases'][database]['mysql_password']
+          password database_opts['mysql_password']
           host best_ip_for(app_node)
           database_name database
           privileges %w(select update insert)
@@ -124,34 +132,34 @@ node[node[stackname]['webserver']]['sites'].each do |port, sites|
       end
     end
   end
+end
 
-  # need to do this loop twice to properly encapsulate the db autocreation
-  sites.each do |site_name, site_opts|
-    # sets up the user defined databases, if defined
-    node.default[node[stackname]['webserver']]['sites'][site_name]['databases'] = [] unless node.deep_fetch(node[stackname]['webserver'], 'sites', site_name, 'databases')
-    node[node[stackname]['webserver']]['sites'][site_name]['databases'].each do |database|
-      database = database[0]
-      mysql_database database do
-        connection connection_info
-        action 'create'
-      end
+# user defined databases exist somewhere else
+node[stackname]['mysql']['databases'].each do |database, database_opts|
+  next if includes_recipe?("#{stackname}::mysql_slave")
 
-      node.set_unless[node[stackname]['webserver']]['sites'][site_name]['databases'][database]['mysql_user'] = ::SecureRandom.hex # ~FC047
-      node.set_unless[node[stackname]['webserver']]['sites'][site_name]['databases'][database]['mysql_password'] = secure_password # ~FC047
+  mysql_database database do
+    connection connection_info
+    action 'create'
+  end
 
-      # allow access if needed
-      app_nodes.each do |app_node|
-        mysql_database_user node[node[stackname]['webserver']]['sites'][site_name]['databases'][database]['mysql_user'] do
-          connection connection_info
-          password node[node[stackname]['webserver']]['sites'][site_name]['databases'][database]['mysql_password']
-          host best_ip_for(app_node)
-          database_name database
-          privileges %w(select update insert)
-          retries 2
-          retry_delay 2
-          action %w(create grant)
-        end
-      end
+  node.set_unless[stackname]['mysql']['databases'][database]['mysql_user'] = ::SecureRandom.hex # ~FC047
+  node.set_unless[stackname]['mysql']['databases'][database]['mysql_password'] = secure_password # ~FC047
+
+  # need to redefine database_opts because we just added user/passwords to that hash
+  database_opts = node[stackname]['mysql']['databases'][database]
+
+  # allow access if needed
+  app_nodes.each do |app_node|
+    mysql_database_user database_opts['mysql_user'] do
+      connection connection_info
+      password database_opts['mysql_password']
+      host best_ip_for(app_node)
+      database_name database
+      privileges %w(select update insert)
+      retries 2
+      retry_delay 2
+      action %w(create grant)
     end
   end
 end

@@ -30,7 +30,7 @@ end
 include_recipe 'git'
 
 # set demo if needed
-include_recipe "#{stackname}::demo"
+node.default[stackname][node[stackname]['webserver']]['sites'] = node[stackname]['demo'][node[stackname]['webserver']]['sites'] if node[stackname]['demo']['enabled']
 
 # we need to run this before apache to pull in the correct version of php
 include_recipe 'php'
@@ -80,7 +80,7 @@ if gluster_cluster.key?('nodes')
 end
 
 if node.deep_fetch(stackname, 'code-deployment', 'enabled')
-  node[node[stackname]['webserver']]['sites'].each do |port, sites|
+  node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
     sites.each do |site_name, site_opts|
       application "#{site_name}-#{port}" do
         path site_opts['docroot']
@@ -113,23 +113,20 @@ template "#{stackname}.ini" do
     cookbook_name: cookbook_name,
     # if it responds then we will create the config section in the ini file
     mysql: if mysql_node.respond_to?('deep_fetch')
-             if mysql_node.deep_fetch(node[stackname]['webserver'], 'sites').nil?
+             if mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').nil?
                nil
              else
-               mysql_node.deep_fetch(node[stackname]['webserver'], 'sites').values[0].values[0]['mysql_password'].nil? ? nil : mysql_node
+               mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').values[0].values[0]['mysql_password'].nil? ? nil : mysql_node
              end
            end,
     # need to do here because sugar is not available inside the template
-    rabbit_host: if rabbit_node.respond_to?('deep_fetch')
-                   best_ip_for(rabbit_node)
-                 else
-                   nil
-                 end,
-    rabbit_passwords: if rabbit_node.respond_to?('deep_fetch')
-                        rabbit_node.deep_fetch(stackname, 'rabbitmq', 'passwords').values[0].nil? == true ? nil : rabbit_node[stackname]['rabbitmq']['passwords']
-                      else
-                        nil
-                      end
+    rabbit: if rabbit_node.respond_to?('deep_fetch')
+              if rabbit_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').nil?
+                nil
+              else
+                rabbit_node.deep_fetch(stackname, 'rabbitmq', 'passwords').values[0].nil? ? nil : rabbit_node
+              end
+            end
   )
   action 'create'
   # For Nginx the service Uwsgi subscribes to the template, as we need to restart each Uwsgi service
@@ -143,7 +140,7 @@ node.set_unless['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email
 node.default['rackspace_cloudbackup']['backups'] =
   [
     {
-      location: node[node[stackname]['webserver']]['docroot_dir'],
+      location: node[stackname]['gluster_mountpoint'],
       enable: node[stackname]['rackspace_cloudbackup']['http_docroot']['enable'],
       comment: 'Web Content Backup',
       cloud: { notify_email: node['rackspace_cloudbackup']['backups_defaults']['cloud_notify_email'] }

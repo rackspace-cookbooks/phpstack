@@ -4,31 +4,47 @@
 # Controlling Cookbook: <%=  @cookbook_name %>
 #
 <%- unless @mysql.nil? -%>
-<%-   node[node['phpstack']['webserver']]['sites'].each do |site_name| -%>
-<%-     site_name = site_name[0] -%>
-<%-     @mysql[node['phpstack']['webserver']]['sites'][site_name]['databases'].each do |database| -%>
-<%-       database = database[0] -%>
-[MySQL-<%= site_name -%>-<%= database -%>]
-master-host = <%= node['mysql-multi']['master'] %>
-slave-hosts = <%= node['mysql-multi']['slaves'].join(', ') %>
+<%-   @mysql['phpstack'][node['phpstack']['webserver']]['sites'].each do |port, sites| -%>
+<%-     sites.each do |site_name, site_opts| -%>
+<%-       if site_opts.include?('db_autocreate') -%>
+<%-         next unless site_opts['db_autocreate'] -%>
+<%-       end -%>
+<%-       site_opts['databases'].each do |database, database_opts| -%>
+[MySQL-<%= database -%>]
+master-host = <%= @mysql['mysql-multi']['master'] %>
+slave-hosts = <%= @mysql['mysql-multi']['slaves'].join(', ') %>
 port = <%= @mysql['mysql']['port'] %>
 db_name = <%= database %>
-username = <%= @mysql[node['phpstack']['webserver']]['sites'][site_name]['databases'][database]['mysql_user'] %>
-password = <%= @mysql[node['phpstack']['webserver']]['sites'][site_name]['databases'][database]['mysql_password'] %>
+username = <%= database_opts['mysql_user'] -%>
+password = <%= database_opts['mysql_password'] -%>
 
+<%-       end -%>
 <%-     end -%>
+<%-   end -%>
+
+<%-   @mysql['phpstack']['mysql']['databases'].each do |database, database_opts| -%>
+[MySQL-<%= database -%>]
+master-host = <%= @mysql['mysql-multi']['master'] %>
+slave-hosts = <%= @mysql['mysql-multi']['slaves'].join(', ') %>
+port = <%= @mysql['mysql']['port'] %>
+db_name = <%= database %>
+username = <%= database_opts['mysql_user'] -%>
+password = <%= database_opts['mysql_password'] -%>
+
 <%-   end -%>
 <%- end -%>
 
-<%- unless @rabbit_host.nil? -%>
-<%-   node[node['phpstack']['webserver']]['sites'].each do |site_name| -%>
-<%-     site_name = site_name[0] -%>
-[RabbitMQ-<%= site_name -%>]
-host = <%= @rabbit_host %>
-port = <%= node['rabbitmq']['port'].nil? == true ? 5672 : node['rabbitmq']['port'] %>
-vhost = <%= site_name %>
-user = <%= site_name %>
-pass = <%= @rabbit_passwords.nil? == true ? 'this_is_not_going_to_work' : @rabbit_passwords[site_name] %>
+<%- unless @rabbit.nil? -%>
+<%-   @rabbit['phpstack'][node['phpstack']['webserver']]['sites'].each do |port, sites| -%>
+<%-     sites.each do |site_name, site_opts| -%>
+<%-       rabbit_vhost = "#{site_name}-#{port}" -%>
+[RabbitMQ-<%= rabbit_vhost -%>]
+host = <%= @rabbit['phpstack']['rabbitmq']['best_ip_for'] %>
+port = <%= @rabbit['rabbitmq']['port'] %>
+vhost = <%= rabbit_vhost %>
+user = <%= rabbit_vhost %>
+pass = <%= @rabbit['phpstack']['rabbitmq']['passwords'][rabbit_vhost] %>
 
+<%-     end -%>
 <%-   end -%>
 <%- end -%>
