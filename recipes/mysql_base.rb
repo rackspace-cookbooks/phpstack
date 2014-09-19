@@ -97,7 +97,7 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
   # we don't want to create DBs or users and the like on slaves, do we?
   next if includes_recipe?("#{stackname}::mysql_slave")
   # only auto-generate databases if needed
-  next unless node['phpstack']['db-autocreate']['enabled']
+  next unless node[stackname]['db-autocreate']['enabled']
   sites.each do |site_name, site_opts|
     if site_opts.include?('db_autocreate')
       next unless site_opts['db_autocreate']
