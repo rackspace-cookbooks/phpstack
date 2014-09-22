@@ -49,7 +49,7 @@
 ### apache
 - what it does
   - Creates sites coming from `node['phpstack']['apache']['sites']` array
-  - Creates monitoring check for each site if `node[platformstack][cloud_monitoring]` is true
+  - Creates monitoring check for each site if `node[platformstack][cloud_monitoring]['enabled'] = true`.
 - toggles
   - can be disabled by setting `node['phpstack']['webserver_deployment']['enabled']` to false
 
