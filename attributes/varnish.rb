@@ -18,3 +18,4 @@
 #
 
 default['phpstack']['varnish']['multi'] = true
+default['phpstack']['varnish']['backend_hosts'] = []

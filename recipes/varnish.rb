@@ -40,11 +40,10 @@ node.set['platformstack']['cloud_monitoring']['plugins']['varnish']['disabled'] 
 node.default['varnish']['backend_port'] = node[node[stackname]['webserver']]['listen_ports'].first
 
 # pull a list of backend hosts to populate the template
-backend_hosts = {}
+backend_nodes = node['phpstack']['varnish']['backend_hosts'] # default to attribute
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
-  backend_nodes = nil
-else
+elsif backend_hosts.nil? || backend_hosts.empty? # if attr empty, search
   backend_nodes = search('node', "tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}")
 end
 
