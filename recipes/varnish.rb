@@ -47,17 +47,17 @@ if Chef::Config[:solo]
   backend_nodes.merge!(node['phpstack']['varnish']['backend_nodes'] || {})
 elsif backend_nodes.nil? || backend_nodes.empty? # if attr empty, search
   backend_nodes = search('node', "tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}")
+end
 
-  # only convert search results to ips if we actually do a search
-  backend_nodes.each do |backend_node|
-    backend_node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
-      sites.each do |site_name, site_opts|
-        backend_hosts.merge!(
-          best_ip_for(backend_node) => {
-            port => { site_name: site_name }
-          }
-        )
-      end
+# convert backend_nodes into backend_hosts list
+backend_nodes.each do |backend_node|
+  backend_node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
+    sites.each do |site_name, site_opts|
+      backend_hosts.merge!(
+        best_ip_for(backend_node) => {
+          port => { site_name: site_name }
+        }
+      )
     end
   end
 end
