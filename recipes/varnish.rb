@@ -40,22 +40,25 @@ node.set['platformstack']['cloud_monitoring']['plugins']['varnish']['disabled'] 
 node.default['varnish']['backend_port'] = node[node[stackname]['webserver']]['listen_ports'].first
 
 # pull a list of backend hosts to populate the template
-backend_hosts = {}
-backend_nodes = node['phpstack']['varnish']['backend_hosts'] # default to attribute
+backend_nodes = {}
+backend_hosts = node['phpstack']['varnish']['backend_hosts'] # default to attribute
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+  # build a list of nodes from the hosts attribute if we aren't doing search
+  backend_nodes.merge!(backend_hosts || {})
 elsif backend_nodes.nil? || backend_nodes.empty? # if attr empty, search
   backend_nodes = search('node', "tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}")
-end
 
-backend_nodes.each do |backend_node|
-  backend_node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
-    sites.each do |site_name, site_opts|
-      backend_hosts.merge!(
-        best_ip_for(backend_node) => {
-          port => { site_name: site_name }
-        }
-      )
+  # only convert search results to ips if we actually do a search
+  backend_nodes.each do |backend_node|
+    backend_node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
+      sites.each do |site_name, site_opts|
+        backend_hosts.merge!(
+          best_ip_for(backend_node) => {
+            port => { site_name: site_name }
+          }
+        )
+      end
     end
   end
 end
@@ -63,7 +66,7 @@ end
 node.default[stackname]['varnish']['backends'] = backend_hosts
 
 # only set if we have backends to populate (aka not on first run with an all in one node)
-if backend_nodes.first.nil?
+if backend_hosts.first.nil?
   # if our backends go away we needs this
   node.default['varnish']['vcl_cookbook'] = 'varnish'
   node.default['varnish']['vcl_source'] = 'default.vcl.erb'
