@@ -261,7 +261,7 @@ shouldn't really be messed with
 ### varnish
 - `default['phpstack']['varnish']['multi'] = true`
   - allows us to use more complex logic for the varnish configuration
-- `default['phpstack']['varnish']['backend_hosts'] = []`
+- `default['phpstack']['varnish']['backend_nodes'] = []`
   - a list of nodes to use for backends. if empty or nil, search is the default behavior
 
 ## Usage
