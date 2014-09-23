@@ -43,11 +43,13 @@ node.default['varnish']['backend_port'] = node[node[stackname]['webserver']]['li
 backend_hosts = {}
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
-  backend_nodes = nil
+  # build a list of nodes from the backend_nodes attribute if we aren't doing search
+  backend_nodes = ({}).merge(node['phpstack']['varnish']['backend_nodes'] || {})
 else
   backend_nodes = search('node', "tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}")
 end
 
+# convert backend_nodes into backend_hosts list
 backend_nodes.each do |backend_node|
   backend_node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
     sites.each do |site_name, site_opts|
@@ -63,7 +65,7 @@ end
 node.default[stackname]['varnish']['backends'] = backend_hosts
 
 # only set if we have backends to populate (aka not on first run with an all in one node)
-if backend_nodes.first.nil?
+if backend_hosts.first.nil?
   # if our backends go away we needs this
   node.default['varnish']['vcl_cookbook'] = 'varnish'
   node.default['varnish']['vcl_source'] = 'default.vcl.erb'

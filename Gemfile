@@ -18,6 +18,7 @@ end
 
 group :kitchen_vagrant do
   gem 'kitchen-vagrant'
+  gem 'vagrant-wrapper'
 end
 
 group :development do

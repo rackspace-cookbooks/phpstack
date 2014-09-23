@@ -94,10 +94,12 @@ if node.deep_fetch(stackname, 'code-deployment', 'enabled')
   end
 end
 
+# the template handles nil, so this is an exception where it's okay to default to nil
+mysql_node = nil
+rabbit_node = nil
+
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
-  mysql_node = nil
-  rabbit_node = nil
 else
   mysql_node = search('node', "recipes:#{stackname}\\:\\:mysql_master AND chef_environment:#{node.chef_environment}").first
   rabbit_node = search('node', "recipes:#{stackname}\\:\\:rabbitmq AND chef_environment:#{node.chef_environment}").first
