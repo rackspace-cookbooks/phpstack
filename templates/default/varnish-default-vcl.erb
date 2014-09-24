@@ -52,9 +52,9 @@ sub vcl_recv {
   if (req.http.host == "<%= also_hostname -%>" || req.http.host == "www.<%= also_hostname -%>") {
     set req.backend_hint = <%= also_hostname.gsub(/[\.-]/, '_') -%>.backend();
   }
-}
 <%- end -%>
 
+}
 <%- else %>
 
 # configures load balancing between for each site...
@@ -81,4 +81,5 @@ director <%= also_hostname.gsub(/[\.-]/, '_') -%> round-robin {
 
 <%- end -%>
 
+}
 <%- end %>
