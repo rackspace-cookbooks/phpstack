@@ -17,6 +17,8 @@ provisioner:
       server_debian_password: "randompass"
     holland:
       password: "randompass"
+  run_list:
+    - recipe[disable_ipv6]
 
 platforms:
   - name: ubuntu-12.04
