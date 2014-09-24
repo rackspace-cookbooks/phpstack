@@ -8,6 +8,7 @@ cookbook 'rackspace_gluster', git: 'git@github.com:rackspace-cookbooks/rackspace
 cookbook 'rackops_rolebook', git: 'git@github.com:rackops/rackops_rolebook.git'
 cookbook 'cron', git: 'git@github.com:rackspace-cookbooks/cron.git'
 cookbook 'pg-multi', git: 'git@github.com:rackspace-cookbooks/pg-multi.git'
+cookbook 'wrapper', path: 'test/fixtures/cookbooks/wrapper'
 
 group :integration do
   cookbook 'apt'

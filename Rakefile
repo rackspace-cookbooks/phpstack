@@ -4,7 +4,16 @@ require 'bundler/setup'
 namespace :style do
   require 'rubocop/rake_task'
   desc 'Run Ruby style checks'
-  RuboCop::RakeTask.new(:ruby)
+  RuboCop::RakeTask.new(:ruby) do |task|
+    # see templatestack's .rubocop.yml for comparison
+    task.patterns = ['**/*.rb']
+
+    # only show the files with failures
+    task.formatters = ['files']
+
+    # abort rake on failure
+    task.fail_on_error = true
+  end
 
   require 'foodcritic'
   require 'foodcritic/rackspace/rules/version' # ensure loaded
@@ -12,7 +21,11 @@ namespace :style do
   FoodCritic::Rake::LintTask.new(:chef) do |t|
     # 'search_gems' doesn't work, but :search_gems does
     # rubocop:disable Style/HashSyntax
-    t.options = { :search_gems => true }
+    t.options = { :search_gems => true,
+                  :fail_tags => ['correctness',
+                                 'rackspace'],
+                  :chef_version => '11.6.0'
+                }
     # rubocop:enable Style/HashSyntax
   end
 end
