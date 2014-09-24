@@ -119,8 +119,9 @@ template "#{stackname}.ini" do
              if mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').nil?
                nil
              else
-               # we didn't set up any databases
-               if mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').empty? && mysql_node.deep_fetch(stackname, node[stackname], 'mysql', 'databases').empty?
+               # we didn't set up any databases, protects the next elsif statement
+               if mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').empty? &&
+                  mysql_node.deep_fetch(stackname, 'mysql', 'databases').empty?
                  nil
                # sites set up with no database
                elsif mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').values[0].values[0].key?('mysql_password') &&
