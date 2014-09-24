@@ -7,9 +7,6 @@ driver_config:
 provisioner:
   name: chef_zero
   attributes:
-    phpstack:
-      demo:
-        enabled: true
     authorization:
       sudo:
         users: ['vagrant']
@@ -33,7 +30,7 @@ platforms:
     - recipe[yum]
 
 suites:
-  - name: aio-apache
+  - name: default
     run_list:
       - recipe[phpstack::mysql_base]
       - recipe[phpstack::postgresql_base]
@@ -43,6 +40,10 @@ suites:
       - recipe[phpstack::rabbitmq]
       - recipe[phpstack::redis_single]
       - recipe[phpstack::application_php]
+    attributes:
+      phpstack:
+        demo:
+          enabled: true
 
   - name: aio-nginx
     run_list:
@@ -57,10 +58,32 @@ suites:
     attributes:
       phpstack:
         webserver: 'nginx'
+        demo:
+          enabled: true
+
+  - name: runlist
+    run_list:
+      - recipe[phpstack::mysql_base]
+      - recipe[phpstack::postgresql_base]
+      - recipe[phpstack::mongodb_standalone]
+      - recipe[phpstack::memcache]
+      - recipe[phpstack::varnish]
+      - recipe[phpstack::rabbitmq]
+      - recipe[phpstack::redis_single]
+      - recipe[phpstack::application_php]
+      - recipe[wrapper::demo]
+
+  - name: wrapper
+    run_list:
+      - recipe[wrapper]
 
   - name: application-php-apache
     run_list:
       - recipe[phpstack::application_php]
+    attributes:
+      phpstack:
+        demo:
+          enabled: true
 
   - name: application-php-nginx
     run_list:
@@ -68,11 +91,23 @@ suites:
     attributes:
       phpstack:
         webserver: 'nginx'
+    attributes:
+      phpstack:
+        demo:
+          enabled: true
 
   - name: mysql
     run_list:
       - recipe[phpstack::mysql_base]
+    attributes:
+      phpstack:
+        demo:
+          enabled: true
 
   - name: postgresql
     run_list:
       - recipe[phpstack::postgresql_base]
+    attributes:
+      phpstack:
+        demo:
+          enabled: true
