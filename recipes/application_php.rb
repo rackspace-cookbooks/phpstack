@@ -115,10 +115,21 @@ template "#{stackname}.ini" do
     cookbook_name: cookbook_name,
     # if it responds then we will create the config section in the ini file
     mysql: if mysql_node.respond_to?('deep_fetch')
+             # if statement still needed to protect against no sites defined and a third party webserver in use (since we don't initialize that hash)
              if mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').nil?
                nil
              else
-               mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').values[0].values[0]['mysql_password'].nil? ? nil : mysql_node
+               # we didn't set up any databases
+               if mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').empty? && mysql_node.deep_fetch(stackname, node[stackname], 'mysql', 'databases').empty?
+                 nil
+               # sites set up with no database
+               elsif mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').values[0].values[0].key?('mysql_password') &&
+                     mysql_node.deep_fetch(stackname, node[stackname], 'mysql', 'databases').empty?
+                 nil
+               # databases are defined in either the sites or the databases hash
+               else
+                 mysql_node
+               end
              end
            end,
     # need to do here because sugar is not available inside the template
