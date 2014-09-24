@@ -209,11 +209,11 @@ No Data_Bag configured for this cookbook
     - you can set this to something like `'not_a_webserver'` and then use that namespace if you still want to deploy your application
 - `default['phpstack']['ini']['cookbook'] = 'phpstack'`
   - sets where the `/etc/phpstack.ini` template is sourced from
-- `default['phpstack']['mysql']['databases'] = []`
+- `default['phpstack']['mysql']['databases'] = {}`
   - contains a list of databases to set up (along with users / passwords)
-- `default['phpstack']['apache']['sites'] = []`
+- `default['phpstack']['apache']['sites'] = {}`
   - contains a list of ports and vhosts to set up for apache
-- `default['phpstack']['nginx']['sites'] = []`
+- `default['phpstack']['nginx']['sites'] = {}`
   - contains a list of ports and vhosts to set up for nginx
 - `default['phpstack']['webserver_deployment']['enabled'] = true`
   - allows apache and/or nginx recipes to run
@@ -368,7 +368,7 @@ shouldn't really be messed with
 {
     "run_list": [
       "recipe[platformstack::default]",
-      "recipe[rackops_rolebook::default]",  
+      "recipe[rackops_rolebook::default]",
       "recipe[phpstack::mysql_base]"
     ]
 }
@@ -379,7 +379,7 @@ shouldn't really be messed with
 {
     "run_list": [
       "recipe[platformstack::default]",
-      "recipe[rackops_rolebook::default]",  
+      "recipe[rackops_rolebook::default]",
       "recipe[phpstack::mysql_master]"
     ]
 }
