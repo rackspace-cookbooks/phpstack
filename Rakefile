@@ -22,8 +22,7 @@ namespace :style do
     # 'search_gems' doesn't work, but :search_gems does
     # rubocop:disable Style/HashSyntax
     t.options = { :search_gems => true,
-                  :fail_tags => ['correctness',
-                                 'rackspace'],
+                  :fail_tags => ['correctness','rackspace'],
                   :chef_version => '11.6.0'
                 }
     # rubocop:enable Style/HashSyntax
@@ -37,8 +36,14 @@ require 'kitchen'
 desc 'Run Test Kitchen integration tests'
 task :integration do
   Kitchen.logger = Kitchen.default_file_logger
+  sh 'kitchen test -c'
+end
+
+desc 'Destroy test kitchen instances'
+task :destroy do
+  Kitchen.logger = Kitchen.default_file_logger
   Kitchen::Config.new.instances.each do |instance|
-    instance.test(:always)
+    instance.destroy
   end
 end
 
