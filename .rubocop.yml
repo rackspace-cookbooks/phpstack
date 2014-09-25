@@ -1,10 +1,5 @@
 # Rubocop,  we're buddies and all,  but we're going to have to disagree on the following -
 
-# Disable for Guardfile
-AllCops:
-  Exclude:
-    - 'Guardfile'
-
 # Disable requirement of "encoding" headers on files
 Encoding:
   Enabled: false
@@ -42,3 +37,8 @@ WordArray:
 # Don't complain about unused block args
 UnusedBlockArgument:
   Enabled: false
+
+AllCops:
+  Include:
+    - 'metadata.rb'
+    - '**/*.rb'
