@@ -47,16 +47,18 @@ if Chef::Config[:solo]
   backend_nodes = ({}).merge(node['phpstack']['varnish']['backend_nodes'] || {})
 else
   backend_nodes = search('node', "tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}")
+  Chef::Log.warn('Search for varnish backend nodes returned no results, may be skipped...') if backend_nodes.nil? || backend_nodes.empty?
 end
 
 # convert backend_nodes into backend_hosts list
 backend_nodes.each do |backend_node|
   backend_node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
     sites.each do |site_name, site_opts|
+      found_ip = best_ip_for(backend_node)
+      Chef::Log.warn("Could not determine IP for varnish backend #{backend_node}, skipping it...") if found_ip.nil?
+      next if found_ip.nil?
       backend_hosts.merge!(
-        best_ip_for(backend_node) => {
-          port => { site_name: site_name }
-        }
+        found_ip => { port => { site_name: site_name } }
       )
     end
   end
