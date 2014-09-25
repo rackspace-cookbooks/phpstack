@@ -143,7 +143,7 @@ node[stackname]['mysql']['databases'].each do |database, database_opts|
     action 'create'
   end
 
-  node.set_unless[stackname]['mysql']['databases'][database]['mysql_user'] = ::SecureRandom.hex # ~FC047
+  node.set_unless[stackname]['mysql']['databases'][database]['mysql_user'] = ::SecureRandom.hex(12) # ~FC047
   node.set_unless[stackname]['mysql']['databases'][database]['mysql_password'] = secure_password # ~FC047
 
   # need to redefine database_opts because we just added user/passwords to that hash
