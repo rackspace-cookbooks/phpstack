@@ -132,6 +132,8 @@ template "#{stackname}.ini" do
                  mysql_node
                end
              end
+           else
+             nil
            end,
     # need to do here because sugar is not available inside the template
     rabbit: if rabbit_node.respond_to?('deep_fetch')
@@ -140,6 +142,8 @@ template "#{stackname}.ini" do
               else
                 rabbit_node.deep_fetch(stackname, 'rabbitmq', 'passwords').values[0].nil? ? nil : rabbit_node
               end
+            else
+              nil
             end
   )
   action 'create'
