@@ -39,7 +39,7 @@ directory '/var/lib/mysql' do
 end
 
 mount '/var/lib/mysql' do
-  device device
-  fstype 'ext3'
+  device node['disk']['name']
+  fstype node['disk']['fs']
   action [:mount, :enable]
 end
