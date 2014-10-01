@@ -22,6 +22,9 @@ describe 'configures our application' do
   describe file('/var/www/example.com') do
     it { should be_directory }
   end
+  describe 'the app returns the expected content' do
+    it { expect(page_returns).to match(/MySQL Service/) }
+  end
 end
 
 # memcache
