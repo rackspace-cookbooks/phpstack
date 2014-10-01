@@ -1,6 +1,6 @@
 # Encoding: utf-8
 require 'serverspec'
-require 'net:http'
+require 'net/http'
 
 include Serverspec::Helper::Exec
 include Serverspec::Helper::DetectOS
