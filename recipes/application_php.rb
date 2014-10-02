@@ -40,9 +40,13 @@ include_recipe 'php::ini'
 include_recipe "#{stackname}::#{node[stackname]['webserver']}" if %w(apache nginx).include?(node[stackname]['webserver'])
 
 if node[stackname]['webserver'] == 'nginx'
+  node.default['php-fpm']['user'] = node['nginx']['user']
+  node.default['php-fpm']['group'] = node['nginx']['group']
   include_recipe 'php-fpm'
   node.default[stackname]['gluster_mountpoint'] = node['nginx']['default_root']
 elsif node[stackname]['webserver'] == 'apache'
+  node.default['php-fpm']['user'] = node['apache']['user']
+  node.default['php-fpm']['group'] = node['apache']['group']
   node.default[stackname]['gluster_mountpoint'] = node['apache']['docroot_dir']
 else
   node.default_unless[stackname]['gluster_mountpoint'] = '/var/www'
