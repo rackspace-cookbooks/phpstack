@@ -18,14 +18,6 @@
 # limitations under the License.
 #
 
-if node['phpstack']['webserver'] == 'apache'
-  default['php-fpm']['user'] = node['apache']['user']
-  default['php-fpm']['group'] = node['apache']['group']
-else
-  default['php-fpm']['user'] = node['nginx']['user']
-  default['php-fpm']['group'] = node['nginx']['group']
-end
-
 case node['platform_family']
 when 'rhel'
   default['php-fpm']['package_name'] = 'php55u-fpm'

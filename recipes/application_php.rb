@@ -40,9 +40,13 @@ include_recipe 'php::ini'
 include_recipe "#{stackname}::#{node[stackname]['webserver']}" if %w(apache nginx).include?(node[stackname]['webserver'])
 
 if node[stackname]['webserver'] == 'nginx'
+  node.default['php-fpm']['user'] = node['nginx']['user']
+  node.default['php-fpm']['group'] = node['nginx']['group']
   include_recipe 'php-fpm'
   node.default[stackname]['gluster_mountpoint'] = node['nginx']['default_root']
 elsif node[stackname]['webserver'] == 'apache'
+  node.default['php-fpm']['user'] = node['apache']['user']
+  node.default['php-fpm']['group'] = node['apache']['group']
   node.default[stackname]['gluster_mountpoint'] = node['apache']['docroot_dir']
 else
   node.default_unless[stackname]['gluster_mountpoint'] = '/var/www'
@@ -112,27 +116,24 @@ template "#{stackname}.ini" do
   mode '00640'
   variables(
     cookbook_name: cookbook_name,
-    # if it responds then we will create the config section in the ini file
+    # if it responds then we will create the config section in the ini file, it means seach found something
     mysql: if mysql_node.respond_to?('deep_fetch')
-             # if statement still needed to protect against no sites defined and a third party webserver in use (since we don't initialize that hash)
-             if mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').nil?
-               nil
-             else
-               # we didn't set up any databases, protects the next elsif statement
-               if mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').empty? &&
-                  mysql_node.deep_fetch(stackname, 'mysql', 'databases').empty?
+             # if we don't define our own databases
+             if mysql_node[stackname]['mysql']['databases'].empty?
+               # if we define sites, does it actually have content?
+               if mysql_node[stackname][node[stackname]['webserver']]['sites'].empty?
                  nil
-               # sites set up with no database
-               elsif mysql_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').values[0].values[0].key?('mysql_password') &&
-                     mysql_node.deep_fetch(stackname, node[stackname], 'mysql', 'databases').empty?
-                 nil
-               # databases are defined in either the sites or the databases hash
-               else
+               # if we have content do we have a database defined with a password, then return with the node
+               elsif mysql_node[stackname][node[stackname]['webserver']]['sites'].values[0].values[0].key?('mysql_password')
                  mysql_node
+               # previous elsif returning false means that db auto generation is disabled
+               else
+                 nil
                end
+             # we defined our own database so return with the ndoe
+             else
+               mysql_node
              end
-           else
-             nil
            end,
     # need to do here because sugar is not available inside the template
     rabbit: if rabbit_node.respond_to?('deep_fetch')
