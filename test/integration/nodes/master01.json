@@ -13,10 +13,33 @@
   },
   "chef_type": "node",
   "default": {
+    "mysql": {
+      "port": "3306"
+    },
     "phpstack": {
+      "webserver": "apache",
       "demo": {
         "enabled": true
+      },
+      "apache": {
+        "sites": {
+        }
+      },
+      "mysql": {
+        "databases": {
+          "foo": {
+            "mysql_user": "fooUser",
+            "mysql_password": "bar"
+          }
+        }
       }
+    },
+    "mysql-multi": {
+      "master": "10.20.30.40",
+      "slaves": [
+        "10.20.20.20",
+        "10.20.20.30"
+          ]
     }
   },
   "override": {

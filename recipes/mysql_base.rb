@@ -92,6 +92,9 @@ else
   app_nodes = search(:node, "tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}")
 end
 
+# set sites to nothing if not defined, this is needed for webservers other then apache and nginx
+node.default_unless[stackname][node[stackname]['webserver']]['sites'] = {}
+
 # auto-generate databases
 node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
   # we don't want to create DBs or users and the like on slaves, do we?

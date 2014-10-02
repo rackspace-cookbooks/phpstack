@@ -5,38 +5,35 @@
 # Controlling Cookbook: <%=  @cookbook_name %>
 #
 <%- unless @mysql.nil? -%>
-<%-   @mysql[stackname][node[stackname]['webserver']]['sites'].each do |port, sites| -%>
+<%-   @mysql[stackname][@mysql[stackname]['webserver']]['sites'].each do |port, sites| -%>
 <%-     sites.each do |site_name, site_opts| -%>
-<%-       if site_opts.include?('db_autocreate') -%>
-<%-         next unless site_opts['db_autocreate'] -%>
-<%-       end -%>
+<%-       next unless site_opts.key('databases') # this key is not created if db autocreation is disabled so we need to check-%>
 <%-       site_opts['databases'].each do |database, database_opts| -%>
 [MySQL-<%= database -%>]
 master-host = <%= @mysql['mysql-multi']['master'] %>
 slave-hosts = <%= @mysql['mysql-multi']['slaves'].join(', ') %>
 port = <%= @mysql['mysql']['port'] %>
 db_name = <%= database %>
-username = <%= database_opts['mysql_user'] -%>
-password = <%= database_opts['mysql_password'] -%>
+username = <%= database_opts['mysql_user'] %>
+password = <%= database_opts['mysql_password'] %>
 
 <%-       end -%>
 <%-     end -%>
 <%-   end -%>
-
 <%-   @mysql[stackname]['mysql']['databases'].each do |database, database_opts| -%>
 [MySQL-<%= database -%>]
 master-host = <%= @mysql['mysql-multi']['master'] %>
 slave-hosts = <%= @mysql['mysql-multi']['slaves'].join(', ') %>
 port = <%= @mysql['mysql']['port'] %>
 db_name = <%= database %>
-username = <%= database_opts['mysql_user'] -%>
-password = <%= database_opts['mysql_password'] -%>
+username = <%= database_opts['mysql_user'] %>
+password = <%= database_opts['mysql_password'] %>
 
 <%-   end -%>
 <%- end -%>
 
 <%- unless @rabbit.nil? -%>
-<%-   @rabbit[stackname][node[stackname]['webserver']]['sites'].each do |port, sites| -%>
+<%-   @rabbit[stackname][@rabbit[stackname]['webserver']]['sites'].each do |port, sites| -%>
 <%-     sites.each do |site_name, site_opts| -%>
 <%-       rabbit_vhost = "#{site_name}-#{port}" -%>
 [RabbitMQ-<%= rabbit_vhost -%>]
