@@ -18,4 +18,4 @@
 #
 
 default['phpstack']['varnish']['multi'] = true
-default['phpstack']['varnish']['backend_nodes'] = []
+default['phpstack']['varnish']['backend_nodes'] = {}
