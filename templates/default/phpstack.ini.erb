@@ -7,7 +7,7 @@
 <%- unless @mysql.nil? -%>
 <%-   @mysql[stackname][@mysql[stackname]['webserver']]['sites'].each do |port, sites| -%>
 <%-     sites.each do |site_name, site_opts| -%>
-<%-       next unless site_opts.key('databases') # this key is not created if db autocreation is disabled so we need to check-%>
+<%-       next unless site_opts.key('databases') # this key is not created if db autocreation is disabled so we need to check -%>
 <%-       site_opts['databases'].each do |database, database_opts| -%>
 [MySQL-<%= database -%>]
 master-host = <%= @mysql['mysql-multi']['master'] %>
