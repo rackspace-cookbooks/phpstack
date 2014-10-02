@@ -18,14 +18,16 @@
 # limitations under the License.
 #
 
-default['phpstack']['newrelic']['application_monitoring'] = ''
-default['phpstack']['webserver'] = 'apache'
-default['phpstack']['ini']['cookbook'] = 'phpstack'
+stackname = 'phpstack'
 
-default['phpstack']['mysql']['databases'] = {}
-default['phpstack']['apache']['sites'] = {}
-default['phpstack']['nginx']['sites'] = {}
+default[stackname]['newrelic']['application_monitoring'] = ''
+default[stackname]['webserver'] = 'apache'
+default[stackname]['ini']['cookbook'] = stackname
 
-default['phpstack']['webserver_deployment']['enabled'] = true
-default['phpstack']['code-deployment']['enabled'] = true
-default['phpstack']['db-autocreate']['enabled'] = true
+default[stackname]['mysql']['databases'] = {}
+default[stackname]['apache']['sites'] = {}
+default[stackname]['nginx']['sites'] = {}
+
+default[stackname]['webserver_deployment']['enabled'] = true
+default[stackname]['code-deployment']['enabled'] = true
+default[stackname]['db-autocreate']['enabled'] = true

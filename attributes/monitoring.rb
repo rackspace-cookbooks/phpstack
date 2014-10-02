@@ -18,17 +18,19 @@
 # limitations under the License.
 #
 
-default['phpstack']['cloud_monitoring']['remote_http']['disabled'] = false
-default['phpstack']['cloud_monitoring']['remote_http']['alarm'] = false
-default['phpstack']['cloud_monitoring']['remote_http']['period'] = 60
-default['phpstack']['cloud_monitoring']['remote_http']['timeout'] = 15
+stackname = 'phpstack'
 
-default['phpstack']['cloud_monitoring']['agent_mysql']['disabled'] = false
-default['phpstack']['cloud_monitoring']['agent_mysql']['alarm'] = false
-default['phpstack']['cloud_monitoring']['agent_mysql']['period'] = 60
-default['phpstack']['cloud_monitoring']['agent_mysql']['timeout'] = 15
-default['phpstack']['cloud_monitoring']['agent_mysql']['user'] = 'raxmon-agent'
-default['phpstack']['cloud_monitoring']['agent_mysql']['password'] = nil
+default[stackname]['cloud_monitoring']['remote_http']['disabled'] = false
+default[stackname]['cloud_monitoring']['remote_http']['alarm'] = false
+default[stackname]['cloud_monitoring']['remote_http']['period'] = 60
+default[stackname]['cloud_monitoring']['remote_http']['timeout'] = 15
+
+default[stackname]['cloud_monitoring']['agent_mysql']['disabled'] = false
+default[stackname]['cloud_monitoring']['agent_mysql']['alarm'] = false
+default[stackname]['cloud_monitoring']['agent_mysql']['period'] = 60
+default[stackname]['cloud_monitoring']['agent_mysql']['timeout'] = 15
+default[stackname]['cloud_monitoring']['agent_mysql']['user'] = 'raxmon-agent'
+default[stackname]['cloud_monitoring']['agent_mysql']['password'] = nil
 
 default['platformstack']['cloud_monitoring']['plugins'] = {}
 default['platformstack']['cloud_monitoring']['plugins']['rabbitmq']['label'] = 'rabbitmq'

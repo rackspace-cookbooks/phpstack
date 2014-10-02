@@ -20,6 +20,7 @@
 
 stackname = 'phpstack'
 
+# plugin depends
 if platform_family?('rhel')
   include_recipe 'yum'
   include_recipe 'yum-epel'
@@ -27,6 +28,7 @@ if platform_family?('rhel')
 elsif platform_family?('debian')
   include_recipe 'apt'
 end
+include_recipe 'build-essential'
 include_recipe 'git'
 
 # set demo if needed
@@ -43,12 +45,9 @@ if node[stackname]['webserver'] == 'nginx'
 elsif node[stackname]['webserver'] == 'apache'
   node.default[stackname]['gluster_mountpoint'] = node['apache']['docroot_dir']
 else
-  # set gluster mountpoint unless set already
   node.default_unless[stackname]['gluster_mountpoint'] = '/var/www'
 end
 
-include_recipe 'build-essential'
-# Adding mongod compatibility
 php_pear 'mongo' do
   action :install
 end
@@ -165,4 +164,4 @@ node.default['rackspace_cloudbackup']['backups'] =
     }
   ]
 
-tag('php_app_node')
+tag("#{stackname.gsub('stack', '')}_app_node")

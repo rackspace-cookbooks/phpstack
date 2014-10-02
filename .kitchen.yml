@@ -57,7 +57,7 @@ suites:
       - recipe[phpstack::application_php]
     attributes:
       phpstack:
-        webserver: 'nginx'
+        webserver: "nginx"
         demo:
           enabled: true
 
@@ -90,9 +90,7 @@ suites:
       - recipe[phpstack::application_php]
     attributes:
       phpstack:
-        webserver: 'nginx'
-    attributes:
-      phpstack:
+        webserver: "nginx"
         demo:
           enabled: true
 

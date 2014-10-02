@@ -17,5 +17,7 @@
 # limitations under the License.
 #
 
-default['phpstack']['varnish']['multi'] = true
-default['phpstack']['varnish']['backend_nodes'] = []
+stackname = 'phpstack'
+
+default[stackname]['varnish']['multi'] = true
+default[stackname]['varnish']['backend_nodes'] = []
