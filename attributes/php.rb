@@ -31,7 +31,6 @@ when 'rhel'
     php55u-devel
     php55u-mcrypt
     php55u-mbstring
-    php55u-mysql
     php55u-gd
     php55u-pear
     php55u-pecl-memcache
@@ -47,7 +46,6 @@ when 'debian'
     php5
     php5-dev
     php5-mcrypt
-    php5-mysql
     php5-gd
     php5-gmp
     php5-mysqlnd
