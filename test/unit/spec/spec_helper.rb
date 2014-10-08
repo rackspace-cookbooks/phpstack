@@ -22,9 +22,9 @@ def node_resources(node)
 end
 
 def stub_resources
-  stub_command("/usr/sbin/httpd -t").and_return(0)
-  stub_command("/usr/sbin/apache2 -t").and_return(0)
-  stub_command("which php").and_return('/usr/bin/php')
+  stub_command('/usr/sbin/httpd -t').and_return(0)
+  stub_command('/usr/sbin/apache2 -t').and_return(0)
+  stub_command('which php').and_return('/usr/bin/php')
 end
 
 def stub_nodes(platform, version)
@@ -32,6 +32,8 @@ def stub_nodes(platform, version)
     node_data = JSON.parse(IO.read(f), symbolize_names: false)
     node_name = node_data['name']
     ChefSpec::Server.create_node(node_name, node_data)
+    platform.to_s # pacify rubocop
+    version.to_s # pacify rubocop
   end
 end
 
