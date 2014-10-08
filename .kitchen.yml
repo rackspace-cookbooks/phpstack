@@ -7,10 +7,6 @@ driver_config:
 provisioner:
   name: chef_zero
   attributes:
-    openssh:
-      server:
-        password_authentication: 'yes'
-        permit_root_login: 'yes'
     authorization:
       sudo:
         users: ['vagrant']
@@ -21,15 +17,6 @@ provisioner:
       server_debian_password: "randompass"
     holland:
       password: "randompass"
-    platformstack:
-      iptables:
-        allow_ssh_from_world: true
-      cloud_backup:
-        enabled: false
-      cloud_monitoring:
-        enabled: false
-      omnibus_updater:
-        enabled: false
 
 platforms:
   - name: ubuntu-12.04

@@ -112,7 +112,7 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
 
     # need to redefine site_opts because we just added user/passwords to that hash
     site_opts = node[stackname][node[stackname]['webserver']]['sites'][port][site_name]
-
+    
     # sets up the default, autodefined database(s)
     site_opts['databases'].each do |database, database_opts|
       mysql_database database do
