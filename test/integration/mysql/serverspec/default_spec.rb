@@ -3,7 +3,7 @@
 require_relative 'spec_helper'
 
 # mysql-master
-if os[:family] == 'RedHat'
+if os[:family] == 'redhat'
   describe service('mysqld') do
     it { should be_enabled }
     it { should be_running }

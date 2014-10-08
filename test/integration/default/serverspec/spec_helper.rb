@@ -1,11 +1,15 @@
 # Encoding: utf-8
 require 'serverspec'
+require 'net/http'
 
-include Serverspec::Helper::Exec
-include Serverspec::Helper::DetectOS
+set :backend, :exec
 
 RSpec.configure do |c|
   c.before :all do
-    c.path = '/sbin:/usr/bin'
+    c.path = '/sbin:/usr/sbin:/bin:/usr/bin'
   end
+end
+
+def page_returns(url = 'http://localhost/')
+  Net::HTTP.get(URI(url))
 end

@@ -3,7 +3,7 @@
 require_relative 'spec_helper'
 
 # apache
-if os[:family] == 'RedHat'
+if os[:family] == 'redhat'
   describe service('httpd') do
     it { should be_enabled }
   end
@@ -24,5 +24,5 @@ describe file('/etc/phpstack.ini') do
 end
 
 describe command("#{apache2ctl} -M") do
-  it { should return_stdout(/^ ssl_module/) }
+  its(:stdout) { should match(/^ ssl_module/) }
 end
