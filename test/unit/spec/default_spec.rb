@@ -4,8 +4,7 @@ require_relative 'spec_helper'
 
 # the runlist came from test-kitchen's default suite
 describe 'phpstack all in one demo' do
-  recipes_for_demo = %w(mysql_base postgresql_base mongodb_standalone memcache varnish rabbitmq redis_single application_php)
-  recipes_for_demo.map { |r| "phpstack::#{r}" }
+  recipes_for_demo = %w(mysql_base postgresql_base mongodb_standalone memcache varnish rabbitmq redis_single application_php).map { |r| "phpstack::#{r}" }
   before { stub_resources }
   supported_platforms.each do |platform, versions|
     versions.each do |version|
