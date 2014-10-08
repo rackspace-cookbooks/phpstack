@@ -13,6 +13,13 @@ describe 'phpstack all in one demo' do
           ChefSpec::Runner.new(platform: platform, version: version) do |node|
             node_resources(node) # stub this node
             stub_nodes(platform, version) # stub other nodes for chef-zero
+
+            # Stub the node and any calls to Environment.Load to return this environment
+            env = Chef::Environment.new
+            env.name 'chefspec' # matches ./test/integration/
+            allow(node).to receive(:chef_environment).and_return(env.name)
+            allow(Chef::Environment).to receive(:load).and_return(env)
+
             node.set['phpstack']['demo']['enabled'] = true
           end.converge(*recipes_for_demo) # *splat operator for array to vararg
         end

@@ -3,7 +3,7 @@
 require_relative 'spec_helper'
 
 # apache
-if os[:family] == 'RedHat'
+if os[:family] == 'redhat'
   describe service('httpd') do
     it { should be_enabled }
   end

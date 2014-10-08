@@ -37,7 +37,7 @@ describe port(11_211) do
 end
 
 # mysql base
-if os[:family] == 'RedHat'
+if os[:family] == 'redhat'
   describe service('mysqld') do
     it { should be_enabled }
     it { should be_running }
@@ -53,7 +53,7 @@ describe port(3306) do
 end
 
 # postgresql base
-if os[:family] == 'RedHat'
+if os[:family] == 'redhat'
   # process is named postgres
   describe service('postgres') do
     it { should be_running }
@@ -100,7 +100,7 @@ end
 describe service('redis') do
   it { should be_running }
 end
-if os[:family] == 'RedHat'
+if os[:family] == 'redhat'
   describe service('redis6379') do
     it { should be_enabled }
   end

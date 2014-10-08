@@ -1,0 +1,51 @@
+{
+  "name": "chefspec01",
+  "chef_environment": "chefspec",
+  "json_class": "Chef::Node",
+  "automatic": {
+    "hostname": "vagrant.vm",
+    "ipaddress": "192.168.0.23",
+    "recipes": [
+      "phpstack::mysql_master"
+    ]
+  },
+  "normal": {
+  },
+  "chef_type": "node",
+  "default": {
+    "mysql": {
+      "port": "3306"
+    },
+    "phpstack": {
+      "webserver": "apache",
+      "demo": {
+        "enabled": true
+      },
+      "apache": {
+        "sites": {
+        }
+      },
+      "mysql": {
+        "databases": {
+          "foo": {
+            "mysql_user": "fooUser",
+            "mysql_password": "bar"
+          }
+        }
+      }
+    },
+    "mysql-multi": {
+      "master": "10.20.30.40",
+      "slaves": [
+        "10.20.20.20",
+        "10.20.20.30"
+          ]
+    }
+  },
+  "override": {
+  },
+  "run_list": [
+    "recipe[phpstack::mysql_master]"
+  ],
+  "tags": [ "mysql_master" ]
+}

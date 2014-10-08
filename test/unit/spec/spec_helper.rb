@@ -35,6 +35,12 @@ def stub_nodes(platform, version)
     platform.to_s # pacify rubocop
     version.to_s # pacify rubocop
   end
+
+  Dir['./test/integration/environments/*.json'].sort.each do |f|
+    env_data = JSON.parse(IO.read(f), symbolize_names: false)
+    env_name = env_data['name']
+    ChefSpec::Server.create_environment(env_name, env_data)
+  end
 end
 
 at_exit { ChefSpec::Coverage.report! }
