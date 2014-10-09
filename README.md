@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/rackspace-cookbooks/phpstack.png?label=ready&title=Ready)](https://waffle.io/rackspace-cookbooks/phpstack)
 # phpstack
 
 ## Supported Platforms
