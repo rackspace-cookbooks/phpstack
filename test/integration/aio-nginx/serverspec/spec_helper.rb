@@ -3,13 +3,13 @@ require 'serverspec'
 require 'net/http'
 
 set :backend, :exec
+set :path, '/sbin:/usr/local/sbin:/bin:/usr/bin:$PATH'
 
-RSpec.configure do |c|
-  c.before :all do
-    c.path = '/sbin:/usr/sbin:/bin:/usr/bin'
-  end
-end
-
-def page_returns(url = 'http://localhost/')
-  Net::HTTP.get(URI(url))
+def page_returns(url = 'http://localhost/', host = 'example.com')
+  uri = URI.parse(url)
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.read_timeout = 70
+  req = Net::HTTP::Get.new(uri.request_uri)
+  req.initialize_http_header('Host' => host)
+  http.request(req).body
 end
