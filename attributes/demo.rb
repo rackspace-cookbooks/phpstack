@@ -21,7 +21,7 @@ default['phpstack']['demo']['enabled'] = false
 
 site1 = 'example.com'
 site2 = 'test.com'
-version1 = '0.0.9'
+version1 = '0.1.0'
 port1 = '80'
 port2 = '8080'
 
