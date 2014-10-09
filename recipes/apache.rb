@@ -28,6 +28,14 @@ if rhel?
   include_recipe 'yum-ius'
 end
 
+listen_ports = []
+
+node[stackname]['apache']['sites'].each do |port, sites|
+  listen_ports |= [port]
+end
+
+node.default['apache']['listen_ports'] = listen_ports
+
 %w(
   platformstack::monitors
   platformstack::iptables
@@ -39,10 +47,7 @@ end
   include_recipe recipe
 end
 
-listen_ports = []
-
 node[stackname]['apache']['sites'].each do |port, sites|
-  listen_ports |= [port]
   add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{port} -j ACCEPT", 100, 'Allow access to apache')
   sites.each do |site_name, site_opts|
     web_app "#{site_name}-#{port}" do
@@ -74,5 +79,3 @@ node[stackname]['apache']['sites'].each do |port, sites|
     end
   end
 end
-
-node.default['apache']['listen_ports'] = listen_ports
