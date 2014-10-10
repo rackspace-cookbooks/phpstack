@@ -19,6 +19,7 @@
 #
 
 stackname = 'phpstack'
+default['stack-commons']['stackname'] = 'phpstack'
 
 default[stackname]['newrelic']['application_monitoring'] = ''
 default[stackname]['webserver'] = 'apache'
