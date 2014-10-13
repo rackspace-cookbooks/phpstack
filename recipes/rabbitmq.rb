@@ -18,4 +18,4 @@
 # limitations under the License.
 #
 
-include_recipe 'stack-commons::rabbitmq'
+include_recipe 'stack_commons::rabbitmq'

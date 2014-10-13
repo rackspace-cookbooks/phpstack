@@ -1,6 +1,5 @@
 source 'https://api.berkshelf.com'
 
-cookbook 'stack-commons', git: 'git@github.com:rackspace-cookbooks/stack-commons.git'
 cookbook 'rackops_rolebook', git: 'git@github.com:rackops/rackops_rolebook.git'
 cookbook 'cron', git: 'git@github.com:rackspace-cookbooks/cron.git'
 
