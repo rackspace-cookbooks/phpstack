@@ -10,7 +10,7 @@ describe 'phpstack all in one demo' do
     versions.each do |version|
       context "on #{platform.capitalize} #{version}" do
         let(:chef_run) do
-          ChefSpec::Runner.new(platform: platform, version: version) do |node|
+          ChefSpec::ServerRunner.new(platform: platform, version: version) do |node|
             node_resources(node) # stub this node
             stub_nodes(platform, version) # stub other nodes for chef-zero
 
