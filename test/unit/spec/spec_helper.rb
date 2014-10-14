@@ -1,7 +1,6 @@
 # Encoding: utf-8
 require 'rspec/expectations'
 require 'chefspec'
-require 'chefspec/server'
 require 'chefspec/berkshelf'
 require 'chef/application'
 require 'json'
@@ -27,11 +26,11 @@ def stub_resources
   stub_command('which php').and_return('/usr/bin/php')
 end
 
-def stub_nodes(platform, version)
+def stub_nodes(platform, version, server)
   Dir['./test/integration/nodes/*.json'].sort.each do |f|
     node_data = JSON.parse(IO.read(f), symbolize_names: false)
     node_name = node_data['name']
-    ChefSpec::Server.create_node(node_name, node_data)
+    server.create_node(node_name, node_data)
     platform.to_s # pacify rubocop
     version.to_s # pacify rubocop
   end
@@ -39,7 +38,7 @@ def stub_nodes(platform, version)
   Dir['./test/integration/environments/*.json'].sort.each do |f|
     env_data = JSON.parse(IO.read(f), symbolize_names: false)
     env_name = env_data['name']
-    ChefSpec::Server.create_environment(env_name, env_data)
+    server.create_environment(env_name, env_data)
   end
 end
 
