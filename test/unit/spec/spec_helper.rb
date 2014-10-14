@@ -18,9 +18,6 @@ def node_resources(node)
 
   # for postgres cookbook, https://github.com/hw-cookbooks/postgresql#chef-solo-note
   node.set['postgresql']['password']['postgres'] = 'chef-solo'
-
-  # for stack_commons
-  node.set['stack_commons']['stackname'] = 'phpstack'
 end
 
 def stub_resources
