@@ -72,6 +72,10 @@ suites:
       - recipe[phpstack::redis_single]
       - recipe[phpstack::application_php]
       - recipe[wrapper::demo]
+    attributes:
+      phpstack:
+        demo:
+          enabled: true
 
   - name: wrapper
     run_list:
