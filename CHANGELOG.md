@@ -1,7 +1,9 @@
 phpstack CHANGELOG
 ==================
 
-This file is used to list changes made in each version of the phpstack cookbook.
+3.0.12
+------
+[Julien Berard] - Use stack_commons for pythonstack::mongodb_standalone
 
 3.0.2
 ------
