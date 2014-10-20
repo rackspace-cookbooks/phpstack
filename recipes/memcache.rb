@@ -18,8 +18,4 @@
 # limitations under the License.
 #
 
-include_recipe 'apt' if platform_family?('debian')
-include_recipe 'memcached'
-
-# enable agent for cloud monitoring
-node.set['platformstack']['cloud_monitoring']['plugins']['memcached']['disabled'] = false
+include_recipe 'stack_commons::memcached'
