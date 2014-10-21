@@ -109,6 +109,7 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
     db_name = "#{site_name[0...58]}-#{port}"
     node.set_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][db_name]['mysql_user'] = "#{site_name[0...10]}-#{port}" # ~FC047
     node.set_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][db_name]['mysql_password'] = secure_password # ~FC047
+    node.set_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['databases'][db_name]['privileges'] = %w(select update insert)
 
     # need to redefine site_opts because we just added user/passwords to that hash
     site_opts = node[stackname][node[stackname]['webserver']]['sites'][port][site_name]
@@ -127,7 +128,7 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
           password database_opts['mysql_password']
           host best_ip_for(app_node)
           database_name database
-          privileges %w(select update insert)
+          privileges database_opts['privileges']
           retries 2
           retry_delay 2
           action %w(create grant)
@@ -148,6 +149,7 @@ node[stackname]['mysql']['databases'].each do |database, database_opts|
 
   node.set_unless[stackname]['mysql']['databases'][database]['mysql_user'] = ::SecureRandom.hex(8)
   node.set_unless[stackname]['mysql']['databases'][database]['mysql_password'] = secure_password
+  node.set_unless[stackname]['mysql']['databases'][database]['privileges'] = %w(select update insert)
 
   # need to redefine database_opts because we just added user/passwords to that hash
   database_opts = node[stackname]['mysql']['databases'][database]
@@ -159,7 +161,7 @@ node[stackname]['mysql']['databases'].each do |database, database_opts|
       password database_opts['mysql_password']
       host best_ip_for(app_node)
       database_name database
-      privileges %w(select update insert)
+      privileges database_opts['privileges']
       retries 2
       retry_delay 2
       action %w(create grant)
