@@ -18,5 +18,4 @@
 # limitations under the License.
 #
 
-include_recipe 'redis-multi::slave'
-include_recipe 'phpstack::redis_base'
+include_recipe 'stack_commons::redis_slave' # ~RACK002

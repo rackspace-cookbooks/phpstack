@@ -18,4 +18,4 @@
 # limitations under the License.
 #
 
-include_recipe 'stack_commons::mongodb_standalone'
+include_recipe 'stack_commons::mongodb_standalone' # ~RACK002

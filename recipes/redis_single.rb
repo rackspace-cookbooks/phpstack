@@ -17,5 +17,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_recipe 'phpstack::redis_base'
-include_recipe 'redis-multi::single'
+include_recipe 'stack_commons::redis_single' # ~RACK002
