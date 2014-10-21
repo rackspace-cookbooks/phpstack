@@ -19,28 +19,5 @@
 #
 
 stackname = 'phpstack'
-
-include_recipe 'redis-multi::sentinel'
-include_recipe 'redis-multi::sentinel_default'
-include_recipe 'redis-multi::sentinel_enable'
-
-# allow app nodes to connect
-search_add_iptables_rules("tags:#{stackname.gsub('stack', '')}_app_node AND chef_environment:#{node.chef_environment}",
-                          'INPUT',
-                          "-m tcp -p tcp --dport #{node['redis-multi']['bind_port']} -j ACCEPT",
-                          9999,
-                          'Open port for redis from app')
-
-# allow redis to connect to eachother
-search_add_iptables_rules("tags:#{stackname}-redis_sentinel AND chef_environment:#{node.chef_environment}",
-                          'INPUT',
-                          "-m tcp -p tcp --dport #{node['redis-multi']['sentinel_port']} -j ACCEPT",
-                          9999,
-                          'Open port for redis to redis for sentinel')
-search_add_iptables_rules("tags:#{stackname}-redis AND chef_environment:#{node.chef_environment}",
-                          'INPUT',
-                          "-m tcp -p tcp --dport #{node['redis-multi']['bind_port']} -j ACCEPT",
-                          9999,
-                          'Open port for redis to redis')
-
+include_recipe 'stack_commons::redis_sentinel'
 tag("#{stackname}-redis_sentinel")

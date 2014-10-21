@@ -18,4 +18,4 @@
 # limitations under the License.
 #
 
-include_recipe 'stack_commons::varnish'
+include_recipe 'stack_commons::varnish' # ~RACK002
