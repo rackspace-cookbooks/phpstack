@@ -18,28 +18,4 @@
 # limitations under the License.
 #
 
-# This recipe will format /dev/xvde1 (datadisk on Rackspace performance cloud nodes) and will prepare it for the mysql datadir.
-
-include_recipe 'phpstack::format_disk'
-
-user 'mysql' do
-  comment 'MySQL Server'
-  home '/var/lib/mysql'
-  shell '/sbin/nologin'
-end
-
-directory '/var/lib/mysql' do
-  owner 'mysql'
-  group 'mysql'
-  mode '0700'
-  action :create
-  not_if do
-    File.directory?('/var/lib/mysql')
-  end
-end
-
-mount '/var/lib/mysql' do
-  device node['disk']['name']
-  fstype node['disk']['fs']
-  action [:mount, :enable]
-end
+include_recipe 'stack_commons::mysql_add_drive'

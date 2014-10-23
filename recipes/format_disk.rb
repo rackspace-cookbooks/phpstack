@@ -19,24 +19,4 @@
 # limitations under the License.
 #
 
-# This recipe will format /dev/xvde1 (datadisk on Rackspace performance cloud nodes) and will prepare it for the mysql datadir.
-
-device = node['disk']['name']
-fs = node['disk']['fs']
-
-execute 'mkfs' do
-  command "mkfs -t #{fs} #{device}"
-  only_if do
-    loop do
-      if File.blockdev?(device)
-        Chef::Log.info("device #{device} exists")
-        break
-      else
-        fail("device #{device} does not exist")
-      end
-    end
-    # check volume filesystem
-    cmd = Mixlib::ShellOut.new("blkid -s TYPE -o value #{device}")
-    cmd.run_command.error?
-  end
-end
+include_recipe 'stack_commons::format_disk'
