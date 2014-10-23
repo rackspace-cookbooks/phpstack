@@ -92,24 +92,23 @@ if node.deep_fetch(stackname, 'code-deployment', 'enabled')
         deploy_key site_opts['deploy_key']
         repository site_opts['repository']
         revision site_opts['revision']
-        before_migrate do
-          # create a deployment script if it's defined
-          template "before symlink deployment script for #{site_name}" do
-            path "#{release_path}/#{site_opts['deployment']['before_symlink_script_name']}"
-            cookbook site_opts['deployment']['before_symlink_script_cookbook']
-            source site_opts['deployment']['before_symlink_script_template']
-            owner node[node[stackname]['webserver']]['user']
-            group node[node[stackname]['webserver']]['group']
-            mode 0744
-            variables(
-              site_opts: site_opts,
-              templates_options: site_opts['deployment']['template_options']
-            )
-            only_if { node.deep_fetch(stackname, node[stackname]['webserver'], port, site_name, site_opts, 'deployment', 'before_symlink_script_name') }
-          end
-        end
         # run the deployment script only if it's defined
         if node.deep_fetch(stackname, node[stackname]['webserver'], port, site_name, site_opts, 'deployment', 'before_symlink_script_name')
+          before_migrate do
+            # create a deployment script if it's defined
+            template "before symlink deployment script for #{site_name}" do
+              path "#{release_path}/#{site_opts['deployment']['before_symlink_script_name']}"
+              cookbook site_opts['deployment']['before_symlink_script_cookbook']
+              source site_opts['deployment']['before_symlink_script_template']
+              owner node[node[stackname]['webserver']]['user']
+              group node[node[stackname]['webserver']]['group']
+              mode 0744
+              variables(
+                site_opts: site_opts,
+                templates_options: site_opts['deployment']['template_options']
+              )
+            end
+          end
           before_symlink site_opts['deployment']['before_symlink_script_name']
         end
       end
