@@ -25,13 +25,6 @@ default[stackname]['cloud_monitoring']['remote_http']['alarm'] = false
 default[stackname]['cloud_monitoring']['remote_http']['period'] = 60
 default[stackname]['cloud_monitoring']['remote_http']['timeout'] = 15
 
-default[stackname]['cloud_monitoring']['agent_mysql']['disabled'] = false
-default[stackname]['cloud_monitoring']['agent_mysql']['alarm'] = false
-default[stackname]['cloud_monitoring']['agent_mysql']['period'] = 60
-default[stackname]['cloud_monitoring']['agent_mysql']['timeout'] = 15
-default[stackname]['cloud_monitoring']['agent_mysql']['user'] = 'raxmon-agent'
-default[stackname]['cloud_monitoring']['agent_mysql']['password'] = nil
-
 default['platformstack']['cloud_monitoring']['plugins'] = {}
 
 default['platformstack']['cloud_monitoring']['plugins']['memcached']['label'] = 'memcached'

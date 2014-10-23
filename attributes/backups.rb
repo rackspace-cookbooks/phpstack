@@ -17,10 +17,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-default['holland']['enabled'] = false
-default['holland']['password'] = 'notagudpassword'
-default['holland']['cron']['day'] = '*'
-default['holland']['cron']['hour'] = '3'
-default['holland']['cron']['minute'] = '12'
-
 default['phpstack']['rackspace_cloudbackup']['http_docroot']['enable'] = false

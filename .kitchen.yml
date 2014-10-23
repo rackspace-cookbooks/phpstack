@@ -98,14 +98,6 @@ suites:
         demo:
           enabled: true
 
-  - name: mysql
-    run_list:
-      - recipe[phpstack::mysql_base]
-    attributes:
-      phpstack:
-        demo:
-          enabled: true
-
   - name: postgresql
     run_list:
       - recipe[phpstack::postgresql_base]
