@@ -22,8 +22,6 @@
 - `mongodb`
 - `mysql`
 - `mysql-multi`
-- `newrelic`
-- `newrelic_meetme_plugin`
 -` nginx`
 - `openssl`
 - `pg-multi`
