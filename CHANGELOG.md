@@ -1,15 +1,15 @@
 phpstack CHANGELOG
 ==================
 
-3.0.13
+3.0.15
 ------
-[Julien Berard] - Use stack_commons for phpstack::memcache
+[@jujugrrr] - Use stack_commons for phpstack::newrelic
 
 3.0.12
 ------
-[Julien Berard] - Use stack_commons for phpstack::mongodb_standalone
+[@jujugrrr] - Use stack_commons for phpstack::mongodb_standalone
 
 3.0.2
 ------
-- @jujugrrr - Fixed default type (array->hash) #205
+[@jujugrrr] - Fixed default type (array->hash) #205
 
