@@ -1,6 +1,10 @@
 phpstack CHANGELOG
 ==================
 
+3.0.18
+------
+[@jujugrrr] - Clean memcached attributes, they are not required anymore as they are in stack_commons
+
 3.0.17
 ------
 [@prometheanfire] - Add support to application_php for before_migrate/before_symlink
