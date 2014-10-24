@@ -1,5 +1,8 @@
 phpstack CHANGELOG
 ==================
+3.0.19
+------
+[@jujugrrr] - Use stack_commons for phpstack::gluster
 
 3.0.18
 ------
