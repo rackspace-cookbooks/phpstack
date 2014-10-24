@@ -24,18 +24,3 @@ default[stackname]['cloud_monitoring']['remote_http']['disabled'] = false
 default[stackname]['cloud_monitoring']['remote_http']['alarm'] = false
 default[stackname]['cloud_monitoring']['remote_http']['period'] = 60
 default[stackname]['cloud_monitoring']['remote_http']['timeout'] = 15
-
-default['platformstack']['cloud_monitoring']['plugins'] = {}
-
-default['platformstack']['cloud_monitoring']['plugins']['memcached']['label'] = 'memcached'
-default['platformstack']['cloud_monitoring']['plugins']['memcached']['disabled'] = true
-default['platformstack']['cloud_monitoring']['plugins']['memcached']['period'] = 60
-default['platformstack']['cloud_monitoring']['plugins']['memcached']['timeout'] = 30
-default['platformstack']['cloud_monitoring']['plugins']['memcached']['file_url'] = 'https://raw.githubusercontent.com/racker/rackspace-monitoring-agent-plugins-contrib/master/memcached_stats.py'
-default['platformstack']['cloud_monitoring']['plugins']['memcached']['cookbook'] = 'platformstack'
-default['platformstack']['cloud_monitoring']['plugins']['memcached']['details']['file'] = 'memcached_stats.py'
-default['platformstack']['cloud_monitoring']['plugins']['memcached']['details']['args'] = []
-default['platformstack']['cloud_monitoring']['plugins']['memcached']['details']['timeout'] = 60
-default['platformstack']['cloud_monitoring']['plugins']['memcached']['alarm']['label'] = ''
-default['platformstack']['cloud_monitoring']['plugins']['memcached']['alarm']['notification_plan_id'] = 'npMANAGED'
-default['platformstack']['cloud_monitoring']['plugins']['memcached']['alarm']['criteria'] = ''
