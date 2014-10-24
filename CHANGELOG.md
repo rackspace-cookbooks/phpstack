@@ -1,6 +1,10 @@
 phpstack CHANGELOG
 ==================
 
+3.0.17
+------
+[@prometheanfire] - Add support to application_php for before_migrate/before_symlink
+
 3.0.15
 ------
 [@jujugrrr] - Use stack_commons for phpstack::newrelic
