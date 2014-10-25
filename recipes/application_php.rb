@@ -92,7 +92,6 @@ if node.deep_fetch(stackname, 'code-deployment', 'enabled')
         deploy_key site_opts['deploy_key']
         repository site_opts['repository']
         revision site_opts['revision']
-        notifies :run, 'execute[after_deploy]'
         # run the deployment script only if it's defined
         if node.deep_fetch(stackname, node[stackname]['webserver'], port, site_name, 'deployment', 'before_symlink_script_name')
           before_migrate do
@@ -117,11 +116,6 @@ if node.deep_fetch(stackname, 'code-deployment', 'enabled')
            create_dirs_before_symlink symlinks symlink_before_migrate migrate migration_command restart_command
            environment_name enable_submodules).each do |method_name|
           send(method_name, site_opts[method_name]) if site_opts.include?(method_name)
-        end
-      end
-      execute 'after_deploy' do
-        if node.deep_fetch(stackname, node[stackname]['webserver'], port, site_name, 'deployment', 'after_deploy')
-          command site_opts['deployment']['after_deploy']
         end
       end
     end
