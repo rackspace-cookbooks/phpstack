@@ -120,8 +120,9 @@ if node.deep_fetch(stackname, 'code-deployment', 'enabled')
         end
       end
       execute 'after_deploy' do
-        command site_opts['deployment']['after_deploy']
-        only_if { !site_opts['deployment']['after_deploy'].nil? }
+        if node.deep_fetch(stackname, node[stackname]['webserver'], port, site_name, 'deployment', 'after_deploy')
+          command site_opts['deployment']['after_deploy']
+        end
       end
     end
   end
