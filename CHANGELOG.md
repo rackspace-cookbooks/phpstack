@@ -1,5 +1,9 @@
 phpstack CHANGELOG
 ==================
+3.0.20
+------
+Sheppy - Enable additional application properties
+
 3.0.19
 ------
 [@jujugrrr] - Use stack_commons for phpstack::gluster
