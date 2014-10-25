@@ -128,7 +128,7 @@ if node.deep_fetch(stackname, 'code-deployment', 'enabled')
           restart_command
           environment_name
           enable_submodules).each do |a|
-          if site_opts[a]
+          unless site_opts[a].nil
             a site_opts[a]
           end
         end
