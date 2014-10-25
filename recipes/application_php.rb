@@ -115,7 +115,7 @@ if node.deep_fetch(stackname, 'code-deployment', 'enabled')
         %w(packages keep_releases strategy scm_provider rollback_on_error environment purge_before_symlink
            create_dirs_before_symlink symlinks symlink_before_migrate migrate migration_command restart_command
            environment_name enable_submodules).each do |method_name|
-          send(method_name, method_name) if site_opts.include?(method_name)
+          send(method_name, site_opts[method_name]) if site_opts.include?(method_name)
         end
       end
     end
