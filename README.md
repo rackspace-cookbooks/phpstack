@@ -303,6 +303,7 @@ shouldn't really be messed with
 ```
 
 - applications (combine this with the vhost to deploy a full site)
+  - Any option available to the application resource can be included in the "example.com" hash.
 ```json
 {
     "phpstack": {
