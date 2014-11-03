@@ -24,6 +24,8 @@ else
   default['php']['ext_conf_dir']  = '/etc/php5/conf.d'
 end
 
+default['phpstack']['pear']['modules'] = %w( mongo )
+
 case node['platform_family']
 when 'rhel'
   default['php']['packages'] = %w(
