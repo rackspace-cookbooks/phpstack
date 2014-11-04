@@ -52,8 +52,10 @@ else
   node.default_unless[stackname]['gluster_mountpoint'] = '/var/www'
 end
 
-php_pear 'mongo' do
-  action :install
+node['phpstack']['pear']['modules'].each do |mod|
+  php_pear mod do
+    action 'install'
+  end
 end
 
 include_recipe 'chef-sugar'
