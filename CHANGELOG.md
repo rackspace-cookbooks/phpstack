@@ -1,5 +1,11 @@
 phpstack CHANGELOG
 ==================
+
+3.0.21
+------
+@martinb3 - Unbreak the build by stubbing postgres commands for chefspec
+@prometheanfire - generalizing the instalation of php modules (through pear)
+
 3.0.20
 ------
 Sheppy - Enable additional application properties
