@@ -1,5 +1,10 @@
 phpstack CHANGELOG
 ==================
+
+3.0.21
+------
+Fixing supermarket issue with metadata.
+
 3.0.20
 ------
 Sheppy - Enable additional application properties
