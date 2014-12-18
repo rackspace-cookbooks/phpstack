@@ -1,8 +1,7 @@
-source "https://supermarket.getchef.com"
+source "https://supermarket.chef.io"
 
 metadata
 
-cookbook 'rackops_rolebook', git: 'git@github.com:rackops/rackops_rolebook.git'
 cookbook 'cron', git: 'git@github.com:rackspace-cookbooks/cron.git'
 
 group :integration do
