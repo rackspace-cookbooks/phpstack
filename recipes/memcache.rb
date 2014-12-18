@@ -18,4 +18,4 @@
 # limitations under the License.
 #
 
-include_recipe 'stack_commons::memcached'
+include_recipe 'stack_commons::memcached'  # ~RACK002

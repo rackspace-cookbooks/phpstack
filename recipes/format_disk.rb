@@ -19,4 +19,4 @@
 # limitations under the License.
 #
 
-include_recipe 'stack_commons::format_disk'
+include_recipe 'stack_commons::format_disk'  # ~RACK002

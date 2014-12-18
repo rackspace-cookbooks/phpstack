@@ -18,4 +18,4 @@
 # limitations under the License.
 #
 
-include_recipe 'stack_commons::gluster'
+include_recipe 'stack_commons::gluster'  # ~RACK002
