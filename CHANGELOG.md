@@ -1,6 +1,10 @@
 phpstack CHANGELOG
 ==================
 
+3.0.22
+------
+@jujugrrr - empty bump for new release to the supermarket
+
 3.0.21
 ------
 @martinb3 - Unbreak the build by stubbing postgres commands for chefspec
