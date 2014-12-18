@@ -153,10 +153,8 @@ template "#{stackname}.ini" do
                # if we have content do we have a database defined with a password, then return with the node
                elsif mysql_node[stackname][node[stackname]['webserver']]['sites'].values[0].values[0].key?('mysql_password')
                  mysql_node
-               # previous elsif returning false means that db auto generation is disabled
-               else
-                 nil
                end
+             # previous elsif returning false means that db auto generation is disabled
              # we defined our own database so return with the ndoe
              else
                mysql_node
@@ -169,8 +167,6 @@ template "#{stackname}.ini" do
               else
                 rabbit_node.deep_fetch(stackname, 'rabbitmq', 'passwords').values[0].nil? ? nil : rabbit_node
               end
-            else
-              nil
             end
   )
   action 'create'
