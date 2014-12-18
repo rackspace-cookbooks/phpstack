@@ -7,7 +7,7 @@ group :lint do
 end
 
 group :unit do
-  gem 'berkshelf', '~> 3'
+  gem 'berkshelf', '~> 3.1.1'
   gem 'chefspec'
   gem 'chef-sugar'
 end
