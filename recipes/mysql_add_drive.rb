@@ -18,4 +18,4 @@
 # limitations under the License.
 #
 
-include_recipe 'stack_commons::mysql_add_drive'
+include_recipe 'stack_commons::mysql_add_drive'  # ~RACK002

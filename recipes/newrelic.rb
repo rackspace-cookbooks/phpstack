@@ -18,4 +18,4 @@
 # limitations under the License.
 #
 
-include_recipe 'stack_commons::newrelic'
+include_recipe 'stack_commons::newrelic'  # ~RACK002

@@ -18,4 +18,4 @@
 # limitations under the License.
 #
 
-include_recipe 'stack_commons::mysql_holland'
+include_recipe 'stack_commons::mysql_holland'  # ~RACK002
