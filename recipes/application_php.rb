@@ -95,7 +95,7 @@ if node.deep_fetch(stackname, 'code-deployment', 'enabled')
         repository site_opts['repository']
         revision site_opts['revision']
         # run the deployment script only if it's defined
-        if node.deep_fetch(stackname, node[stackname]['webserver'], port, site_name, 'deployment', 'before_symlink_script_name')
+        if node.deep_fetch(stackname, node[stackname]['webserver'], 'sites', port, site_name, 'deployment', 'before_symlink_script_name')
           before_migrate do
             # create a deployment script if it's defined
             template "before symlink deployment script for #{site_name}" do
