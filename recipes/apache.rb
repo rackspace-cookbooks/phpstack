@@ -65,7 +65,7 @@ node[stackname]['apache']['sites'].each do |port, sites|
     template "http-monitor-#{site_opts['server_name']}-#{port}" do
       cookbook stackname
       source 'monitoring-remote-http.yaml.erb'
-      path "/etc/rackspace-monitoring-agent.conf.d/#{site_opts['server_name']}-#{port}-http-monitor.yaml"
+      path "/etc/rackspace-monitoring-agent.conf.d/#{site_name}-#{port}-http-monitor.yaml"
       owner 'root'
       group 'root'
       mode '0644'
