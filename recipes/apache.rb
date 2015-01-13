@@ -22,6 +22,7 @@ stackname = 'phpstack'
 return 0 unless node[stackname]['webserver_deployment']['enabled']
 
 include_recipe 'chef-sugar'
+include_recipe "#{stackname}::default_unless"
 
 if rhel?
   include_recipe 'yum-epel'
