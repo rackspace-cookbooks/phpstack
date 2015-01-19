@@ -133,8 +133,8 @@ rabbit_node = nil
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
-  mysql_node = search('node', "recipes:#{stackname}\\:\\:mysql_master AND chef_environment:#{node.chef_environment}").first
-  rabbit_node = search('node', "recipes:#{stackname}\\:\\:rabbitmq AND chef_environment:#{node.chef_environment}").first
+  mysql_node = search('node', "recipes:stack_commons\\:\\:mysql_master AND chef_environment:#{node.chef_environment}").first
+  rabbit_node = search('node', "recipes:stack_commons\\:\\:rabbitmq AND chef_environment:#{node.chef_environment}").first
 end
 template "#{stackname}.ini" do
   path "/etc/#{stackname}.ini"
