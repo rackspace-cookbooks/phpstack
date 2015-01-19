@@ -1,5 +1,5 @@
 <VirtualHost *:<%= @params[:port] || node['apache']['listen_ports'].first %>>
-  ServerName <%= @params[:server_name] %>
+  ServerName <%= @params[:server_aliases].first %>:<%= @params[:port] %>
   ServerAlias <% @params[:server_aliases].each do |a| %><%= a %> <% end %>
   DocumentRoot <%= @params[:docroot] %>/current
   RewriteEngine On
@@ -49,10 +49,10 @@
   <% end -%>
 
   # DO NOT canonicalize example.com's template
-  # Canonical host, <%= @params[:server_name] %>
-  #RewriteCond %{HTTP_HOST}   !^<%= @params[:server_name] %> [NC]
+  # Canonical host, <%= @params[:server_aliases].first %>
+  #RewriteCond %{HTTP_HOST}   !^<%= @params[:server_aliases].first %> [NC]
   #RewriteCond %{HTTP_HOST}   !^$
-  #RewriteRule ^/(.*)$        http://<%= @params[:server_name] %>/$1 [L,R=301]
+  #RewriteRule ^/(.*)$        http://<%= @params[:server_aliases].first %>/$1 [L,R=301]
 
   RewriteCond %{DOCUMENT_ROOT}/system/maintenance.html -f
   RewriteCond %{SCRIPT_FILENAME} !maintenance.html

@@ -1,6 +1,6 @@
 server {
   listen <%= @port %>;
-  server_name <%= "#{@server_name} #{@server_aliases.join(' ')}" %>;
+  server_name <% @server_aliases.each do |a| %><%= a %> <% end %>;
   root <%= @docroot %>/current;
 
   location / {

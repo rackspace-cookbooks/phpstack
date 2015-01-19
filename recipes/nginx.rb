@@ -70,8 +70,7 @@ node[stackname]['nginx']['sites'].each do |port, sites|
       mode '0644'
       variables(
         port: port,
-        server_name: site_opts['server_name'],
-        server_aliases: site_opts['server_alias'],
+        server_aliases: site_opts['server_alias'].empty? ? [site_name] : site_opts['server_alias'],
         docroot: site_opts['docroot'],
         errorlog: site_opts['errorlog'],
         customlog: site_opts['customlog']
@@ -82,7 +81,7 @@ node[stackname]['nginx']['sites'].each do |port, sites|
       enable true
       notifies :reload, 'service[nginx]'
     end
-    template "http-monitor-#{site_opts['server_name']}-#{port}" do
+    template "http-monitor-#{site_name}-#{port}" do
       cookbook stackname
       source 'monitoring-remote-http.yaml.erb'
       path "/etc/rackspace-monitoring-agent.conf.d/#{site_name}-#{port}-http-monitor.yaml"
@@ -91,7 +90,7 @@ node[stackname]['nginx']['sites'].each do |port, sites|
       mode '0644'
       variables(
         http_port: port,
-        server_name: site_opts['server_name']
+        server_name: site_opts['server_alias'].empty? ? site_name : site_opts['server_alias'].first
       )
       notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
       action 'create'

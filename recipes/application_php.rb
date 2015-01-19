@@ -88,6 +88,7 @@ end
 if node.deep_fetch(stackname, 'code-deployment', 'enabled')
   node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
     sites.each do |site_name, site_opts|
+      next if site_opts['repository'] == ''
       application "#{site_name}-#{port}" do
         path site_opts['docroot']
         owner node[node[stackname]['webserver']]['user']
