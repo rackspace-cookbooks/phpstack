@@ -90,7 +90,7 @@ node[stackname]['nginx']['sites'].each do |port, sites|
       mode '0644'
       variables(
         http_port: port,
-        server_name: site_opts['server_alias'].empty? ? site_name : site_opts['server_alias'].first
+        server_name: site_opts['monitoring_hostname']
       )
       notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
       action 'create'
