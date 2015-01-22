@@ -88,6 +88,7 @@ end
 if node.deep_fetch(stackname, 'code-deployment', 'enabled')
   node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
     sites.each do |site_name, site_opts|
+      next if site_opts['repository'] == ''
       application "#{site_name}-#{port}" do
         path site_opts['docroot']
         owner node[node[stackname]['webserver']]['user']
@@ -132,8 +133,8 @@ rabbit_node = nil
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
-  mysql_node = search('node', "recipes:#{stackname}\\:\\:mysql_master AND chef_environment:#{node.chef_environment}").first
-  rabbit_node = search('node', "recipes:#{stackname}\\:\\:rabbitmq AND chef_environment:#{node.chef_environment}").first
+  mysql_node = search('node', "recipes:stack_commons\\:\\:mysql_master AND chef_environment:#{node.chef_environment}").first
+  rabbit_node = search('node', "recipes:stack_commons\\:\\:rabbitmq AND chef_environment:#{node.chef_environment}").first
 end
 template "#{stackname}.ini" do
   path "/etc/#{stackname}.ini"

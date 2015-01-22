@@ -35,3 +35,9 @@ default[stackname]['webserver_deployment']['enabled'] = true
 default[stackname]['code-deployment']['enabled'] = true
 default[stackname]['db-autocreate']['enabled'] = true
 default[stackname]['varnish']['multi'] = true
+
+# for http cloud monitoring
+default[stackname]['cloud_monitoring']['remote_http']['disabled'] = false
+default[stackname]['cloud_monitoring']['remote_http']['alarm'] = false
+default[stackname]['cloud_monitoring']['remote_http']['period'] = 60
+default[stackname]['cloud_monitoring']['remote_http']['timeout'] = 15

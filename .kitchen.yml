@@ -17,6 +17,8 @@ provisioner:
       server_debian_password: "randompass"
     holland:
       password: "randompass"
+    stack_commons:
+      stackname: "phpstack"
 
 platforms:
   - name: ubuntu-12.04
@@ -32,13 +34,13 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[phpstack::mysql_base]
-      - recipe[phpstack::postgresql_base]
-      - recipe[phpstack::mongodb_standalone]
-      - recipe[phpstack::memcache]
-      - recipe[phpstack::varnish]
-      - recipe[phpstack::rabbitmq]
-      - recipe[phpstack::redis_single]
+      - recipe[stack_commons::mysql_base]
+      - recipe[stack_commons::postgresql_base]
+      - recipe[stack_commons::mongodb_standalone]
+      - recipe[stack_commons::memcached]
+      - recipe[stack_commons::varnish]
+      - recipe[stack_commons::rabbitmq]
+      - recipe[stack_commons::redis_single]
       - recipe[phpstack::application_php]
     attributes:
       phpstack:
@@ -47,13 +49,13 @@ suites:
 
   - name: aio-nginx
     run_list:
-      - recipe[phpstack::mysql_base]
-      - recipe[phpstack::postgresql_base]
-      - recipe[phpstack::mongodb_standalone]
-      - recipe[phpstack::memcache]
-      - recipe[phpstack::varnish]
-      - recipe[phpstack::rabbitmq]
-      - recipe[phpstack::redis_single]
+      - recipe[stack_commons::mysql_base]
+      - recipe[stack_commons::postgresql_base]
+      - recipe[stack_commons::mongodb_standalone]
+      - recipe[stack_commons::memcached]
+      - recipe[stack_commons::varnish]
+      - recipe[stack_commons::rabbitmq]
+      - recipe[stack_commons::redis_single]
       - recipe[phpstack::application_php]
     attributes:
       phpstack:
@@ -63,13 +65,13 @@ suites:
 
   - name: runlist
     run_list:
-      - recipe[phpstack::mysql_base]
-      - recipe[phpstack::postgresql_base]
-      - recipe[phpstack::mongodb_standalone]
-      - recipe[phpstack::memcache]
-      - recipe[phpstack::varnish]
-      - recipe[phpstack::rabbitmq]
-      - recipe[phpstack::redis_single]
+      - recipe[stack_commons::mysql_base]
+      - recipe[stack_commons::postgresql_base]
+      - recipe[stack_commons::mongodb_standalone]
+      - recipe[stack_commons::memcached]
+      - recipe[stack_commons::varnish]
+      - recipe[stack_commons::rabbitmq]
+      - recipe[stack_commons::redis_single]
       - recipe[phpstack::application_php]
       - recipe[wrapper::demo]
     attributes:
@@ -95,13 +97,5 @@ suites:
     attributes:
       phpstack:
         webserver: "nginx"
-        demo:
-          enabled: true
-
-  - name: postgresql
-    run_list:
-      - recipe[phpstack::postgresql_base]
-    attributes:
-      phpstack:
         demo:
           enabled: true

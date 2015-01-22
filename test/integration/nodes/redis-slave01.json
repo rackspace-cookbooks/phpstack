@@ -6,7 +6,7 @@
     "hostname": "vagrant.vm",
     "os": "centos",
     "recipes": [
-      "redis-multi::slave"
+      "stack_commons::redis_slave"
     ],
     "roles": [
       "redis_slave"
@@ -21,6 +21,9 @@
   },
   "chef_type": "node",
   "default": {
+    "stack_commons": {
+      "stackname": "phpstack"
+    }
   },
   "override": {
   },

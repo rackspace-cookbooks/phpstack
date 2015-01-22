@@ -63,7 +63,7 @@ node[stackname]['apache']['sites'].each do |port, sites|
       customlog site_opts['customlog']
       loglevel site_opts['loglevel']
     end
-    template "http-monitor-#{site_opts['server_name']}-#{port}" do
+    template "http-monitor-#{site_name}-#{port}" do
       cookbook stackname
       source 'monitoring-remote-http.yaml.erb'
       path "/etc/rackspace-monitoring-agent.conf.d/#{site_name}-#{port}-http-monitor.yaml"
@@ -72,7 +72,7 @@ node[stackname]['apache']['sites'].each do |port, sites|
       mode '0644'
       variables(
         http_port: port,
-        server_name: site_opts['server_name']
+        server_name: site_opts['monitoring_hostname']
       )
       notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
       action 'create'

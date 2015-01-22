@@ -18,6 +18,9 @@
   },
   "chef_type": "node",
   "default": {
+    "stack_commons": {
+      "stackname": "phpstack"
+    },
     "phpstack": {
       "nginx": {
         "sites": {
