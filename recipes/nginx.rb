@@ -29,15 +29,6 @@ if rhel?
   include_recipe 'yum-ius'
 end
 
-# Include the necessary recipes.
-%w(
-  apt
-  platformstack::monitors
-  platformstack::iptables
-).each do |recipe|
-  include_recipe recipe
-end
-
 # Pid is different on Ubuntu 14, causing nginx service to fail https://github.com/miketheman/nginx/issues/248
 node.default['nginx']['pid'] = '/run/nginx.pid' if ubuntu_trusty?
 
@@ -92,7 +83,13 @@ node[stackname]['nginx']['sites'].each do |port, sites|
         http_port: port,
         server_name: site_opts['monitoring_hostname']
       )
-      notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
+      begin
+        resources('service[rackspace-monitoring-agent]')
+        notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
+      rescue
+        # this should be removed and the entire template put into an appropriate attribute hash
+        Chef::Log.warn('service[rackspace-monitoring-agent] could not be notified')
+      end
       action 'create'
       only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
     end

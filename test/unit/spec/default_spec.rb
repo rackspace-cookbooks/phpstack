@@ -6,7 +6,7 @@ require_relative 'spec_helper'
 describe 'phpstack all in one demo' do
   recipes_for_demo = %w(stack_commons::mysql_base stack_commons::postgresql_base stack_commons::mongodb_standalone
                         stack_commons::memcached stack_commons::varnish stack_commons::rabbitmq
-                        stack_commons::redis_single phpstack::application_php).map { |r| "#{r}" }
+                        stack_commons::redis_single phpstack::application_php platformstack::monitors).map { |r| "#{r}" }
   before { stub_resources }
   supported_platforms.each do |platform, versions|
     versions.each do |version|

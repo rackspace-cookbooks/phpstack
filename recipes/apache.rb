@@ -36,10 +36,8 @@ node[stackname]['apache']['sites'].each do |port, sites|
 end
 
 node.default['apache']['listen_ports'] = listen_ports
-
+# not sure apt should be on here.... - @martinb3 2015-02-09
 %w(
-  platformstack::monitors
-  platformstack::iptables
   apt
   apache2
   apache2::mod_php5
@@ -74,7 +72,13 @@ node[stackname]['apache']['sites'].each do |port, sites|
         http_port: port,
         server_name: site_opts['monitoring_hostname']
       )
-      notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
+      begin
+        resources('service[rackspace-monitoring-agent]')
+        notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
+      rescue
+        # this should be removed and the entire template put into an appropriate attribute hash
+        Chef::Log.warn('service[rackspace-monitoring-agent] could not be notified')
+      end
       action 'create'
       only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
     end
