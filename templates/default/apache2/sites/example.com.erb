@@ -35,7 +35,7 @@
   LogLevel info
   ErrorLog <%= node['apache']['log_dir'] %>/<%= @params[:name] %>-error.log
   CustomLog <%= node['apache']['log_dir'] %>/<%= @params[:name] %>-access.log combined
-
+  LogFormat '"%{UNIQUE_ID}e %h %l %u %t \"%r\" %>s %b" unique'
   <% if @params[:directory_index] -%>
   DirectoryIndex <%= [@params[:directory_index]].flatten.join " " %>
   <% end -%>
