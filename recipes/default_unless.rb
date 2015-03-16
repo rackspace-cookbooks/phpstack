@@ -47,6 +47,7 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
         "#{node['apache']['log_dir']}/#{site_name}-#{port}-error.log"
       node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['allow_override'] = ['All']
       node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['loglevel'] = 'warn'
+      node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['logformat'] = '%h %l %u %t \"%r\" %>s %b'
     elsif node[stackname]['webserver'] == 'nginx'
       node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['template'] = 'nginx/sites/example.com.erb'
       node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['errorlog'] = # ~FC047
