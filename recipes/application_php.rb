@@ -20,13 +20,16 @@
 
 stackname = 'phpstack'
 
+# openssl devel packages are required for the mongo pecl module, issue #299
 # plugin depends
 if platform_family?('rhel')
   include_recipe 'yum'
   include_recipe 'yum-epel'
   include_recipe 'yum-ius'
+  package 'openssl-devel'
 elsif platform_family?('debian')
   include_recipe 'apt'
+  package 'libssl-dev'
 end
 include_recipe 'build-essential'
 include_recipe 'git'
