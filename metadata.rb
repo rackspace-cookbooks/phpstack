@@ -5,7 +5,7 @@ maintainer_email 'rackspace-cookbooks@rackspace.com'
 license 'Apache 2.0'
 # long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 description 'Provides a full php stack'
-version '4.0.1'
+version '4.0.2'
 
 depends 'apache2', '>= 3.0.1'
 depends 'application', '>= 4.1.6'
