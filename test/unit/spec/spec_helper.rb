@@ -27,6 +27,7 @@ def stub_resources
   stub_command('ls /var/lib/postgresql/9.1/main/recovery.conf').and_return(0)
   stub_command('ls /var/lib/pgsql/data/recovery.conf').and_return(0)
   stub_command('ls /var/lib/postgresql/9.3/main/recovery.conf').and_return(0)
+  stub_command('ls /recovery.conf').and_return(0)
 end
 
 def stub_nodes(platform, version, server)

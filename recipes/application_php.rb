@@ -20,13 +20,16 @@
 
 stackname = 'phpstack'
 
+# openssl devel packages are required for the mongo pecl module, issue #299
 # plugin depends
 if platform_family?('rhel')
   include_recipe 'yum'
   include_recipe 'yum-epel'
   include_recipe 'yum-ius'
+  package 'openssl-devel'
 elsif platform_family?('debian')
   include_recipe 'apt'
+  package 'libssl-dev'
 end
 include_recipe 'build-essential'
 include_recipe 'git'
@@ -90,9 +93,9 @@ if node.deep_fetch(stackname, 'code-deployment', 'enabled')
     sites.each do |site_name, site_opts|
       next if site_opts['repository'] == ''
       application "#{site_name}-#{port}" do
-        path site_opts['docroot']
-        owner node[node[stackname]['webserver']]['user']
-        group node[node[stackname]['webserver']]['group']
+        path site_opts['docbase']
+        owner site_opts['deploy_user']
+        group site_opts['deploy_group']
         deploy_key site_opts['deploy_key']
         repository site_opts['repository']
         revision site_opts['revision']

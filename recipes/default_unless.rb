@@ -28,6 +28,8 @@ node.default_unless[stackname][node[stackname]['webserver']]['sites'] = {}
 # server specific stuff
 node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
   sites.each do |site_name, site_opts|
+    node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['deploy_user'] = node[node[stackname]['webserver']]['user']
+    node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['deploy_group'] = node[node[stackname]['webserver']]['group']
     node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['revision'] = 'master'
     node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['repository'] = ''
     node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['deploy_key'] = '/root/.ssh/id_rsa'
@@ -35,7 +37,9 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
     next unless %w(apache nginx).include?(node[stackname]['webserver'])
     node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['cookbook'] = stackname
     node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['server_alias'] = []
-    node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['docroot'] = "/var/www/#{site_name}/#{port}"
+    node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['docbase'] = "/var/www/#{site_name}/#{port}"
+    node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['docroot'] =
+      "#{node[stackname][node[stackname]['webserver']]['sites'][port][site_name]['docbase']}/current"
     node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['monitoring_hostname'] = site_name
     node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['customlog'] =
       "#{node[node[stackname]['webserver']]['log_dir']}/#{site_name}-#{port}-access.log combined"
@@ -47,6 +51,7 @@ node[stackname][node[stackname]['webserver']]['sites'].each do |port, sites|
         "#{node['apache']['log_dir']}/#{site_name}-#{port}-error.log"
       node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['allow_override'] = ['All']
       node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['loglevel'] = 'warn'
+      node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['logformat'] = '"%h %l %u %t \"%r\" %>s %b"'
     elsif node[stackname]['webserver'] == 'nginx'
       node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['template'] = 'nginx/sites/example.com.erb'
       node.default_unless[stackname][node[stackname]['webserver']]['sites'][port][site_name]['errorlog'] = # ~FC047

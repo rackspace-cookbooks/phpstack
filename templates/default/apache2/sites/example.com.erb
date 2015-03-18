@@ -1,7 +1,7 @@
 <VirtualHost *:<%= @params[:port] || node['apache']['listen_ports'].first %>>
   ServerName <%= @params[:server_aliases].first %>:<%= @params[:port] %>
   ServerAlias <% @params[:server_aliases].each do |a| %><%= a %> <% end %>
-  DocumentRoot <%= @params[:docroot] %>/current
+  DocumentRoot <%= @params[:docroot] %>
   RewriteEngine On
 
   <Directory <%= @params[:docroot] %>>
@@ -35,6 +35,7 @@
   LogLevel info
   ErrorLog <%= node['apache']['log_dir'] %>/<%= @params[:name] %>-error.log
   CustomLog <%= node['apache']['log_dir'] %>/<%= @params[:name] %>-access.log combined
+  LogFormat <%= @params[:logformat] %>
 
   <% if @params[:directory_index] -%>
   DirectoryIndex <%= [@params[:directory_index]].flatten.join " " %>

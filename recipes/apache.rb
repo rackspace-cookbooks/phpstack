@@ -60,6 +60,7 @@ node[stackname]['apache']['sites'].each do |port, sites|
       errorlog site_opts['errorlog']
       customlog site_opts['customlog']
       loglevel site_opts['loglevel']
+      logformat site_opts['logformat']
     end
     template "http-monitor-#{site_name}-#{port}" do
       cookbook stackname
