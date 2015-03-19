@@ -58,6 +58,10 @@
   - if glusterfs is set up via `node['rackspace_gluster']['config']['server']['glusters']` glusterfs will be set up as a client
   - deploys your apps, from attributes, depending on what `node['phpstack']['webserver']` is set to
     - deploys from `node['phpstack'][node['phpstack']['webserver']]['sites']`
+    - deploys under the `node['phpstack'][node['phpstack']['webserver']]['sites'][port][site_name]['deploy_user']` (and group)
+      - uses the web server's group if available and unset (or nobody if not available and unset), overridable
+    - deploys to the location specified in `node['phpstack'][node['phpstack']['webserver']]['sites'][port][site_name]['docbase']`
+      - docroot defaults to the docbase location + /current (so /var/www/site/port/current by default)
   - creates a `/etc/phpstack.ini` file with authentication info for the other nodes in the environment
     - only finding mysql and rabbitmq nodes right now
   - creates a backup job that backs up `/var/www` by default
@@ -276,6 +280,8 @@ shouldn't really be messed with
         "sites": {
           80: {
             "example.com": {
+              "deploy_user": "foo",
+              "deploy_group": "bar",
               "template": "apache2/sites/example.com-80.erb",
               "cookbook": "phpstack",
               "server_name": "example.com",
@@ -283,7 +289,8 @@ shouldn't really be messed with
                 "www.example.com",
                 "test.example.com"
               ],
-              "docroot": "/var/www/example.com/80",
+              "docbase": "/var/www/example.com/80",
+              "docroot": "/var/www/example.com/80/current",
               "errorlog": "/var/log/apache/example.com-error.log",
               "customlog": "/var/log/apache/example.com-access.log combined",
               "allow_override": [
