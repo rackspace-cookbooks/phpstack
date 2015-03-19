@@ -93,9 +93,9 @@ if node.deep_fetch(stackname, 'code-deployment', 'enabled')
     sites.each do |site_name, site_opts|
       next if site_opts['repository'] == ''
       application "#{site_name}-#{port}" do
-        path site_opts['docbase']
-        owner site_opts['deploy_user']
-        group site_opts['deploy_group']
+        path site_opts['docroot']
+        owner node[node[stackname]['webserver']]['user']
+        group node[node[stackname]['webserver']]['group']
         deploy_key site_opts['deploy_key']
         repository site_opts['repository']
         revision site_opts['revision']
