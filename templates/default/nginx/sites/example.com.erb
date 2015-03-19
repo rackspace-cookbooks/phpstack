@@ -1,7 +1,7 @@
 server {
   listen <%= @port %>;
   server_name <% @server_aliases.each do |a| %><%= a %> <% end %>;
-  root <%= @docroot %>/current;
+  root <%= @docroot %>;
 
   location / {
     index  index.html index.htm index.php;
