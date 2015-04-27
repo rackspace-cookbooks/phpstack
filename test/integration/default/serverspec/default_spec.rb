@@ -44,9 +44,10 @@ if os[:family] == 'redhat'
     it { should be_enabled }
   end
 else
-  describe service('postgresl') do
-    it { should be_enabled }
-    it { should be_running }
+    describe service('postgresql') do
+      it { should be_enabled }
+      it { should be_running }
+    end
   end
 end
 describe port(5432) do
