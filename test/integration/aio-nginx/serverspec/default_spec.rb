@@ -56,7 +56,6 @@ describe port(5432) do
   it { should be_listening }
 end
 
-
 # mongo
 describe port(27_017) do
   it { should be_listening }
