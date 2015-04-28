@@ -47,7 +47,7 @@ if os[:family] == 'redhat'
     it { should be_enabled }
   end
 else
-  describe service('postgres') do
+  describe service('postgresql') do
     it { should be_enabled }
     it { should be_running }
   end
@@ -55,6 +55,7 @@ end
 describe port(5432) do
   it { should be_listening }
 end
+
 
 # mongo
 describe port(27_017) do
