@@ -64,7 +64,8 @@ node[stackname]['nginx']['sites'].each do |port, sites|
         server_aliases: site_opts['server_alias'].empty? ? [site_name] : site_opts['server_alias'],
         docroot: site_opts['docroot'],
         errorlog: site_opts['errorlog'],
-        customlog: site_opts['customlog']
+        customlog: site_opts['customlog'],
+        site_name: site_name
       )
       notifies :reload, 'service[nginx]'
     end
