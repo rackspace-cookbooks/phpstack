@@ -1,6 +1,10 @@
 phpstack CHANGELOG
 ==================
 
+4.0.3
+------
+* @lil-cain - Added site_name to variables for nginx templates
+
 4.0.2
 ------
 
