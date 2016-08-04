@@ -61,6 +61,7 @@ node[stackname]['nginx']['sites'].each do |port, sites|
       mode '0644'
       variables(
         port: port,
+        server_name: site_opts['server_name'],
         server_aliases: site_opts['server_alias'].empty? ? [site_name] : site_opts['server_alias'],
         docroot: site_opts['docroot'],
         errorlog: site_opts['errorlog'],
