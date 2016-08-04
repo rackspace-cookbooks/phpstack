@@ -30,6 +30,10 @@ group :kitchen_openstack do
   gem 'kitchen-openstack'
 end
 
+group :kitchen_rackspace do
+  gem 'kitchen-rackspace'
+end
+
 group :development do
   gem 'growl'
   gem 'rb-fsevent'
